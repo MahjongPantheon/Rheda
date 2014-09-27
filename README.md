@@ -1,0 +1,2 @@
+riichi-statboard
+================
