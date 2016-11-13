@@ -62,7 +62,9 @@ class Graphs extends Controller
             return [
                 'playerData' => $playerData,
                 'data' => empty($data['score_history']) ? null : [
-                    'currentPlayer' => $currentUser,
+                    'currentPlayer'     => $currentUser,
+                    'totalPlayedGames'  => $data['total_played_games'],
+                    'totalPlayedRounds' => $data['total_played_rounds'],
 
                     'playersMap'     => json_encode($usersMap),
                     'points'         => json_encode($graphData),
