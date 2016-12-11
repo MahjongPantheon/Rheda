@@ -10,7 +10,6 @@ deps: hooks
 lint:
 	php vendor/bin/phpcs --config-set default_standard PSR2
 	php vendor/bin/phpcs --config-set show_warnings 0
-	php vendor/bin/phpcs src tests
 
 dev:
 	echo "Running dev server on port 8001..."
