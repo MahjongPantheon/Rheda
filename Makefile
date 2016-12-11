@@ -12,6 +12,10 @@ lint:
 	php vendor/bin/phpcs --config-set show_warnings 0
 	php vendor/bin/phpcs src tests
 
+dev:
+	echo "Running dev server on port 8001..."
+	cd www && php -S localhost:8001
+
 unit:
 	php bin/unit.php
 
