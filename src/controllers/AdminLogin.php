@@ -28,7 +28,7 @@ class AdminLogin extends Controller
             if ($_POST['secret'] != ADMIN_PASSWORD) {
                 $error = "Wrong password!";
             } else {
-                setcookie('secret', ADMIN_COOKIE, time() + 3600, '/');
+                setcookie('secret', ADMIN_COOKIE, time() + ADMIN_COOKIE_LIFE, '/');
                 header('Location: ' . $this->_url);
             }
         }
