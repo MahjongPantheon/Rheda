@@ -67,23 +67,34 @@
                 <ul class="nav">
                     <li><a href="/last/">Последние игры</a></li>
                     <li><a href="/stat/">Рейтинг</a></li>
-                    {{#isOnline}}
-                        <li><a href="/addonline/">+Онлайн-игра&nbsp;&nbsp;<span style="opacity: 0.5"
-                                                                                class="icon-lock icon-white"></span></a>
+                    {{#isLoggedIn}}
+                        {{#isOnline}}
+                            <li><a href="/addonline/">+Онлайн-игра&nbsp;&nbsp;<span style="opacity: 0.5"
+                                                                                    class="icon-lock icon-white"></span></a>
+                            </li>
+                        {{/isOnline}}
+                        {{^isOnline}}
+                            <li><a href="/add/">+Игра&nbsp;&nbsp;<span style="opacity: 0.5"
+                                                                       class="icon-lock icon-white"></span></a></li>
+                        {{/isOnline}}
+                        <li>
+                            <a href="/reg/">
+                                +Игрок&nbsp;&nbsp;<span style="opacity: 0.5" class="icon-lock icon-white"></span>
+                            </a>
                         </li>
-                    {{/isOnline}}
-                    {{^isOnline}}
-                        <li><a href="/add/">+Игра&nbsp;&nbsp;<span style="opacity: 0.5"
-                                                                   class="icon-lock icon-white"></span></a></li>
-                    {{/isOnline}}
-                    <li><a href="/reg/">+Игрок&nbsp;&nbsp;<span style="opacity: 0.5"
-                                                                class="icon-lock icon-white"></span></a></li>
-                    <li><a href="/login/">Вход&nbsp;&nbsp;<span style="opacity: 0.5"
-                                                                class="icon-lock icon-white"></span></a></li>
+                        <li>
+                            <a href="/sortition/gennew/">Рассадка&nbsp;&nbsp;<span style="opacity: 0.5"
+                                                                                   class="icon-lock icon-white"></span>
+                            </a>
+                        </li>
+                    {{/isLoggedIn}}
                     <li><a href="/timer/" target="_blank">Таймер</a></li>
-                    <li><a href="/sortition/gennew/" target="_blank">Рассадка&nbsp;&nbsp;<span style="opacity: 0.5"
-                                                                                               class="icon-lock icon-white"></a>
-                    </li>
+                    {{^isLoggedIn}}
+                        <li>
+                            <a href="/login/">Вход&nbsp;&nbsp;<span style="opacity: 0.5" class="icon-lock icon-white"></span>
+                            </a>
+                        </li>
+                    {{/isLoggedIn}}
                 </ul>
             </div>
         </div>

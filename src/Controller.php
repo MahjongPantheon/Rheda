@@ -57,9 +57,12 @@ abstract class Controller
 
             header("Content-type: text/html; charset=utf-8");
 
+            $isLoggedIn = (isset($_COOKIE['secret']) && $_COOKIE['secret'] == ADMIN_COOKIE);
+
             echo $m->render('Layout', [
                 'isOnline' => IS_ONLINE,
-                'content' => $m->render($this->_mainTemplate, $context)
+                'content' => $m->render($this->_mainTemplate, $context),
+                'isLoggedIn' => $isLoggedIn
             ]);
         }
 

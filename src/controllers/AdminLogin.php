@@ -21,7 +21,7 @@ class AdminLogin extends Controller
     protected $_mainTemplate = 'AdminLogin';
     protected function _run()
     {
-        $loggedIn = (isset($_COOKIE['secret']) && $_COOKIE['secret'] == ADMIN_COOKIE);
+        $isLoggedIn = (isset($_COOKIE['secret']) && $_COOKIE['secret'] == ADMIN_COOKIE);
         $error = null;
 
         if (!empty($_POST['secret'])) {
@@ -35,7 +35,7 @@ class AdminLogin extends Controller
 
         return [
             'error' => $error,
-            'loggedIn' => $loggedIn
+            'isLoggedIn' => $isLoggedIn
         ];
     }
 }
