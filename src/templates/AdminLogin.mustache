@@ -20,9 +20,9 @@
     <div class="alert alert-error">{{error}}</div>
 {{/error}}
 
-{{#loggedIn}}
-    <div class="alert alert-error">Уже авторизованы!</div>
-{{/loggedIn}}
+{{#isLoggedIn}}
+    <div class="alert alert-success">Успешно авторизованы!</div>
+{{/isLoggedIn}}
 
 <form action="" method="post" class="well form-search">
     <input type="password" class="input-medium search-query" name="secret" placeholder='secret'>

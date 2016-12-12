@@ -21,21 +21,21 @@ class AdminLogin extends Controller
     protected $_mainTemplate = 'AdminLogin';
     protected function _run()
     {
-        $loggedIn = (isset($_COOKIE['secret']) && $_COOKIE['secret'] == ADMIN_COOKIE);
+        $isLoggedIn = (isset($_COOKIE['secret']) && $_COOKIE['secret'] == ADMIN_COOKIE);
         $error = null;
 
         if (!empty($_POST['secret'])) {
             if ($_POST['secret'] != ADMIN_PASSWORD) {
                 $error = "Wrong password!";
             } else {
-                setcookie('secret', ADMIN_COOKIE, time() + 3600, '/');
+                setcookie('secret', ADMIN_COOKIE, time() + ADMIN_COOKIE_LIFE, '/');
                 header('Location: ' . $this->_url);
             }
         }
 
         return [
             'error' => $error,
-            'loggedIn' => $loggedIn
+            'isLoggedIn' => $isLoggedIn
         ];
     }
 }

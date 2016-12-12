@@ -22,5 +22,7 @@ define('TOURNAMENT_ID', 1);
 
 define('ADMIN_PASSWORD', 'hjpjdstckjybrb');
 define('ADMIN_COOKIE', 'kldfmewmd9vbeiogbjsdvjepklsdmnvmn');
+// in seconds
+define('ADMIN_COOKIE_LIFE', 3600);
 
 define('PARSER_LOG', false);
