@@ -52,7 +52,7 @@ class LastGames extends Controller
                 function ($finalScore, $playerId) use (&$gamesData) {
                     return [
                         'display_name' => $gamesData['players'][$playerId]['display_name'],
-                        'score' => $finalScore['score'],
+                        'score' => number_format($finalScore['score'], 0, '.', ','),
                         'label' => ($finalScore['rating_delta'] > 0
                             ? 'success'
                             : ($finalScore['rating_delta'] < 0
@@ -60,12 +60,21 @@ class LastGames extends Controller
                                 : 'info'
                             )
                         ),
-                        'rating_delta' => ($finalScore['rating_delta'] > 0 ? '+' : '') . $finalScore['rating_delta']
+                        'rating_delta' => ($finalScore['rating_delta'] > 0 ? '+' : '') .
+                            number_format($finalScore['rating_delta'], 0, '.', ','),
+                        'id' => $playerId
                     ];
                 },
                 array_values($game['final_results']),
                 array_keys($game['final_results'])
             );
+
+            $iterator = 0;
+            $winds = ['東', '南', '西', '北'];
+            foreach ($players as $key => $player) {
+                $players[$key]['wind'] = $winds[$iterator];
+                $iterator += 1;
+            }
 
             // Some client-side stats
             $bestHan = 0;
