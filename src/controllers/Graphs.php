@@ -98,6 +98,9 @@ class Graphs extends Controller
                     'riichiLost'        => $data['riichi_summary']['riichi_lost'],
                     'riichiTotal'       => $data['riichi_summary']['riichi_won'] + $data['riichi_summary']['riichi_lost'],
 
+                    'minScores'     => number_format($data['scores_summary']['min_scores'], 0, '.', ','),
+                    'maxScores'     => number_format($data['scores_summary']['max_scores'], 0, '.', ','),
+                    'averageScores' => number_format($data['scores_summary']['average_scores'], 0, '.', ','),
 
                     'ronCountPercent'        => round($data['win_summary']['ron']
                         * 100. / $data['total_played_rounds'], 2),
