@@ -33,12 +33,10 @@ class Graphs extends Controller
                 $usersMap[$player['id']] = $player;
             }
 
-            $integralData = [];
             $graphData = [];
             $i = 0;
             foreach ($data['rating_history'] as $rating) {
                 $graphData []= [$i++, floor($rating)];
-                $integralData []= $rating;
             }
 
             $handValueStats = [];
@@ -84,8 +82,6 @@ class Graphs extends Controller
                     'games'          => json_encode($data['score_history']),
                     'handValueStats' => json_encode($handValueStats),
                     'yakuStats'      => json_encode($yakuStats),
-
-                    'integralRating' => $this->_integral($integralData),
 
                     'ronCount'          => $data['win_summary']['ron'],
                     'tsumoCount'        => $data['win_summary']['tsumo'],
@@ -137,18 +133,5 @@ class Graphs extends Controller
                 'error' => $e->getMessage()
             ];
         }
-    }
-
-    protected function _integral($integralData)
-    {
-        $integralResult = 0;
-        $dataCount = count($integralData);
-        for ($i = 1; $i < $dataCount; $i++) {
-            $integralResult += (
-                ($integralData[$i-1] - 1500) +
-                ($integralData[$i] - 1500)
-            ) / 2.;
-        }
-        return $integralResult;
     }
 }
