@@ -64,11 +64,12 @@ function plotRating (points, games, currentUser, playersMap) {
                         outcome = g[i].rating_delta < 0 ? 'important' : 'success';
                         own = g[i].player_id == currentUser ? 'own' : '';
                         var rating_delta = $.jqplot.sprintf("%'i", g[i].rating_delta);
+                        var scores = $.jqplot.sprintf("%'i", g[i].score);
                         players.push(
                             '<tr class="' + own + '">' +
-                            '<td><b>' + winds[i] + ' ' + playersMap[g[i].player_id].display_name + '</b>: ' +
+                            '<td>' + winds[i] + ' <b>' + playersMap[g[i].player_id].display_name + '</b>: ' +
                             '</td><td>' +
-                            '<span class="badge badge-' + outcome + '">' + rating_delta + '</span>' +
+                            scores + ' <span class="badge badge-' + outcome + '">' + rating_delta + '</span>' +
                             '</td></tr>'
                         );
                     }
