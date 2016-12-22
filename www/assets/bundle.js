@@ -43,7 +43,10 @@ function plotRating (points, games, currentUser, playersMap) {
                     }
                 },
                 yaxis: {
-                    label: 'Рейтинг'
+                    label: 'Рейтинг',
+                    tickOptions: {
+                      formatString: "%'i"
+                    }
                 }
             },
             highlighter: {
@@ -54,16 +57,19 @@ function plotRating (points, games, currentUser, playersMap) {
                     var players = [];
                     var outcome = '';
                     var own = '';
+                    var winds = ['東', '南', '西', '北'];
 
                     players.push('<table class="table table-condensed table-bordered table-plot-rating">');
                     for (var i = 0; i < 4; i++) {
                         outcome = g[i].rating_delta < 0 ? 'important' : 'success';
                         own = g[i].player_id == currentUser ? 'own' : '';
+                        var rating_delta = $.jqplot.sprintf("%'i", g[i].rating_delta);
+                        var scores = $.jqplot.sprintf("%'i", g[i].score);
                         players.push(
                             '<tr class="' + own + '">' +
-                            '<td><b>' + playersMap[g[i].player_id].display_name + '</b>: ' +
+                            '<td>' + winds[i] + ' <b>' + playersMap[g[i].player_id].display_name + '</b>: ' +
                             '</td><td>' +
-                            '<span class="badge badge-' + outcome + '">' + g[i].rating_delta + '</span>' +
+                            scores + ' <span class="badge badge-' + outcome + '">' + rating_delta + '</span>' +
                             '</td></tr>'
                         );
                     }

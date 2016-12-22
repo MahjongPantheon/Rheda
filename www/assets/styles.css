@@ -72,3 +72,11 @@ li, .table th, .table td {
     background: transparent;
     width: 50%;
 }
+
+.last-games a {
+  color: #000;
+}
+
+.last-games a:hover {
+  cursor: pointer;
+}

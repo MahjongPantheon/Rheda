@@ -33,12 +33,10 @@ class Graphs extends Controller
                 $usersMap[$player['id']] = $player;
             }
 
-            $integralData = [];
             $graphData = [];
             $i = 0;
             foreach ($data['rating_history'] as $rating) {
                 $graphData []= [$i++, floor($rating)];
-                $integralData []= $rating;
             }
 
             $handValueStats = [];
@@ -60,9 +58,19 @@ class Graphs extends Controller
             }
 
             $yakuStats = [];
+            $totalYakuhai = 0;
             foreach ($data['yaku_summary'] as $yaku => $count) {
                 $yakuStats []= [$count, Yaku::getMap()[$yaku]];
+                if (in_array($yaku, [13, 14, 15, 16, 17])) {
+                    $totalYakuhai += $count;
+                }
             }
+
+            if ($totalYakuhai) {
+                $yakuStats[] = [$totalYakuhai, 'Якухай: всего'];
+            }
+
+            $scoresSummary = $this->_getScoresSummary($currentUser, $data['score_history']);
 
             return [
                 'playerData' => $playerData,
@@ -77,8 +85,6 @@ class Graphs extends Controller
                     'handValueStats' => json_encode($handValueStats),
                     'yakuStats'      => json_encode($yakuStats),
 
-                    'integralRating' => $this->_integral($integralData),
-
                     'ronCount'          => $data['win_summary']['ron'],
                     'tsumoCount'        => $data['win_summary']['tsumo'],
                     'winCount'          => $data['win_summary']['ron'] + $data['win_summary']['tsumo'],
@@ -90,6 +96,9 @@ class Graphs extends Controller
                     'riichiLost'        => $data['riichi_summary']['riichi_lost'],
                     'riichiTotal'       => $data['riichi_summary']['riichi_won'] + $data['riichi_summary']['riichi_lost'],
 
+                    'minScores'     => number_format($scoresSummary['min_scores'], 0, '.', ','),
+                    'maxScores'     => number_format($scoresSummary['max_scores'], 0, '.', ','),
+                    'averageScores' => number_format($scoresSummary['average_scores'], 0, '.', ','),
 
                     'ronCountPercent'        => round($data['win_summary']['ron']
                         * 100. / $data['total_played_rounds'], 2),
@@ -128,16 +137,44 @@ class Graphs extends Controller
         }
     }
 
-    protected function _integral($integralData)
+    /**
+     * Get scores summary stats for player
+     *
+     * @param $playerId
+     * @param [] $scoresData
+     * @return array
+     */
+    protected function _getScoresSummary($playerId, $scoresData)
     {
-        $integralResult = 0;
-        $dataCount = count($integralData);
-        for ($i = 1; $i < $dataCount; $i++) {
-            $integralResult += (
-                ($integralData[$i-1] - 1500) +
-                ($integralData[$i] - 1500)
-            ) / 2.;
+        $totalScores = 0;
+        $playedGames = 0;
+
+        $minScores = 0;
+        $maxScores = 0;
+        foreach ($scoresData as $key => $value) {
+            foreach ($value as $roundKey => $hanchanResult) {
+                if ($hanchanResult['player_id'] == $playerId) {
+                    $scores = $hanchanResult['score'];
+                    $playedGames += 1;
+                    $totalScores += $scores;
+
+                    if (!$minScores) {
+                        $minScores = $scores;
+                    }
+                    if ($scores > $maxScores) {
+                        $maxScores = $scores;
+                    }
+                    if ($scores < $minScores) {
+                        $minScores = $scores;
+                    }
+                }
+            }
         }
-        return $integralResult;
+
+        return [
+            'min_scores' => $minScores,
+            'max_scores' => $maxScores,
+            'average_scores' => $playedGames ? (int) ($totalScores / $playedGames) : 0,
+        ];
     }
 }
