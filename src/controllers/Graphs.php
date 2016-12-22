@@ -70,6 +70,8 @@ class Graphs extends Controller
                 $yakuStats[] = [$totalYakuhai, 'Якухай: всего'];
             }
 
+            $scoresSummary = $this->_getScoresSummary($currentUser, $data['score_history']);
+
             return [
                 'playerData' => $playerData,
                 'data' => empty($data['score_history']) ? null : [
@@ -94,9 +96,9 @@ class Graphs extends Controller
                     'riichiLost'        => $data['riichi_summary']['riichi_lost'],
                     'riichiTotal'       => $data['riichi_summary']['riichi_won'] + $data['riichi_summary']['riichi_lost'],
 
-                    'minScores'     => number_format($data['scores_summary']['min_scores'], 0, '.', ','),
-                    'maxScores'     => number_format($data['scores_summary']['max_scores'], 0, '.', ','),
-                    'averageScores' => number_format($data['scores_summary']['average_scores'], 0, '.', ','),
+                    'minScores'     => number_format($scoresSummary['min_scores'], 0, '.', ','),
+                    'maxScores'     => number_format($scoresSummary['max_scores'], 0, '.', ','),
+                    'averageScores' => number_format($scoresSummary['average_scores'], 0, '.', ','),
 
                     'ronCountPercent'        => round($data['win_summary']['ron']
                         * 100. / $data['total_played_rounds'], 2),
@@ -133,5 +135,46 @@ class Graphs extends Controller
                 'error' => $e->getMessage()
             ];
         }
+    }
+
+    /**
+     * Get scores summary stats for player
+     *
+     * @param $playerId
+     * @param [] $scoresData
+     * @return array
+     */
+    protected function _getScoresSummary($playerId, $scoresData)
+    {
+        $totalScores = 0;
+        $playedGames = 0;
+
+        $minScores = 0;
+        $maxScores = 0;
+        foreach ($scoresData as $key => $value) {
+            foreach ($value as $roundKey => $hanchanResult) {
+                if ($hanchanResult['player_id'] == $playerId) {
+                    $scores = $hanchanResult['score'];
+                    $playedGames += 1;
+                    $totalScores += $scores;
+
+                    if (!$minScores) {
+                        $minScores = $scores;
+                    }
+                    if ($scores > $maxScores) {
+                        $maxScores = $scores;
+                    }
+                    if ($scores < $minScores) {
+                        $minScores = $scores;
+                    }
+                }
+            }
+        }
+
+        return [
+            'min_scores' => $minScores,
+            'max_scores' => $maxScores,
+            'average_scores' => $playedGames ? (int) ($totalScores / $playedGames) : 0,
+        ];
     }
 }
