@@ -28,6 +28,10 @@ body, html {
   font-family: "PT Sans Narrow", Arial, sans-serif !important;
 }
 
+body {
+  margin-bottom: 60px;
+}
+
 .lastgames-button, .ratingtable-button {
   display: block;
   position: fixed;
