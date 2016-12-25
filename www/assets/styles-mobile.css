@@ -1,0 +1,59 @@
+/*  Riichi mahjong stat GUI
+ *  Copyright (C) 2016  o.klimenko aka ctizen
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@font-face {
+  font-family: 'PT Sans Narrow';
+  src: local('PT Sans Narrow'), local('PTSans-Narrow'), url('./ptn57f.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: "PT Sans Narrow", Arial, sans-serif !important;
+}
+
+.home {
+  display: block;
+  position: fixed;
+  width: 32px;
+  height: 32px;
+  top: 4px;
+  left: 4px;
+  border-radius: 50%;
+  background-color: #fff;
+  padding: 8px;
+  opacity: 0.5;
+  box-shadow: 2px 2px 6px black;
+}
+
+.header-title {
+  margin-top: 0;
+  background-color: #333;
+  color: #ccc;
+  height: 56px;
+  font-size: 28px;
+  line-height: 56px;
+  text-align: center;
+}
+
+.main-content {
+  margin: 0 10px;
+  font-size: 22px;
+  line-height: 26px;  
+}

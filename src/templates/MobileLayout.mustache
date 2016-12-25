@@ -1,0 +1,54 @@
+{{!*  Riichi mahjong stat GUI
+*  Copyright (C) 2016  o.klimenko aka ctizen
+*
+*  This program is free software: you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation, either version 3 of the License, or
+*  (at your option) any later version.
+*
+*  This program is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
+*
+*  You should have received a copy of the GNU General Public License
+*  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*}}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Riichi stat mobile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+    <meta name="description" content="">
+    <meta name="author" content="Oleg Klimenko @ Novosibirsk Mahjong Club">
+
+    <script type="text/javascript" src="/assets/js/jquery.js"></script>
+    <script type="text/javascript" src="/assets/js/jquery.jqplot.min.js"></script>
+    <script type="text/javascript" src="/assets/js/jqplot.categoryAxisRenderer.min.js"></script>
+    <script type="text/javascript" src="/assets/js/jqplot.barRenderer.min.js"></script>
+    <script type="text/javascript" src="/assets/js/jqplot.highlighter.js"></script>
+    <script type="text/javascript" src="/assets/js/jqplot.cursor.js"></script>
+    <script type="text/javascript" src="/assets/bundle-mobile.js"></script>
+
+    <link rel="shortcut icon" href="/assets/ico/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/assets/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/assets/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="/assets/ico/apple-touch-icon-57-precomposed.png">
+
+    <link rel="stylesheet" type="text/css" href="/assets/css/jquery.jqplot.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/assets/styles-mobile.css">
+</head>
+<body>
+<div class="home"><a href="/last/">
+  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve">
+    <path d="M512,296l-96-96V56h-64v80l-96-96L0,296v16h64v160h160v-96h64v96h160V312h64V296z"/>
+  </svg>
+</a></div>
+<div class="container">
+    {{{content}}}
+</div>
+
+</body>
+</html>
