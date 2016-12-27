@@ -38,9 +38,10 @@ class Sortition extends Controller
 
     protected function _run()
     {
-        if ($_COOKIE['secret'] != ADMIN_COOKIE) {
-            echo "Секретное слово неправильное";
-            return;
+        if (empty($_COOKIE['secret']) || $_COOKIE['secret'] != ADMIN_COOKIE) {
+            return [
+                'error' => "Секретное слово неправильное"
+            ];
         }
 
         $players = $this->_api->execute('getAllPlayers', [TOURNAMENT_ID]);

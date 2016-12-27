@@ -16,23 +16,58 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once __DIR__ . '/../helpers/Array.php';
+
 class Timer extends Controller
 {
+    protected $_mainTemplate = 'Timer';
+    
     protected function _run()
     {
-        $getNewUsersData = !empty($_GET['newData']);
-        if ($getNewUsersData) {
-            layout::disable();
+        $timerState = $this->_api->execute('getTimerState', [TOURNAMENT_ID]);
+        $currentSeating = $this->_formatSeating($this->_api->execute('getCurrentSeating', [TOURNAMENT_ID]));
+        
+        if ($timerState['started'] && $timerState['time_remaining']) {
+            $formattedTime = (int)($timerState['time_remaining'] / 60) . ':'
+                           . (floor(($timerState['time_remaining'] % 60) / 10) * 10);
+            return [
+                'redZoneLength' => 10,
+                'initialTime' => $formattedTime,
+                'showSeating' => $timerState['time_remaining'] > 85 * 60,
+                'seating' => $currentSeating
+            ];
         }
 
-        $usersData = Db::get("SELECT * FROM players ORDER BY rating DESC, place_avg ASC");
+        return [
+            'redZoneLength' => 10,
+            'initialTime' => '00:00',
+            'showSeating' => true,
+            'seating' => $currentSeating
+        ];
+    }
 
-        $users = Db::get("SELECT username, alias FROM players");
-        $aliases = [];
-        foreach ($users as $v) {
-            $aliases[$v['username']] = $v['alias'];
+    protected function _formatSeating($seating)
+    {
+        $result = [];
+
+        // assign colors first
+        foreach ($seating as &$player) {
+            $player['zone'] = $player['rating'] >= START_RATING ? 'success' : 'important';
+        }
+        
+        $seating = ArrayHelpers::elm2key($seating, 'session_id', true);
+
+        $i = 1;
+        foreach ($seating as $table) {
+            usort($table, function($e1, $e2) {
+                return $e1['order'] - $e2['order'];
+            });
+            $result []= [
+                'index' => $i++,
+                'players' => $table
+            ];
         }
 
-        include 'templates/Timer.php';
+        return $result;
     }
 }

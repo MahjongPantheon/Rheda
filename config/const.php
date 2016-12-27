@@ -20,7 +20,7 @@ define('IS_ONLINE', false); // TODO -> get from rules!
 define('START_RATING', 1500); // TODO -> get from rules!
 define('API_URL', 'http://api.furiten.ru/');
 define('API_ADMIN_TOKEN', 'CHANGE_ME'); // TODO -> change it on prod!
-define('TOURNAMENT_ID', 1);
+define('TOURNAMENT_ID', 3);
 define('DEBUG_MODE', true); // TODO -> to false in prod!
 
 define('ADMIN_PASSWORD', 'hjpjdstckjybrb');
