@@ -16,6 +16,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once __DIR__ . '/../helpers/Array.php';
+
 class Timer extends Controller
 {
     protected $_mainTemplate = 'Timer';
@@ -23,13 +25,49 @@ class Timer extends Controller
     protected function _run()
     {
         $timerState = $this->_api->execute('getTimerState', [TOURNAMENT_ID]);
+        $currentSeating = $this->_formatSeating($this->_api->execute('getCurrentSeating', [TOURNAMENT_ID]));
+        
         if ($timerState['started'] && $timerState['time_remaining']) {
             $formattedTime = (int)($timerState['time_remaining'] / 60) . ':'
                            . (floor(($timerState['time_remaining'] % 60) / 10) * 10);
             return [
                 'redZoneLength' => 10,
-                'initialTime' => $formattedTime
+                'initialTime' => $formattedTime,
+                'showSeating' => $timerState['time_remaining'] > 85 * 60,
+                'seating' => $currentSeating
             ];
         }
+
+        return [
+            'redZoneLength' => 10,
+            'initialTime' => '00:00',
+            'showSeating' => true,
+            'seating' => $currentSeating
+        ];
+    }
+
+    protected function _formatSeating($seating)
+    {
+        $result = [];
+
+        // assign colors first
+        foreach ($seating as &$player) {
+            $player['zone'] = $player['rating'] >= START_RATING ? 'success' : 'important';
+        }
+        
+        $seating = ArrayHelpers::elm2key($seating, 'session_id', true);
+
+        $i = 1;
+        foreach ($seating as $table) {
+            usort($table, function($e1, $e2) {
+                return $e1['order'] - $e2['order'];
+            });
+            $result []= [
+                'index' => $i++,
+                'players' => $table
+            ];
+        }
+
+        return $result;
     }
 }
