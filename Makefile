@@ -13,7 +13,7 @@ lint:
 
 dev:
 	echo "Running dev server on port 8001..."
-	cd www && php -S localhost:8001
+	cd www && php -S localhost:8001 -c ../config/php.dev.ini
 
 unit:
 	php bin/unit.php
