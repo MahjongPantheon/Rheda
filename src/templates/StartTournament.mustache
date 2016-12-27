@@ -21,3 +21,15 @@
   <h3>Старт игр</h3>
   <button onclick="location.href='/tourn/start/'" style="font-size: 50px; height: 100px">START</button>
 {{/allOk}}
+<hr />
+<h3>Состояние столов:</h3>
+<table class="table table-bordered">
+  {{#tables}}
+    <tr>
+      {{#players}}
+        <td>{{display_name}}</td>
+      {{/players}}
+      <td><span class="badge {{#finished}}badge-success{{/finished}}">{{status}}</span></td>
+    </tr>
+  {{/tables}}
+</table>

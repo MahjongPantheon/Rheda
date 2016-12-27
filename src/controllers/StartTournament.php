@@ -72,9 +72,15 @@ class StartTournament extends Controller {
             }
         }
 
+        $tables = $this->_api->execute('getTablesState', [TOURNAMENT_ID]);
+
         return [
             'allOk' => $allOk,
-            'reason' => $reason
+            'reason' => $reason,
+            'tables' => array_map(function($t) {
+                $t['finished'] = $t['status'] == 'finished';
+                return $t;
+            }, $tables)
         ];
     }
 }
