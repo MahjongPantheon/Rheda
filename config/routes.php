@@ -26,7 +26,7 @@ return [
     '/reg/'           => 'PlayerRegistration',
     '/stat/.*'        => 'RatingTable',
     '/timer/.*'       => 'Timer',
-    '/sortition/gennew/'     => 'Sortition',
+    '/sortition/'     => 'Sortition',
     '/sortition/(?<seed>[0-9a-f]+)/' => 'Sortition',
 
     '/favicon.ico'    => 'Mainpage' // костылёк ^_^

@@ -16,42 +16,20 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'src/helpers/Array.php';
-require_once 'src/helpers/Sortition.php';
+require_once __DIR__ . '/../helpers/Array.php';
 
 class Sortition extends Controller
 {
+    protected $_mainTemplate = 'Sortition';
+    
     protected function _beforeRun()
     {
         if (!empty($_POST['factor'])) {
-            $cachedSortition = db::get("SELECT * FROM sortition_cache WHERE hash = '" . hexdec($_POST['factor']) . "'");
-            if (count($cachedSortition) >= 0) {
-                $sortition = unserialize(base64_decode($cachedSortition[0]['data']));
-
-                $tablesData = [];
-                foreach ($sortition[0] as $table) {
-                    $tablesData = array_merge($tablesData, [
-                        ['username' => $table[0]['username'], 'player_num' => 0],
-                        ['username' => $table[1]['username'], 'player_num' => 1],
-                        ['username' => $table[2]['username'], 'player_num' => 2],
-                        ['username' => $table[3]['username'], 'player_num' => 3],
-                    ]);
-                }
-                $query = "INSERT INTO tables (username, player_num) VALUES " . implode(', ', array_map(function ($item) {
-                    return "('{$item['username']}', {$item['player_num']})";
-                }, $tablesData));
-                db::exec($query);
-
-                db::exec("UPDATE sortition_cache SET is_confirmed=1 WHERE hash = '" . hexdec($_POST['factor']) . "'");
-                echo "Рассадка успешно подтверждена!";
-                return false;
-            }
-
-            return true;
+            // approve, start games
         }
 
         if (empty($this->_path['seed'])) {
-            header('Location: /sortition/' . substr(md5(microtime(true)), 3, 8) . '/');
+            header('Location: /sortition/' . substr(md5(microtime(true)), 3, 5) . '/');
             return false;
         }
 
@@ -60,95 +38,83 @@ class Sortition extends Controller
 
     protected function _run()
     {
-        $users = db::get("SELECT username, alias FROM players");
-        $aliases = [];
-        foreach ($users as $v) {
-            $aliases[$v['username']] = IS_ONLINE ? base64_decode($v['alias']) : $v['alias'];
+        if ($_COOKIE['secret'] != ADMIN_COOKIE) {
+            echo "Секретное слово неправильное";
+            return;
         }
 
-        $randFactor = hexdec($this->_path['seed']);
-        $cachedSortition = db::get("SELECT * FROM sortition_cache WHERE hash = '{$randFactor}'");
-        if (count($cachedSortition) == 0) {
-            if ($_COOKIE['secret'] != ADMIN_COOKIE) {
-                echo "Секретное слово неправильное";
-                return;
+        $players = $this->_api->execute('getAllPlayers', [TOURNAMENT_ID]);
+        $players = ArrayHelpers::elm2key($players, 'id');
+        
+        $seed = hexdec($this->_path['seed']);
+        $sortition = $this->_api->execute('generateSeating', [
+            TOURNAMENT_ID,
+            1, // groups
+            $seed
+        ]);
+
+        // Reformat seating for template...
+        
+        $seating = array_map(function($player) use (&$players) {
+            return [
+                'id' => $player['id'],
+                'rating' => $player['score'],
+                'zone' => $player['score'] >= START_RATING ? 'success' : 'important',
+                // TODO; get rid of bootstrap terminology here ^
+                'username' => $players[$player['id']]['display_name']
+            ];
+        }, $sortition['seating']);
+
+        $seating = array_chunk($seating, 4);
+        $tables = [];
+        for ($i = 0; $i < count($seating); $i++) {
+            $tables []= [
+                'tableIndex' => $i + 1,
+                'players' => $seating[$i]
+            ];
+        }
+
+        // Reformat intersections for template...
+        $maxIntersection = max($sortition['intersections']);
+        $intersections = [];
+        
+        foreach ($players as $id1 => $d1) {
+            $entry = [
+                'username' => $d1['display_name'],
+                'intersectWith' => []
+            ];
+            
+            foreach ($players as $id2 => $d2) {
+                $itemKey1 = $id1 . "+++" . $id2;
+                $itemKey2 = $id2 . "+++" . $id1;
+                $cnt1 = empty($sortition['intersections'][$itemKey1]) ? 0 : intval($sortition['intersections'][$itemKey1]);
+                $cnt2 = empty($sortition['intersections'][$itemKey2]) ? 0 : intval($sortition['intersections'][$itemKey2]);
+                $entry['intersectWith'] []= [
+                    'self' => $id1 == $id2,
+                    'intcolor' => $this->_getColor($cnt1 + $cnt2, $maxIntersection),
+                    'count' => $cnt1 + $cnt2
+                ];
             }
 
-            $usersData = db::get("SELECT * FROM players ORDER BY rating DESC, place_avg ASC");
-            $playData = db::get("SELECT game_id, username, rating FROM rating_history");
-            $previousPlacements = db::get("SELECT * FROM tables");
-            $previousPlacements = ArrayHelpers::elm2Key($previousPlacements, 'username', true);
-
-            list($tables, $sortition, $bestIntersection, $bestIntersectionSets) =
-                SortitionHelper::generate($randFactor, $usersData, $playData, $previousPlacements, SORTITION_GROUPS_COUNT);
-
-            // store to cache
-            $cacheData = base64_encode(serialize([$tables, $sortition, $bestIntersection, $bestIntersectionSets, $usersData]));
-            db::exec("INSERT INTO sortition_cache(hash, data) VALUES ('{$randFactor}', '{$cacheData}')");
-        } else {
-            $isApproved = !!$cachedSortition[0]['is_confirmed'];
-            list($tables, $sortition, $bestIntersection, $bestIntersectionSets, $usersData) = unserialize(base64_decode($cachedSortition[0]['data']));
+            $intersections []= $entry;
         }
 
-        include "templates/Sortition.php";
+        return [
+            'seed' => $seed,
+            'seating' => $tables,
+            'intersections' => $intersections
+        ];
     }
 
-    protected function _generateAndApprove()
-    {
-        $randFactor = substr(md5(microtime(true)), 3, 8);
-        $botsNames = array_map('base64_encode', BOT_NAMES);
-
-        // Generate
-        $usersData = db::get("SELECT * FROM players WHERE username NOT IN('{$botsNames[0]}', '{$botsNames[1]}', '{$botsNames[2]}', '{$botsNames[3]}')
-                              ORDER BY games_played DESC, rating DESC, place_avg ASC");
-        while (count($usersData) % 4 != 0) { // округляем до стола
-            array_pop($usersData);
+    protected function _getColor($num, $max) {
+        $warningThreshold = ceil($max / 2.);
+        if ($num == $max) {
+            return 'important';
         }
-
-        $playData = db::get("SELECT game_id, username, rating FROM rating_history");
-        $previousPlacements = db::get("SELECT * FROM tables");
-        $previousPlacements = ArrayHelpers::elm2Key($previousPlacements, 'username', true);
-
-        list($tables, $sortition, $bestIntersection, $bestIntersectionSets) =
-            SortitionHelper::generate($randFactor, $usersData, $playData, $previousPlacements, SORTITION_GROUPS_COUNT);
-
-        // store to cache
-        $cacheData = base64_encode(serialize([$tables, $sortition, $bestIntersection, $bestIntersectionSets, $usersData]));
-        db::exec("INSERT INTO sortition_cache(hash, data) VALUES ('{$randFactor}', '{$cacheData}')");
-
-        // Approve
-        $tablesData = [];
-        foreach ($tables as $table) {
-            $tablesData = array_merge($tablesData, [
-                ['username' => $table[0]['username'], 'player_num' => 0],
-                ['username' => $table[1]['username'], 'player_num' => 1],
-                ['username' => $table[2]['username'], 'player_num' => 2],
-                ['username' => $table[3]['username'], 'player_num' => 3],
-            ]);
+        if ($num >= $warningThreshold) {
+            return 'warning';
         }
-        $query = "INSERT INTO tables (username, player_num) VALUES " . implode(', ', array_map(function ($item) {
-            return "('{$item['username']}', {$item['player_num']})";
-        }, $tablesData));
-        db::exec($query);
-
-        db::exec("UPDATE sortition_cache SET is_confirmed=1 WHERE hash = '" . $randFactor . "'");
-
-        return $randFactor;
+        return '';
     }
-
-    public function _genSort() // паблик морозов
-    {
-        return $this->_generateAndApprove();
-    }
-
-    public function _getSort($seed)
-    {
-        $cachedSortition = db::get("SELECT * FROM sortition_cache WHERE hash = '" . $seed . "'");
-        if (count($cachedSortition) >= 0) {
-            $sortition = unserialize(base64_decode($cachedSortition[0]['data']));
-            return $sortition[0]; // tables
-        }
-
-        return null;
-    }
+    
 }

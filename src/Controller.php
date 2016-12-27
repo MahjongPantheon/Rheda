@@ -44,6 +44,12 @@ abstract class Controller
         $this->_url = $url;
         $this->_path = $path;
         $this->_api = new \JsonRPC\Client(API_URL);
+        $this->_api->getHttpClient()->withHeaders([
+            'X-Auth-Token: ' . API_ADMIN_TOKEN
+        ]);
+        if (DEBUG_MODE) {
+            $this->_api->getHttpClient()->withDebug();
+        }
     }
 
     public function run()
