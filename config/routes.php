@@ -29,5 +29,8 @@ return [
     '/sortition/'     => 'Sortition',
     '/sortition/(?<seed>[0-9a-f]+)/' => 'Sortition',
 
+    '/tourn/'         => 'StartTournament',
+    '/tourn/(?<action>start)/'   => 'StartTournament',
+
     '/favicon.ico'    => 'Mainpage' // костылёк ^_^
 ];

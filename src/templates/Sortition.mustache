@@ -41,58 +41,63 @@
    background-color: #888;
  }
 </style>
-<h2>Жеребьёвка</h2>
-<form action="" method="post">
-  <input type="hidden" name="factor" value="{{seed}}" />
-  <input type="submit" class="btn btn-success" value="Начать игры!"
-         onclick="javascript: return prompt('Начать игры с данной рассадкой?');" />
-</form>
-<a href='/sortition/' class="btn btn-warning" style="float: right">Следующая рассадка</a>
-<br>
-<table class="table table-striped">
-  <tr>
-    <th># стола</th>
-    <th>ВОСТОК</th>
-    <th></th>
-    <th>ЮГ</th>
-    <th></th>
-    <th>ЗАПАД</th>
-    <th></th>
-    <th>СЕВЕР</th>
-    <th></th>
-  </tr>
-  {{#seating}}
+{{#error}}
+  <h4>Ошибка: {{error}}</h4>
+{{/error}}
+{{^error}}
+  <h2>Жеребьёвка</h2>
+  <form action="" method="post">
+    <input type="hidden" name="factor" value="{{seed}}" />
+    <input type="submit" class="btn btn-success" value="Начать игры!"
+           onclick="javascript: return prompt('Начать игры с данной рассадкой?');" />
+  </form>
+  <a href='/sortition/' class="btn btn-warning" style="float: right">Следующая рассадка</a>
+  <br>
+  <table class="table table-striped">
     <tr>
-      <td>Стол № {{tableIndex}}</td>
-      {{#players}}
-        <td>
-          {{username}}
-        </td>
-        <td>
-          <span class="badge badge-{{zone}}">{{rating}}</span>
-        </td>
-      {{/players}}
+      <th># стола</th>
+      <th>ВОСТОК</th>
+      <th></th>
+      <th>ЮГ</th>
+      <th></th>
+      <th>ЗАПАД</th>
+      <th></th>
+      <th>СЕВЕР</th>
+      <th></th>
     </tr>
-  {{/seating}}
-</table>
-<hr />
-<h3>Пересечения</h3>
-<br><br>
-<table cellpadding="3">
-  <tr>
-    <th>&nbsp;</th>
+    {{#seating}}
+      <tr>
+        <td>Стол № {{tableIndex}}</td>
+        {{#players}}
+          <td>
+            {{username}}
+          </td>
+          <td>
+            <span class="badge badge-{{zone}}">{{rating}}</span>
+          </td>
+        {{/players}}
+      </tr>
+    {{/seating}}
+  </table>
+  <hr />
+  <h3>Пересечения</h3>
+  <br><br>
+  <table cellpadding="3">
+    <tr>
+      <th>&nbsp;</th>
+      {{#intersections}}
+        <th class="rotate"><div><span>{{username}}</span></div></th>
+      {{/intersections}}
+    </tr>
     {{#intersections}}
-      <th class="rotate"><div><span>{{username}}</span></div></th>
+      <tr>
+        <td>{{username}}</td>
+        {{#intersectWith}}
+          <td class="intsect{{#self}} gray{{/self}}">
+            <span class="badge badge-{{intcolor}}">{{count}}</span>
+          </td>
+        {{/intersectWith}}
+      </tr>
     {{/intersections}}
-  </tr>
-  {{#intersections}}
-    <tr>
-      <td>{{username}}</td>
-      {{#intersectWith}}
-        <td class="intsect{{#self}} gray{{/self}}">
-          <span class="badge badge-{{intcolor}}">{{count}}</span>
-        </td>
-      {{/intersectWith}}
-    </tr>
-  {{/intersections}}
-</table>
+  </table>
+{{/error}}
