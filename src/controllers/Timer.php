@@ -18,21 +18,18 @@
 
 class Timer extends Controller
 {
+    protected $_mainTemplate = 'Timer';
+    
     protected function _run()
     {
-        $getNewUsersData = !empty($_GET['newData']);
-        if ($getNewUsersData) {
-            layout::disable();
+        $timerState = $this->_api->execute('getTimerState', [TOURNAMENT_ID]);
+        if ($timerState['started'] && $timerState['time_remaining']) {
+            $formattedTime = (int)($timerState['time_remaining'] / 60) . ':'
+                           . (floor(($timerState['time_remaining'] % 60) / 10) * 10);
+            return [
+                'redZoneLength' => 10,
+                'initialTime' => $formattedTime
+            ];
         }
-
-        $usersData = Db::get("SELECT * FROM players ORDER BY rating DESC, place_avg ASC");
-
-        $users = Db::get("SELECT username, alias FROM players");
-        $aliases = [];
-        foreach ($users as $v) {
-            $aliases[$v['username']] = $v['alias'];
-        }
-
-        include 'templates/Timer.php';
     }
 }
