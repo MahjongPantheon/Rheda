@@ -74,21 +74,22 @@
                             </li>
                         {{/isOnline}}
                         {{^isOnline}}
-                            <li><a href="/add/">+Игра&nbsp;&nbsp;<span style="opacity: 0.5"
-                                                                       class="icon-lock icon-white"></span></a></li>
+                            {{!--<li><a href="/add/">+Игра&nbsp;&nbsp;<span style="opacity: 0.5"
+                              class="icon-lock icon-white"></span></a></li>--}}
+                              <li><a href="/tourn/">Старт игр</a></li>
                         {{/isOnline}}
-                        <li>
+                        {{!--<li>
                             <a href="/reg/">
                                 +Игрок&nbsp;&nbsp;<span style="opacity: 0.5" class="icon-lock icon-white"></span>
                             </a>
-                        </li>
+                        </li>--}}
                         <li>
-                            <a href="/sortition/gennew/">Рассадка&nbsp;&nbsp;<span style="opacity: 0.5"
+                            <a href="/sortition/">Пересечения&nbsp;&nbsp;<span style="opacity: 0.5"
                                                                                    class="icon-lock icon-white"></span>
                             </a>
                         </li>
                     {{/isLoggedIn}}
-                    <li><a href="/timer/" target="_blank">Таймер</a></li>
+                    <li><a href="/timer/" target="_blank">Таймер и рассадка</a></li>
                     {{^isLoggedIn}}
                         <li>
                             <a href="/login/">Вход&nbsp;&nbsp;<span style="opacity: 0.5" class="icon-lock icon-white"></span>
