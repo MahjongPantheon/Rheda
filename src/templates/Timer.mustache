@@ -71,9 +71,7 @@
        addedZero = '0';
      }
 
-     if (minutes < 85) {
-       showSeating = false;
-     }
+     showSeating = (minutes >= 85); // only before start
 
      if (minutes < {{redZoneLength}}) {
        $('#time').css({color: '#f55'});
@@ -84,7 +82,7 @@
      }
 
      if (minutes < 0) {
-       showSeating = true;
+       showSeating = true; // ... and after end too
        window.clearInterval(timer);
        $('#time').html('СТОП!');
        if (sndend) {
