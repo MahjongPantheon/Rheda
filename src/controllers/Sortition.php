@@ -25,6 +25,7 @@ class Sortition extends Controller
     protected function _beforeRun()
     {
         if (!empty($_POST['factor'])) {
+            // TODO
             // approve, start games
         }
 
@@ -46,7 +47,7 @@ class Sortition extends Controller
 
         $players = $this->_api->execute('getAllPlayers', [TOURNAMENT_ID]);
         $players = ArrayHelpers::elm2key($players, 'id');
-        
+
         $seed = hexdec($this->_path['seed']);
         $sortition = $this->_api->execute('generateSeating', [
             TOURNAMENT_ID,
@@ -76,28 +77,30 @@ class Sortition extends Controller
         }
 
         // Reformat intersections for template...
-        $maxIntersection = max($sortition['intersections']);
         $intersections = [];
-        
-        foreach ($players as $id1 => $d1) {
-            $entry = [
-                'username' => $d1['display_name'],
-                'intersectWith' => []
-            ];
-            
-            foreach ($players as $id2 => $d2) {
-                $itemKey1 = $id1 . "+++" . $id2;
-                $itemKey2 = $id2 . "+++" . $id1;
-                $cnt1 = empty($sortition['intersections'][$itemKey1]) ? 0 : intval($sortition['intersections'][$itemKey1]);
-                $cnt2 = empty($sortition['intersections'][$itemKey2]) ? 0 : intval($sortition['intersections'][$itemKey2]);
-                $entry['intersectWith'] []= [
-                    'self' => $id1 == $id2,
-                    'intcolor' => $this->_getColor($cnt1 + $cnt2, $maxIntersection),
-                    'count' => $cnt1 + $cnt2
-                ];
-            }
 
-            $intersections []= $entry;
+        if (!empty($sortition['intersections'])) {
+            $maxIntersection = max($sortition['intersections']);
+            foreach ($players as $id1 => $d1) {
+                $entry = [
+                    'username' => $d1['display_name'],
+                    'intersectWith' => []
+                ];
+
+                foreach ($players as $id2 => $d2) {
+                    $itemKey1 = $id1 . "+++" . $id2;
+                    $itemKey2 = $id2 . "+++" . $id1;
+                    $cnt1 = empty($sortition['intersections'][$itemKey1]) ? 0 : intval($sortition['intersections'][$itemKey1]);
+                    $cnt2 = empty($sortition['intersections'][$itemKey2]) ? 0 : intval($sortition['intersections'][$itemKey2]);
+                    $entry['intersectWith'] [] = [
+                        'self' => $id1 == $id2,
+                        'intcolor' => $this->_getColor($cnt1 + $cnt2, $maxIntersection),
+                        'count' => $cnt1 + $cnt2
+                    ];
+                }
+
+                $intersections [] = $entry;
+            }
         }
 
         return [
