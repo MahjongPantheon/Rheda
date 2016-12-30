@@ -29,6 +29,10 @@ function plotRating (points, games, currentUser, playersMap) {
         gamesIdx.push(id);
     }
 
+    $.jqplot.eventListenerHooks.push(['jqplotClick', function() {
+        $('#chart_rating_info').html('');
+    }]);
+
     $.jqplot(
         'chart_rating',
         [points],
@@ -41,38 +45,15 @@ function plotRating (points, games, currentUser, playersMap) {
                     tickOptions: {
                         formatString: '%d'
                     }
-                },
-                yaxis: {
-                    label: 'Рейтинг'
-                }
-            },
-            highlighter: {
-                show: true,
-                sizeAdjust: 7,
-                tooltipContentEditor: function (str, seriesIndex, pointIndex) {
-                    var g = games[gamesIdx[pointIndex - 1]];
-                    var players = [];
-                    var outcome = '';
-                    var own = '';
-
-                    players.push('<table class="table table-condensed table-bordered table-plot-rating">');
-                    for (var i = 0; i < 4; i++) {
-                        outcome = g[i].rating_delta < 0 ? 'important' : 'success';
-                        own = g[i].player_id == currentUser ? 'own' : '';
-                        players.push(
-                            '<tr class="' + own + '">' +
-                            '<td><b>' + playersMap[g[i].player_id].display_name + '</b>: ' +
-                            '</td><td>' +
-                            '<span class="badge badge-' + outcome + '">' + g[i].rating_delta + '</span>' +
-                            '</td></tr>'
-                        );
-                    }
-                    players.push('</table>');
-                    return players.join('');
                 }
             },
             cursor: {
                 show: false
+            },
+            highlighter: {
+                show: true,
+                showTooltip: false,
+                sizeAdjust: 10
             },
             seriesDefaults: {
                 rendererOptions: {
@@ -81,12 +62,44 @@ function plotRating (points, games, currentUser, playersMap) {
             }
         }
     );
+
+    $('#chart_rating').bind('jqplotDataClick',
+        function (ev, seriesIndex, pointIndex) {
+            var g = games[gamesIdx[pointIndex - 1]];
+            var players = [];
+            var outcome = '';
+            var own = '';
+            var score;
+            players.push('<div class="rating-chart-details">');
+            for (var i = 0; i < 4; i++) {
+                outcome = g[i].rating_delta < 0 ? 'important' : 'success';
+                own = g[i].player_id == currentUser ? 'own' : '';
+                score = $.jqplot.sprintf("%'i", g[i].score);
+                players.push(
+                    '<div class="player-item ' + own + '">' +
+                    '<div class="player-name">' + playersMap[g[i].player_id].display_name + '</div>' +
+                    '<div class="player-score">' +
+                    '<span class="score">' + score + '</span> ' +
+                    '<span class="badge ' + outcome + '">' + (
+                        g[i].rating_delta > 0 ? '+' : ''
+                    ) + g[i].rating_delta + '</span>' +
+                    '</div></div>'
+                );
+            }
+            players.push('</table>');
+            $('#chart_rating_info').html(players.join(''));
+        }
+    );
 }
 
 function plotHands (handValueStats, yakuStats) {
     $.jqplot('chart_hands', [handValueStats], {
-        title: 'Ценность собранных рук',
-        series:[{renderer:$.jqplot.BarRenderer}],
+        series:[{
+            renderer: $.jqplot.BarRenderer,
+            rendererOptions: {
+                barWidth: 10
+            }
+        }],
         axesDefaults: {
             tickOptions: {
                 fontSize: '12pt'
@@ -102,7 +115,6 @@ function plotHands (handValueStats, yakuStats) {
 
     $.jqplot('chart_yaku', [yakuStats], {
         height: 400,
-        title: 'Собранные яку (за все время)',
         series:[{
             renderer: $.jqplot.BarRenderer,
             rendererOptions: {
@@ -113,7 +125,7 @@ function plotHands (handValueStats, yakuStats) {
         }],
         axesDefaults: {
             tickOptions: {
-                fontSize: '12pt'
+                fontSize: '10pt'
             }
         },
         axes: {
@@ -121,10 +133,8 @@ function plotHands (handValueStats, yakuStats) {
                 renderer: $.jqplot.CategoryAxisRenderer
             },
             xaxis: {
-                min: 0,
-                tickInterval: 1,
                 tickOptions: {
-                    formatString: '%d'
+                    formatString: " "
                 }
             }
         }
