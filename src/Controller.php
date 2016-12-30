@@ -16,6 +16,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once __DIR__ . '/helpers/MobileDetect.php';
+
 abstract class Controller
 {
     /**
@@ -56,6 +58,7 @@ abstract class Controller
     {
         if ($this->_beforeRun()) {
             $context = $this->_run();
+            $detector = new \MobileDetect();
 
             $m = new Mustache_Engine(array(
                 'loader' => new Mustache_Loader_FilesystemLoader(__DIR__ . '/templates/'),
@@ -64,10 +67,11 @@ abstract class Controller
             header("Content-type: text/html; charset=utf-8");
 
             $isLoggedIn = (isset($_COOKIE['secret']) && $_COOKIE['secret'] == ADMIN_COOKIE);
+            $add = $detector->isMobile() ? 'Mobile' : '';
 
-            echo $m->render('Layout', [
+            echo $m->render($add . 'Layout', [
                 'isOnline' => IS_ONLINE,
-                'content' => $m->render($this->_mainTemplate, $context),
+                'content' => $m->render($add . $this->_mainTemplate, $context),
                 'isLoggedIn' => $isLoggedIn
             ]);
         }

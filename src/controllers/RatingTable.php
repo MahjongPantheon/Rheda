@@ -87,6 +87,8 @@ class RatingTable extends Controller
             $ctr = 1;
             $data = array_map(function($el) use (&$ctr, &$players) {
                 $el['_index'] = $ctr++;
+                $el['short_name'] = $this->_makeShortName($el['display_name']);
+                $el['avg_place_less_precision'] = sprintf('%.2f', $el['avg_place']);
                 return $el;
             }, $data);
 
@@ -104,5 +106,11 @@ class RatingTable extends Controller
             'orderByAvgPlace'   => $orderBy == 'avg_place',
             'orderByName'       => $orderBy == 'name',
         ];
+    }
+
+    private function _makeShortName($name)
+    {
+        list($name, $surname) = explode(' ', $name);
+        return $surname . ' ' . mb_substr($name, 0, 1, 'utf8') . '.';
     }
 }

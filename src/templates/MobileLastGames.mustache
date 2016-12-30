@@ -1,0 +1,186 @@
+{{!*  Riichi mahjong stat GUI
+*  Copyright (C) 2016  o.klimenko aka ctizen
+*
+*  This program is free software: you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation, either version 3 of the License, or
+*  (at your option) any later version.
+*
+*  This program is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
+*
+*  You should have received a copy of the GNU General Public License
+*  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*}}
+
+<style>
+    .playdate {
+        background-color: #bbb;
+        padding: 3px;
+    }
+    .badge {
+        display: inline-block;
+        color: #eee;
+        background-color: #555;
+        padding: 1px 4px;
+        border-radius: 20%;
+    }
+    .badge.important {
+        background-color: #800;
+    }
+    .badge.success {
+        background-color: #070;
+    }
+    .results {
+        margin: 10px 0;
+        display: flex;
+        flex-direction: column;
+    }
+    .results .player-item {
+        flex: 1;
+        display: flex;
+        flex-direction: row;
+        margin: 4px 0;
+    }
+    .results .username {
+        flex: 1;
+    }
+    .results .score {
+        flex-shrink: 1;
+    }
+    .details {
+        display: none;
+    }
+    .fullLog {
+        font-size: 14px;
+        line-height: normal;
+        margin-bottom: 20px;
+    }
+    .fullLog div:nth-child(even) {
+        background-color: #ddd;
+    }
+</style>
+<script>
+    function toggleDetails(self) {
+        self.nextSibling.style.display =
+                self.nextSibling.style.display === 'block'
+                        ? 'none'
+                        : 'block';
+    }
+</script>
+
+<h2 class="header-title">Последние игры</h2>
+<div class="main-content">
+    {{#noGames}}
+        Ни одной игры еще не сыграно
+    {{/noGames}}
+    {{^noGames}}
+        <div class="games">
+            {{#games}}
+                <div class="playdate">{{playDate}}</div>
+                <div class="results" onclick="toggleDetails(this)">
+                    {{#players}}
+                        <div class="player-item">
+                            <div class="username">{{wind}} <strong>{{display_name}}</strong></div>
+                            <div class="score">{{score}} <span class='badge {{label}}'>{{rating_delta}}</span></div>
+                        </div>
+                    {{/players}}
+                </div><div class="details">
+                    <hr />
+                    <ul>
+                        <li>Выигрышей по рон: {{ronWins}}</li>
+                        <li>Выигрышей по цумо: {{tsumoWins}}</li>
+                        <li>Ничьих: {{draws}}</li>
+                        {{#chombo}}
+                            <li>Чомбо: {{chombo}}</li>
+                        {{/chombo}}
+                    </ul>
+                    <div class='fullLog'>
+                        {{#logItems}}
+                            <div>
+                                {{roundWind}}{{roundIndex}}:
+
+                                {{#roundTypeRon}}
+                                    <b>{{winnerName}}</b> -
+                                    {{yakuList}}{{#doras}}, дора {{doras}}{{/doras}} (<b>{{loserName}}</b>),
+                                    {{#yakuman}}
+                                        якуман!
+                                    {{/yakuman}}
+                                    {{^yakuman}}
+                                        {{han}}{{#fu}}/{{fu}}{{/fu}}{{^fu}} хан{{/fu}}.
+                                    {{/yakuman}}
+                                    {{#riichiPlayers}}
+                                        Риичи: {{riichiPlayers}}
+                                    {{/riichiPlayers}}
+                                {{/roundTypeRon}}
+
+                                {{#roundTypeMultiRon}}
+                                    Дабл-рон:
+                                    {{#multiRonWins}}{{! double & triple rons }}
+                                        <div>
+                                            <b>{{winnerName}}</b> -
+                                            {{yakuList}}{{#doras}}, дора {{doras}}{{/doras}} (<b>{{loserName}}</b>),
+                                            {{#yakuman}}
+                                                якуман!
+                                            {{/yakuman}}
+                                            {{^yakuman}}
+                                                {{han}} хан{{#fu}}, {{fu}} фу{{/fu}}.
+                                            {{/yakuman}}
+                                            {{#riichiPlayers}}
+                                                Риичи: {{riichiPlayers}}
+                                            {{/riichiPlayers}}
+                                        </div>
+                                    {{/multiRonWins}}
+                                {{/roundTypeMultiRon}}
+
+                                {{#roundTypeTsumo}}
+                                    <b>{{winnerName}}</b> -
+                                    {{yakuList}}{{#doras}}, дора {{doras}}{{/doras}} (цумо),
+                                    {{#yakuman}}
+                                        якуман!
+                                    {{/yakuman}}
+                                    {{^yakuman}}
+                                        {{han}} хан{{#fu}}, {{fu}} фу{{/fu}}.
+                                    {{/yakuman}}
+                                    {{#riichiPlayers}}
+                                        Риичи: {{riichiPlayers}}
+                                    {{/riichiPlayers}}
+                                {{/roundTypeTsumo}}
+
+                                {{#roundTypeDraw}}
+                                    Ничья (темпай: {{tempaiPlayers}}).
+                                    {{#riichiPlayers}}
+                                        Риичи: {{riichiPlayers}}
+                                    {{/riichiPlayers}}
+                                {{/roundTypeDraw}}
+
+                                {{#roundTypeAbort}}
+                                    Пересдача.
+                                    {{#riichiPlayers}}
+                                        Риичи: {{riichiPlayers}}
+                                    {{/riichiPlayers}}
+                                {{/roundTypeAbort}}
+
+                                {{#roundTypeChombo}}
+                                    Чомбо: {{loserName}}.
+                                {{/roundTypeChombo}}
+                            </div>
+                        {{/logItems}}
+                    </div>
+                </div>
+            {{/games}}
+        </div>
+        <a class="prevbutton" href='?page={{prevPage}}'>
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 445 445" xml:space="preserve" fill="#ccc">
+                <path transform="rotate(180 222 222)" d="M352,197L166,11C159,4,150,0,140,0c-10,0-19,4-26,11L93,32c-7,7-11,15-11,26c0,10,4,19,11,26l139,138L93,361c-7,7-11,16-11,26c0,10,4,19,11,26l22,21c7,7,16,11,26,11c10,0,19-4,26-11l186-186c7-7,11-16,11-26C363,212,359,204,352,197z"/>
+            </svg>
+        </a>
+        <a class="nextbutton" href='?page={{nextPage}}'>
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 445 445" xml:space="preserve" fill="#ccc">
+                <path d="M352,197L166,11C159,4,150,0,140,0c-10,0-19,4-26,11L93,32c-7,7-11,15-11,26c0,10,4,19,11,26l139,138L93,361c-7,7-11,16-11,26c0,10,4,19,11,26l22,21c7,7,16,11,26,11c10,0,19-4,26-11l186-186c7-7,11-16,11-26C363,212,359,204,352,197z"/>
+            </svg>
+        </a>
+    {{/noGames}}
+</div>
