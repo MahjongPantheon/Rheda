@@ -46,6 +46,7 @@ class Graphs extends Controller
                 5 => 0, 6 => 0, 7 => 0, 8 => 0,
                 9 => 0, 10 => 0, 11 => 0, 12 => 0
             ];
+            ksort($data['hands_value_summary']);
             foreach ($data['hands_value_summary'] as $han => $count) {
                 if ($han > 0) {
                     $handValueStats []= [(string)$han, $count];

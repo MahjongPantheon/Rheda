@@ -102,7 +102,7 @@ function plotHands (handValueStats, yakuStats) {
         }],
         axesDefaults: {
             tickOptions: {
-                fontSize: '12pt'
+                fontSize: '10pt'
             }
         },
         axes: {
