@@ -44,13 +44,44 @@ class LastGames extends Controller
         ];
     }
 
+    protected function _enrichWithInitials($array)
+    {
+        // TODO: make more universal
+        if (!empty($array['display_name'])) {
+            $nameparts = explode(' ', $array['display_name']);
+            $array['firstname'] = reset($nameparts);
+            $array['surname'] = end($nameparts);
+            $array['name_initial'] = mb_substr($nameparts[0], 0, 1, 'utf8');
+            $array['display_short'] = $array['surname'] . ' ' . $array['name_initial'] . '.';
+        }
+
+        if (!empty($array['loserName'])) {
+            $nameparts = explode(' ', $array['loserName']);
+            $array['loserFirstname'] = reset($nameparts);
+            $array['loserSurname'] = end($nameparts);
+            $array['loserInitial'] = mb_substr($nameparts[0], 0, 1, 'utf8');
+            $array['loserShort'] = $array['loserSurname'] . ' ' . $array['loserInitial'] . '.';
+        }
+
+        if (!empty($array['winnerName'])) {
+            $nameparts = explode(' ', $array['winnerName']);
+            $array['winnerFirstname'] = reset($nameparts);
+            $array['winnerSurname'] = end($nameparts);
+            $array['winnerInitial'] = mb_substr($nameparts[0], 0, 1, 'utf8');
+            $array['winnerShort'] = $array['winnerSurname'] . ' ' . $array['winnerInitial'] . '.';
+        }
+
+        return $array;
+    }
+
     protected function _makeGamesData(&$gamesData)
     {
         $result = [];
         foreach ($gamesData['games'] as $gameId => $game) {
             $players = array_map(
                 function ($finalScore, $playerId) use (&$gamesData) {
-                    return [
+
+                    return $this->_enrichWithInitials([
                         'display_name' => $gamesData['players'][$playerId]['display_name'],
                         'score' => number_format($finalScore['score'], 0, '.', ','),
                         'label' => ($finalScore['rating_delta'] > 0
@@ -63,7 +94,7 @@ class LastGames extends Controller
                         'rating_delta' => ($finalScore['rating_delta'] > 0 ? '+' : '') .
                             number_format($finalScore['rating_delta'], 0, '.', ','),
                         'id' => $playerId
-                    ];
+                    ]);
                 },
                 array_values($game['final_results']),
                 array_keys($game['final_results'])
@@ -190,7 +221,7 @@ class LastGames extends Controller
                 $roundIndex = ($round['round_index'] - 12);
             }
 
-            $rounds []= [
+            $rounds []= $this->_enrichWithInitials([
                 'roundWind'         => $roundWind,
                 'roundIndex'        => $roundIndex,
                 'roundTypeRon'      => $round['outcome'] == 'ron',
@@ -211,7 +242,7 @@ class LastGames extends Controller
                 'riichiPlayers'     => $this->_formatCsvPlayersList($round, 'riichi_bets', $playersData),
 
                 'multiRonWins'      => $this->_formatMultiron($round, $playersData)
-            ];
+            ]);
         }
 
         return $rounds;
@@ -255,7 +286,7 @@ class LastGames extends Controller
         $wins = null;
         if ($round['outcome'] == 'multiron' && !empty($round['wins'])) {
             $wins = array_map(function($win) use(&$playersData, &$round) {
-                return [
+                return $this->_enrichWithInitials([
                     'winnerName'    => $playersData[$win['winner_id']]['display_name'],
                     'loserName'     => $playersData[$round['loser_id']]['display_name'],
                     'han'           => $win['han'],
@@ -264,7 +295,7 @@ class LastGames extends Controller
                     'yakuList'      => $this->_formatYaku($win),
                     'riichiPlayers' => $this->_formatCsvPlayersList($win, 'riichi_bets', $playersData),
                     'doras'         => isset($round['dora']) ? $round['dora'] : null
-                ];
+                ]);
             }, $round['wins']);
         }
 
