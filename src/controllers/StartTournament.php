@@ -16,6 +16,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once __DIR__ . '/../helpers/Array.php';
+
 class StartTournament extends Controller {
     protected $_mainTemplate = 'StartTournament';
     protected $_lastEx = null;
@@ -30,6 +32,21 @@ class StartTournament extends Controller {
             try {
                 $this->_api->execute('startGamesWithSeating', [TOURNAMENT_ID, 1, mt_rand(100000, 999999)]);
                 $this->_api->execute('startTimer', [TOURNAMENT_ID]);
+            } catch (Exception $e) {
+                $this->_lastEx = $e;
+                return true;
+            }
+            header('Location: /tourn/');
+            return false;
+        }
+
+        if (!empty($this->_path['action']) && $this->_path['action'] == 'dropLastRound') {
+            if (empty($_COOKIE['secret']) || $_COOKIE['secret'] != ADMIN_COOKIE) {
+                return true; // to show error in _run
+            }
+
+            try {
+                $this->_api->execute('dropLastRound', [$this->_path['hash']]);
             } catch (Exception $e) {
                 $this->_lastEx = $e;
                 return true;
@@ -79,8 +96,55 @@ class StartTournament extends Controller {
             'reason' => $reason,
             'tables' => array_map(function($t) {
                 $t['finished'] = $t['status'] == 'finished';
+                if ($t['status'] == 'finished') {
+                    $t['last_round'] = '';
+                } else {
+                    $t['last_round'] = $this->_formatLastRound($t['last_round'], $t['players']);
+                }
                 return $t;
             }, $tables)
         ];
+    }
+
+    protected function _formatLastRound($roundData, $players)
+    {
+        $players = ArrayHelpers::elm2Key($players, 'id');
+        if (empty($roundData)) {
+            return '';
+        }
+
+        switch ($roundData['outcome']) {
+            case 'ron':
+                return "Рон ({$players[$roundData['winner']]['display_name']} "
+                . "с {$players[$roundData['loser']]['display_name']}) "
+                . "{$roundData['han']} хан"
+                . ($roundData['fu'] ? ", {$roundData['fu']} фу" : '')
+                . "; риичи - " . implode(', ', array_map(function($e) use (&$players) {
+                    return $players[$e]['display_name'];
+                }, $roundData['riichi']));
+            case 'tsumo':
+                return "Цумо ({$players[$roundData['winner']]['display_name']}) "
+                . "{$roundData['han']} хан"
+                . ($roundData['fu'] ? ", {$roundData['fu']} фу" : '')
+                . "; риичи - " . implode(', ', array_map(function($e) use (&$players) {
+                    return $players[$e]['display_name'];
+                }, $roundData['riichi']));
+            case 'draw':
+                return "Ничья "
+                . "(темпай: " . implode(', ', array_map(function($e) use (&$players) {
+                    return $players[$e]['display_name'];
+                }, $roundData['tempai'])) . ")"
+                . "; риичи - " . implode(', ', array_map(function($e) use (&$players) {
+                    return $players[$e]['display_name'];
+                }, $roundData['riichi']));
+            case 'abort':
+                return "Пересдача; риичи - " . implode(', ', array_map(function($e) use (&$players) {
+                    return $players[$e]['display_name'];
+                }, $roundData['riichi']));
+            case 'chombo':
+                return "Чомбо ({$players[$roundData['loser']]['display_name']})";
+            default:
+                return '';
+        }
     }
 }

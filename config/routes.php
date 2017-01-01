@@ -31,6 +31,7 @@ return [
 
     '/tourn/'         => 'StartTournament',
     '/tourn/(?<action>start)/'   => 'StartTournament',
+    '/tourn/(?<action>dropLastRound)/(?<hash>[0-9a-f]+)/'   => 'StartTournament',
 
     '/favicon.ico'    => 'Mainpage' // костылёк ^_^
 ];
