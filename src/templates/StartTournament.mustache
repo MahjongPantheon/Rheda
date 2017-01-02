@@ -44,5 +44,17 @@
               {{/last_round}}
           </td>
       </tr>
+      <tr>
+          <td style="font-weight: bold; font-size: 16px">
+              Штрафы:
+          </td>
+          <td colspan="4">
+              <ul>
+              {{#penalties}}
+                  <li>{{who}} - штраф {{amount}} очков. Причина: {{reason}}</li>
+              {{/penalties}}
+              </ul>
+          </td>
+      </tr>
   {{/tables}}
 </table>

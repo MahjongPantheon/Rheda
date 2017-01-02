@@ -101,6 +101,12 @@ class StartTournament extends Controller {
                 } else {
                     $t['last_round'] = $this->_formatLastRound($t['last_round'], $t['players']);
                 }
+
+                $players = ArrayHelpers::elm2Key($t['players'], 'id');
+                $t['penalties'] = array_map(function($p) use (&$players) {
+                    $p['who'] = $players[$p['who']]['display_name'];
+                    return $p;
+                }, $t['penalties']);
                 return $t;
             }, $tables)
         ];

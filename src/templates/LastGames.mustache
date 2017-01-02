@@ -55,6 +55,16 @@
                             {{#chombo}}
                                 <li>Чомбо: {{chombo}}</li>
                             {{/chombo}}
+                            {{#showPenalties}}
+                                <li>
+                                    Дополнительные штрафы:
+                                    <ul>
+                                        {{#penalties}}
+                                            <li>{{who}} - {{amount}} очков ({{reason}})</li>
+                                        {{/penalties}}
+                                    </ul>
+                                </li>
+                            {{/showPenalties}}
                             <li>Полный лог игры:</li>
                             <div class='fullLog'>
                                 {{#logItems}}

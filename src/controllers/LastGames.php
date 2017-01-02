@@ -175,6 +175,11 @@ class LastGames extends Controller
                 }
             }
 
+            $penalties = array_map(function($p) use($gamesData) {
+                $p['who'] = $gamesData['players'][$p['who']]['display_name'];
+                return $p;
+            }, $game['penalties']);
+
             $result [] = [
                 'index' => $gameId,
                 'playDate' => $game['date'],
@@ -192,6 +197,8 @@ class LastGames extends Controller
                 'tsumoWins' => $tsumoWins,
                 'draws' => $draws,
                 'chombo' => $chomboCount,
+                'penalties' => $penalties,
+                'showPenalties' => !empty($penalties),
                 'logItems' => $this->_makeLog($game['rounds'], $gamesData['players'])
             ];
         }
