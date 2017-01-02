@@ -33,5 +33,8 @@ return [
     '/tourn/(?<action>start)/'   => 'StartTournament',
     '/tourn/(?<action>dropLastRound)/(?<hash>[0-9a-f]+)/'   => 'StartTournament',
 
+    '/penalties/'     => 'Penalties',
+    '/penalties/(?<action>apply)/' => 'Penalties',
+
     '/favicon.ico'    => 'Mainpage' // костылёк ^_^
 ];
