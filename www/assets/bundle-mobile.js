@@ -70,6 +70,7 @@ function plotRating (points, games, currentUser, playersMap) {
             var outcome = '';
             var own = '';
             var score;
+            var winds = ['東', '南', '西', '北'];
             players.push('<div class="rating-chart-details">');
             for (var i = 0; i < 4; i++) {
                 outcome = g[i].rating_delta < 0 ? 'important' : 'success';
@@ -77,12 +78,15 @@ function plotRating (points, games, currentUser, playersMap) {
                 score = $.jqplot.sprintf("%'i", g[i].score);
                 players.push(
                     '<div class="player-item ' + own + '">' +
-                    '<div class="player-name">' + playersMap[g[i].player_id].display_name + '</div>' +
+                    '<div class="player-name">' +
+                        winds[i] + ' ' +
+                        playersMap[g[i].player_id].display_name +
+                    '</div>' +
                     '<div class="player-score">' +
                     '<span class="score">' + score + '</span> ' +
                     '<span class="badge ' + outcome + '">' + (
                         g[i].rating_delta > 0 ? '+' : ''
-                    ) + g[i].rating_delta + '</span>' +
+                    ) + parseInt(g[i].rating_delta, 10) + '</span>' +
                     '</div></div>'
                 );
             }
