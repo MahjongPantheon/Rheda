@@ -47,8 +47,16 @@ class Penalties extends Controller
 
     protected function _run()
     {
+        $amounts = [];
         try {
             $players = $this->_api->execute('getAllPlayers', [TOURNAMENT_ID]);
+            $settings = $this->_api->execute('getGameConfig', [TOURNAMENT_ID]);
+            for ($i = $settings['minPenalty']; $i <= $settings['maxPenalty']; $i += $settings['penaltyStep']) {
+                $amounts []= [
+                    'view' => $i / (float)$settings['ratingDivider'],
+                    'value' => $i
+                ];
+            }
         } catch (Exception $e) {
             $players = [];
             $this->_errors []= $e->getMessage();
@@ -56,6 +64,7 @@ class Penalties extends Controller
 
         return [
             'players' => $players,
+            'penaltyAmounts' => $amounts,
             'error' => implode(', ', $this->_errors)
         ];
     }

@@ -40,14 +40,13 @@
         </tr>
         <tr>
             <td>
-                Очков штрафа
+                Штрафных очков рейтинга
             </td>
             <td>
                 <select name="amount">
-                    <option value="5">5</option>
-                    <option value="10">10</option>
-                    <option value="15">15</option>
-                    <option value="20">20 (размер чомбо)</option>
+                    {{#penaltyAmounts}}
+                    <option value="{{value}}">{{view}}</option>
+                    {{/penaltyAmounts}}
                 </select>
             </td>
         </tr>

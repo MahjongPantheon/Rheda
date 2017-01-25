@@ -67,7 +67,7 @@ abstract class Controller
             header("Content-type: text/html; charset=utf-8");
 
             $isLoggedIn = (isset($_COOKIE['secret']) && $_COOKIE['secret'] == ADMIN_COOKIE);
-            $add = $detector->isMobile() ? 'Mobile' : '';
+            $add = ($detector->isMobile() && !$detector->isTablet()) ? 'Mobile' : ''; // use full version for tablets
 
             echo $m->render($add . 'Layout', [
                 'isOnline' => IS_ONLINE,
