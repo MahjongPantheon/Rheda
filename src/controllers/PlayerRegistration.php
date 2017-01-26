@@ -81,8 +81,8 @@ class PlayerRegistration extends Controller
             }
 
             $this->_lastError = $err;
-            return true;
         }
+        return true;
     }
 
     protected function _registerUserInSystem($ident, $displayName)
