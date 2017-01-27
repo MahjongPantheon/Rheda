@@ -97,10 +97,7 @@ class PlayerRegistration extends Controller
     {
         $errorMsg = '';
         try {
-            $success = $this->_api->execute('unregisterPlayerCP', [$userId, TOURNAMENT_ID]);
-            if (!$success) {
-                $errorMsg = 'Не удалось удалить игрока - проблемы с сетью?';
-            }
+            $this->_api->execute('unregisterPlayerCP', [$userId, TOURNAMENT_ID]);
         } catch (Exception $e) {
             $errorMsg = $e->getMessage();
         };
