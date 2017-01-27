@@ -24,6 +24,7 @@ return [
     '/addonline/'     => 'AddOnlineGame',
     '/graphs/.*'      => 'Graphs',
     '/reg/'           => 'PlayerRegistration',
+    '/enroll/'        => 'PlayerEnrollment',
     '/stat/.*'        => 'RatingTable',
     '/timer/.*'       => 'Timer',
     '/sortition/'     => 'Sortition',
