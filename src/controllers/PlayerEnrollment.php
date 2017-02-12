@@ -31,6 +31,9 @@ class PlayerEnrollment extends Controller
         } else {
             try {
                 $registeredPlayers = $this->_api->execute('getEverybody', []);
+                usort($registeredPlayers, function($u1, $u2) {
+                    return strcmp($u1['display_name'], $u2['display_name']);
+                });
             } catch (Exception $e) {
                 $registeredPlayers = [];
                 $errorMsg = $e->getMessage();
