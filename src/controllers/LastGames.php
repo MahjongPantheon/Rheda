@@ -92,7 +92,7 @@ class LastGames extends Controller
                             )
                         ),
                         'rating_delta' => ($finalScore['rating_delta'] > 0 ? '+' : '') .
-                            number_format($finalScore['rating_delta'], 0, '.', ','),
+                            number_format($finalScore['rating_delta'], 1, '.', ','),
                         'id' => $playerId
                     ]);
                 },
