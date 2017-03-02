@@ -17,6 +17,7 @@
  */
 
 require_once __DIR__ . '/helpers/MobileDetect.php';
+require_once __DIR__ . '/helpers/Config.php';
 
 abstract class Controller
 {
@@ -37,6 +38,11 @@ abstract class Controller
     protected $_api;
 
     /**
+     * @var Config
+     */
+    protected $_rules;
+
+    /**
      * @var string
      */
     protected $_mainTemplate = '';
@@ -52,10 +58,17 @@ abstract class Controller
         if (DEBUG_MODE) {
             $this->_api->getHttpClient()->withDebug();
         }
+
+        $this->_rules = Config::fromRaw($this->_api->execute('getGameConfig', [TOURNAMENT_ID]));
     }
 
     public function run()
     {
+        if (empty($this->_rules->rulesetTitle())) {
+            echo '<h2>Oops.</h2>Failed to get event configuration!';
+            return;
+        }
+
         if ($this->_beforeRun()) {
             $context = $this->_run();
             $detector = new \MobileDetect();
@@ -70,7 +83,7 @@ abstract class Controller
             $add = ($detector->isMobile() && !$detector->isTablet()) ? 'Mobile' : ''; // use full version for tablets
 
             echo $m->render($add . 'Layout', [
-                'isOnline' => IS_ONLINE,
+                'isOnline' => $this->_rules->isOnline(),
                 'content' => $m->render($add . $this->_mainTemplate, $context),
                 'isLoggedIn' => $isLoggedIn
             ]);

@@ -18,7 +18,8 @@
 
 class Yaku
 {
-    public static function getMap() {
+    public static function getMap()
+    {
         return [
             34 => "Дабл-риичи",
             19 => "Дайсанген",

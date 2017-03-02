@@ -175,7 +175,7 @@ class LastGames extends Controller
                 }
             }
 
-            $penalties = array_map(function($p) use($gamesData) {
+            $penalties = array_map(function ($p) use ($gamesData) {
                 $p['who'] = $gamesData['players'][$p['who']]['display_name'];
                 return $p;
             }, $game['penalties']);
@@ -259,7 +259,8 @@ class LastGames extends Controller
     {
         $yakuList = null;
         if (!empty($round['yaku'])) {
-            $yakuList = implode(', ',
+            $yakuList = implode(
+                ', ',
                 array_map(
                     function ($yaku) {
                         return Yaku::getMap()[$yaku];
@@ -292,7 +293,7 @@ class LastGames extends Controller
     {
         $wins = null;
         if ($round['outcome'] == 'multiron' && !empty($round['wins'])) {
-            $wins = array_map(function($win) use(&$playersData, &$round) {
+            $wins = array_map(function ($win) use (&$playersData, &$round) {
                 return $this->_enrichWithInitials([
                     'winnerName'    => $playersData[$win['winner_id']]['display_name'],
                     'loserName'     => $playersData[$round['loser_id']]['display_name'],
@@ -309,4 +310,3 @@ class LastGames extends Controller
         return $wins;
     }
 }
-

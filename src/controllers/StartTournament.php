@@ -18,7 +18,8 @@
 
 require_once __DIR__ . '/../helpers/Array.php';
 
-class StartTournament extends Controller {
+class StartTournament extends Controller
+{
     protected $_mainTemplate = 'StartTournament';
     protected $_lastEx = null;
 
@@ -94,7 +95,7 @@ class StartTournament extends Controller {
         return [
             'allOk' => $allOk,
             'reason' => $reason,
-            'tables' => array_map(function($t) {
+            'tables' => array_map(function ($t) {
                 $t['finished'] = $t['status'] == 'finished';
                 if ($t['status'] == 'finished') {
                     $t['last_round'] = '';
@@ -103,7 +104,7 @@ class StartTournament extends Controller {
                 }
 
                 $players = ArrayHelpers::elm2Key($t['players'], 'id');
-                $t['penalties'] = array_map(function($p) use (&$players) {
+                $t['penalties'] = array_map(function ($p) use (&$players) {
                     $p['who'] = $players[$p['who']]['display_name'];
                     return $p;
                 }, $t['penalties']);
@@ -125,26 +126,26 @@ class StartTournament extends Controller {
                 . "с {$players[$roundData['loser']]['display_name']}) "
                 . "{$roundData['han']} хан"
                 . ($roundData['fu'] ? ", {$roundData['fu']} фу" : '')
-                . "; риичи - " . implode(', ', array_map(function($e) use (&$players) {
+                . "; риичи - " . implode(', ', array_map(function ($e) use (&$players) {
                     return $players[$e]['display_name'];
                 }, $roundData['riichi']));
             case 'tsumo':
                 return "Цумо ({$players[$roundData['winner']]['display_name']}) "
                 . "{$roundData['han']} хан"
                 . ($roundData['fu'] ? ", {$roundData['fu']} фу" : '')
-                . "; риичи - " . implode(', ', array_map(function($e) use (&$players) {
+                . "; риичи - " . implode(', ', array_map(function ($e) use (&$players) {
                     return $players[$e]['display_name'];
                 }, $roundData['riichi']));
             case 'draw':
                 return "Ничья "
-                . "(темпай: " . implode(', ', array_map(function($e) use (&$players) {
+                . "(темпай: " . implode(', ', array_map(function ($e) use (&$players) {
                     return $players[$e]['display_name'];
                 }, $roundData['tempai'])) . ")"
-                . "; риичи - " . implode(', ', array_map(function($e) use (&$players) {
+                . "; риичи - " . implode(', ', array_map(function ($e) use (&$players) {
                     return $players[$e]['display_name'];
                 }, $roundData['riichi']));
             case 'abort':
-                return "Пересдача; риичи - " . implode(', ', array_map(function($e) use (&$players) {
+                return "Пересдача; риичи - " . implode(', ', array_map(function ($e) use (&$players) {
                     return $players[$e]['display_name'];
                 }, $roundData['riichi']));
             case 'chombo':

@@ -57,11 +57,11 @@ class Sortition extends Controller
 
         // Reformat seating for template...
         
-        $seating = array_map(function($player) use (&$players) {
+        $seating = array_map(function ($player) use (&$players) {
             return [
                 'id' => $player['id'],
                 'rating' => $player['score'],
-                'zone' => $player['score'] >= START_RATING ? 'success' : 'important',
+                'zone' => $player['score'] >= $this->_rules->startRating() ? 'success' : 'important',
                 // TODO; get rid of bootstrap terminology here ^
                 'username' => $players[$player['id']]['display_name']
             ];
@@ -110,7 +110,8 @@ class Sortition extends Controller
         ];
     }
 
-    protected function _getColor($num, $max) {
+    protected function _getColor($num, $max)
+    {
         $warningThreshold = ceil($max / 2.);
         if ($num == $max) {
             return 'important';
@@ -120,5 +121,4 @@ class Sortition extends Controller
         }
         return '';
     }
-    
 }

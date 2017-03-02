@@ -16,16 +16,13 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('IS_ONLINE', false); // TODO -> get from rules!
-define('START_RATING', 1500); // TODO -> get from rules!
-define('API_URL', 'http://api.furiten.ru/');
-define('API_ADMIN_TOKEN', 'CHANGE_ME'); // TODO -> change it on prod!
+// Common settings
 define('TOURNAMENT_ID', 2);
+define('API_URL', 'http://api.furiten.ru/');
 define('DEBUG_MODE', true); // TODO -> to false in prod!
+define('API_ADMIN_TOKEN', 'CHANGE_ME'); // TODO -> change it on prod!
 
+// Gui-specific settings
 define('ADMIN_PASSWORD', 'hjpjdstckjybrb');
 define('ADMIN_COOKIE', 'kldfmewmd9vbeiogbjsdvjepklsdmnvmn');
-// in seconds
-define('ADMIN_COOKIE_LIFE', 3600);
-
-define('PARSER_LOG', false);
+define('ADMIN_COOKIE_LIFE', 3600); // in seconds

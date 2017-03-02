@@ -65,7 +65,8 @@ class PlayerRegistration extends Controller
                 case 'reenroll':
                     $err = $this->_reenrollUserForEvent($_POST['id']);
                     break;
-                default:;
+                default:
+                    ;
             }
 
             if (empty($err)) {

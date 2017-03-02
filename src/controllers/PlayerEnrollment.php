@@ -31,7 +31,7 @@ class PlayerEnrollment extends Controller
         } else {
             try {
                 $registeredPlayers = $this->_api->execute('getEverybody', []);
-                usort($registeredPlayers, function($u1, $u2) {
+                usort($registeredPlayers, function ($u1, $u2) {
                     return strcmp($u1['display_name'], $u2['display_name']);
                 });
             } catch (Exception $e) {
@@ -61,7 +61,8 @@ class PlayerEnrollment extends Controller
                 case 'enroll':
                     $err = $this->_enrollUserForEvent($_POST['id']);
                     break;
-                default:;
+                default:
+                    ;
             }
 
             if (empty($err)) {
