@@ -27,12 +27,18 @@ class PlayerRegistration extends Controller
         $registeredPlayers = [];
         $enrolledPlayers = [];
 
+        $sorter = function ($e1, $e2) {
+            return strcmp($e1['display_name'], $e2['display_name']);
+        };
+
         if (!empty($this->_lastError)) {
             $errorMsg = $this->_lastError;
         } else {
             try {
                 $registeredPlayers = $this->_api->execute('getAllPlayers', [TOURNAMENT_ID]);
                 $enrolledPlayers = $this->_api->execute('getAllEnrolled', [TOURNAMENT_ID]);
+                usort($enrolledPlayers, $sorter);
+                usort($registeredPlayers, $sorter);
             } catch (Exception $e) {
                 $registeredPlayers = [];
                 $enrolledPlayers = [];
@@ -43,7 +49,9 @@ class PlayerRegistration extends Controller
         return [
             'error' => $errorMsg,
             'registered' => $registeredPlayers,
-            'enrolled' => $enrolledPlayers
+            'enrolled' => $enrolledPlayers,
+            'registeredCount' => count($registeredPlayers),
+            'enrolledCount' => count($enrolledPlayers)
         ];
     }
 
