@@ -55,7 +55,8 @@ class RatingTable extends Controller
                     $order = 'asc';
                 }
                 break;
-            default:;
+            default:
+                ;
                 $orderBy = 'rating';
                 if (empty($_GET['order'])) {
                     $order = 'desc';
@@ -68,13 +69,13 @@ class RatingTable extends Controller
 
             $data = $this->_api->execute('getRatingTable', [TOURNAMENT_ID, $orderBy, $order]);
 
-            array_map(function($el) use (&$players) {
+            array_map(function ($el) use (&$players) {
                 // remove from common list - user exists in history
                 unset($players[$el['id']]);
             }, $data);
 
             // Merge players who didn't finish yet into rating table
-            $data = array_merge($data, array_map(function($el) {
+            $data = array_merge($data, array_map(function ($el) {
                 return array_merge($el, [
                     'rating'        => '0',
                     'winner_zone'   => true,
@@ -85,13 +86,12 @@ class RatingTable extends Controller
 
             // Assign indexes for table view
             $ctr = 1;
-            $data = array_map(function($el) use (&$ctr, &$players) {
+            $data = array_map(function ($el) use (&$ctr, &$players) {
                 $el['_index'] = $ctr++;
                 $el['short_name'] = $this->_makeShortName($el['display_name']);
                 $el['avg_place_less_precision'] = sprintf('%.2f', $el['avg_place']);
                 return $el;
             }, $data);
-
         } catch (Exception $e) {
             $errMsg = $e->getMessage();
         }

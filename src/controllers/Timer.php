@@ -31,15 +31,15 @@ class Timer extends Controller
             $formattedTime = (int)($timerState['time_remaining'] / 60) . ':'
                            . (floor(($timerState['time_remaining'] % 60) / 10) * 10);
             return [
-                'redZoneLength' => 10,
+                'redZoneLength' => $this->_rules->redZone() / 60,
                 'initialTime' => $formattedTime,
-                'showSeating' => $timerState['time_remaining'] > 85 * 60,
+                'showSeating' => $timerState['time_remaining'] > ($this->_rules->gameDuration() - 5) * 60,
                 'seating' => $currentSeating
             ];
         }
 
         return [
-            'redZoneLength' => 10,
+            'redZoneLength' => $this->_rules->redZone() / 60,
             'initialTime' => '00:00',
             'showSeating' => true,
             'seating' => $currentSeating
@@ -52,14 +52,14 @@ class Timer extends Controller
 
         // assign colors first
         foreach ($seating as &$player) {
-            $player['zone'] = $player['rating'] >= START_RATING ? 'success' : 'important';
+            $player['zone'] = $player['rating'] >= $this->_rules->startRating() ? 'success' : 'important';
         }
         
         $seating = ArrayHelpers::elm2key($seating, 'session_id', true);
 
         $i = 1;
         foreach ($seating as $table) {
-            usort($table, function($e1, $e2) {
+            usort($table, function ($e1, $e2) {
                 return $e1['order'] - $e2['order'];
             });
             $result []= [

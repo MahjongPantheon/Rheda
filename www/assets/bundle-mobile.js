@@ -86,7 +86,7 @@ function plotRating (points, games, currentUser, playersMap) {
                     '<span class="score">' + score + '</span> ' +
                     '<span class="badge ' + outcome + '">' + (
                         g[i].rating_delta > 0 ? '+' : ''
-                    ) + parseInt(g[i].rating_delta, 10) + '</span>' +
+                    ) + parseFloat(g[i].rating_delta).toFixed(1) + '</span>' +
                     '</div></div>'
                 );
             }

@@ -62,8 +62,21 @@ class Graphs extends Controller
             $totalYakuhai = 0;
             foreach ($data['yaku_summary'] as $yaku => $count) {
                 $yakuStats []= [$count, Yaku::getMap()[$yaku]];
-                if (in_array($yaku, [13, 14, 15, 16, 17])) {
-                    $totalYakuhai += $count;
+                switch ($yaku) {
+                    case 13:
+                        $totalYakuhai += 1;
+                        break;
+                    case 14:
+                        $totalYakuhai += 2;
+                        break;
+                    case 15:
+                        $totalYakuhai += 3;
+                        break;
+                    case 16:
+                        $totalYakuhai += 4;
+                        break;
+                    default:
+                        ;
                 }
             }
 
