@@ -41,6 +41,25 @@ class StartTournament extends Controller
             return false;
         }
 
+        if (!empty($this->_path['action']) && $this->_path['action'] == 'startManual') {
+            if (empty($_COOKIE['secret']) || $_COOKIE['secret'] != ADMIN_COOKIE) {
+                return true; // to show error in _run
+            }
+
+            try {
+                $this->_api->execute(
+                    'startGamesWithManualSeating',
+                    [TOURNAMENT_ID, $_POST['description'], $_POST['randomize'] == 'true']
+                );
+            } catch (Exception $e) {
+                $this->_lastEx = $e;
+                return true;
+            }
+            header('Location: /tourn/');
+            return false;
+        }
+
+
         if (!empty($this->_path['action']) && $this->_path['action'] == 'dropLastRound') {
             if (empty($_COOKIE['secret']) || $_COOKIE['secret'] != ADMIN_COOKIE) {
                 return true; // to show error in _run
@@ -95,6 +114,7 @@ class StartTournament extends Controller
         return [
             'allOk' => $allOk,
             'reason' => $reason,
+            'tablesList' => empty($_POST['description']) ? '' : $_POST['description'],
             'tables' => array_map(function ($t) {
                 $t['finished'] = $t['status'] == 'finished';
                 if ($t['status'] == 'finished') {
