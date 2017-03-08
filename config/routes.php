@@ -33,6 +33,7 @@ return [
     '/tourn/'         => 'StartTournament',
     '/tourn/(?<action>start)/'   => 'StartTournament',
     '/tourn/(?<action>dropLastRound)/(?<hash>[0-9a-f]+)/'   => 'StartTournament',
+    '/tourn/(?<action>startManual)/'   => 'StartTournament',
 
     '/penalties/'     => 'Penalties',
     '/penalties/(?<action>apply)/' => 'Penalties',
