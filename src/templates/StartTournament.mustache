@@ -41,15 +41,15 @@
 <h3>Состояние столов:</h3>
 <table class="table table-bordered">
   {{#tables}}
-    <tr>#{{table_index}}</tr>
     <tr>
+      <td>#{{table_index}}</td>
       {{#players}}
         <td>{{display_name}}</td>
       {{/players}}
       <td><span class="badge {{#finished}}badge-success{{/finished}}">{{status}}</span></td>
     </tr>
       <tr>
-          <td colspan="5" style="font-weight: bold; font-size: 16px">
+          <td colspan="6" style="font-weight: bold; font-size: 16px">
               Последний раунд:
               {{^last_round}}еще не состоялся{{/last_round}}
               {{#last_round}}
@@ -65,7 +65,7 @@
           <td style="font-weight: bold; font-size: 16px">
               Штрафы:
           </td>
-          <td colspan="4">
+          <td colspan="5">
               <ul>
               {{#penalties}}
                   <li>{{who}} - штраф {{amount}} очков. Причина: {{reason}}</li>
