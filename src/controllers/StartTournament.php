@@ -51,6 +51,7 @@ class StartTournament extends Controller
                     'startGamesWithManualSeating',
                     [TOURNAMENT_ID, $_POST['description'], $_POST['randomize'] == 'true']
                 );
+                $this->_api->execute('startTimer', [TOURNAMENT_ID]);
             } catch (Exception $e) {
                 $this->_lastEx = $e;
                 return true;
