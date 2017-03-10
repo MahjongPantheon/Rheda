@@ -57,16 +57,19 @@ class Timer extends Controller
         
         $seating = ArrayHelpers::elm2key($seating, 'session_id', true);
 
-        $i = 1;
         foreach ($seating as $table) {
             usort($table, function ($e1, $e2) {
                 return $e1['order'] - $e2['order'];
             });
             $result []= [
-                'index' => $i++,
+                'index' => $table[0]['table_index'],
                 'players' => $table
             ];
         }
+
+        usort($result, function($e1, $e2) {
+            return $e1['index'] - $e2['index'];
+        });
 
         return $result;
     }
