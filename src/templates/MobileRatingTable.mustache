@@ -55,6 +55,7 @@
       <th>Игрок</th>
       <th><a href="?sort=rating">Итог</a>{{#orderByRating}}<span class="icon-arrow-down"></span>{{/orderByRating}}</th>
       <th><a href="?sort=avg_place">Avg</a>{{#orderByAvgPlace}}<span class="icon-arrow-up"></span>{{/orderByAvgPlace}}</th>
+      <th>&nbsp;</th>
     </tr>
     {{#data}}
       <tr>
@@ -65,6 +66,7 @@
                          {{^winner_zone}}important{{/winner_zone}}
                          ">{{rating}}</span></td>
         <td class="cn">{{avg_place_less_precision}}</td>
+        <td class="cn">{{games_played}}</td>
       </tr>
     {{/data}}
   </table>
