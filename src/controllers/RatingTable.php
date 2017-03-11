@@ -110,7 +110,7 @@ class RatingTable extends Controller
 
     private function _makeShortName($name)
     {
-        list($name, $surname) = explode(' ', $name);
+        list($surname, $name) = explode(' ', $name);
         return $surname . ' ' . mb_substr($name, 0, 1, 'utf8') . '.';
     }
 }
