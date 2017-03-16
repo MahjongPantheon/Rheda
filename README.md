@@ -3,7 +3,7 @@
 
 [![Build Status](https://travis-ci.org/MahjongPantheon/Rheda.svg?branch=master)](https://travis-ci.org/MahjongPantheon/Rheda)
 
-**Rheda** provides games and rating visualization and control panel for japanese (riichi) mahjong sessions and events. 
+**Rheda** provides visualization tools and control panel for japanese (riichi) mahjong sessions and events. 
 
 Features:
 
@@ -37,7 +37,7 @@ Administration features:
 
 - Make sure you run *nix-based OS or VM. Rheda is not tested to run on Windows host.
 - To install all dependencies, run `make deps`.
-- Edit `config/const.php` and fill in your [Mimar](https://github.com/MahjongPantheon/Mimar) API server url.
+- Edit `config/const.php` and fill in your [Mimir](https://github.com/MahjongPantheon/Mimir) API server url.
 - Run `make dev` to start Rheda in development mode. Rheda will listen on port 8001.
 - On production environment, set up your web server to use `www` folder as document root. Also it should invoke `www/index.php` as default entry point for every requested path that is not a file or directory.
 

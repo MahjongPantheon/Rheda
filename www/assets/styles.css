@@ -1,4 +1,4 @@
-/*  Riichi mahjong stat GUI
+/*  Rheda: visualizer and control panel
  *  Copyright (C) 2016  o.klimenko aka ctizen
  *
  *  This program is free software: you can redistribute it and/or modify
