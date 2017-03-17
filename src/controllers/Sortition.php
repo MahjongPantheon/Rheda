@@ -21,7 +21,12 @@ require_once __DIR__ . '/../helpers/Array.php';
 class Sortition extends Controller
 {
     protected $_mainTemplate = 'Sortition';
-    
+
+    protected function _pageTitle()
+    {
+        return 'Управление рассадкой';
+    }
+
     protected function _beforeRun()
     {
         if (!empty($_POST['factor'])) {

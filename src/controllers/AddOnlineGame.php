@@ -23,6 +23,11 @@ class AddOnlineGame extends Controller
 {
     protected $_mainTemplate = 'AddOnlineGame';
 
+    protected function _pageTitle()
+    {
+        return 'Добавить онлайн-игру';
+    }
+
     /**
      * Основной метод контроллера
      */
