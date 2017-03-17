@@ -21,12 +21,20 @@ require_once __DIR__ . '/../helpers/YakuMap.php';
 class Graphs extends Controller
 {
     protected $_mainTemplate = 'Graphs';
+    protected $_playerName = 'Игрок';
+
+    protected function _pageTitle()
+    {
+        return 'Статистика и графики: ' . $this->_playerName;
+    }
+
     protected function _run()
     {
         try {
             $currentUser = intval($_GET['user']);
             $playerData = $this->_api->execute('getPlayer', [$currentUser]);
             $data = $this->_api->execute('getPlayerStats', [$currentUser, TOURNAMENT_ID]);
+            $this->_playerName = $playerData['display_name'];
 
             $usersMap = [];
             foreach ($data['players_info'] as $player) {

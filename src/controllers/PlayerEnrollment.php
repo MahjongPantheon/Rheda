@@ -21,6 +21,11 @@ class PlayerEnrollment extends Controller
     protected $_mainTemplate = 'PlayerEnrollment';
     protected $_lastError = '';
 
+    protected function _pageTitle()
+    {
+        return 'Добавление игроков';
+    }
+
     protected function _run()
     {
         $errorMsg = '';

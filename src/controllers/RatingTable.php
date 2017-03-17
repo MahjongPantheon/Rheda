@@ -22,6 +22,11 @@ class RatingTable extends Controller
 {
     protected $_mainTemplate = 'RatingTable';
 
+    protected function _pageTitle()
+    {
+        return 'Таблица результатов';
+    }
+
     protected function _run()
     {
         $errMsg = '';

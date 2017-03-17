@@ -21,6 +21,11 @@ require_once __DIR__ . '/../helpers/Array.php';
 class Timer extends Controller
 {
     protected $_mainTemplate = 'Timer';
+
+    protected function _pageTitle()
+    {
+        return 'Таймер';
+    }
     
     protected function _run()
     {

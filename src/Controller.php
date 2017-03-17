@@ -71,6 +71,7 @@ abstract class Controller
 
         if ($this->_beforeRun()) {
             $context = $this->_run();
+            $pageTitle = $this->_pageTitle(); // должно быть после run! чтобы могло использовать полученные данные
             $detector = new \MobileDetect();
 
             $m = new Mustache_Engine(array(
@@ -84,6 +85,7 @@ abstract class Controller
 
             echo $m->render($add . 'Layout', [
                 'isOnline' => $this->_rules->isOnline(),
+                'pageTitle' => $pageTitle,
                 'content' => $m->render($add . $this->_mainTemplate, $context),
                 'isLoggedIn' => $isLoggedIn
             ]);
@@ -96,6 +98,11 @@ abstract class Controller
      * @return string Mustache context for render
      */
     abstract protected function _run();
+
+    /**
+     * @return string current page title
+     */
+    abstract protected function _pageTitle();
 
     protected function _beforeRun()
     {

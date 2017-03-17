@@ -23,6 +23,11 @@ class StartTournament extends Controller
     protected $_mainTemplate = 'StartTournament';
     protected $_lastEx = null;
 
+    protected function _pageTitle()
+    {
+        return 'Управление турниром';
+    }
+
     protected function _beforeRun()
     {
         if (!empty($this->_path['action']) && $this->_path['action'] == 'start') {

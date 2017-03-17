@@ -23,6 +23,11 @@ class LastGames extends Controller
 {
     protected $_mainTemplate = 'LastGames';
 
+    protected function _pageTitle()
+    {
+        return 'Последние игры';
+    }
+
     protected function _run()
     {
         $limit = 10;

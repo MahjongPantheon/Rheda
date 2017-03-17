@@ -23,6 +23,11 @@ class AddGame extends Controller
 {
     protected $_mainTemplate = 'AddGame';
 
+    protected function _pageTitle()
+    {
+        return 'Добавить игру';
+    }
+
     /**
      * Основной метод контроллера
      */

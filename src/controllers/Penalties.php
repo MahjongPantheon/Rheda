@@ -23,6 +23,11 @@ class Penalties extends Controller
     protected $_errors = [];
     protected $_mainTemplate = 'Penalties';
 
+    protected function _pageTitle()
+    {
+        return 'Штрафы';
+    }
+
     protected function _beforeRun()
     {
         $this->_errors = [];

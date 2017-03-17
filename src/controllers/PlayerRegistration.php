@@ -21,6 +21,11 @@ class PlayerRegistration extends Controller
     protected $_mainTemplate = 'PlayerRegistration';
     protected $_lastError = '';
 
+    protected function _pageTitle()
+    {
+        return 'Игроки и регистрация';
+    }
+
     protected function _run()
     {
         $errorMsg = '';

@@ -19,6 +19,12 @@
 class AdminLogin extends Controller
 {
     protected $_mainTemplate = 'AdminLogin';
+
+    protected function _pageTitle()
+    {
+        return 'Вход администратора';
+    }
+
     protected function _run()
     {
         $isLoggedIn = (isset($_COOKIE['secret']) && $_COOKIE['secret'] == ADMIN_COOKIE);
