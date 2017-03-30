@@ -23,15 +23,13 @@
     {{^noGames}}
         <table class='table table-striped table-condensed'>
             <tr>
-                <th>#</th>
-                {{!-- <th>Время регистрации</th> --}}
+                <th>Время регистрации</th>
                 <th>Игроки</th>
                 <th>Всякое разное</th>
             </tr>
             {{#games}}
                 <tr>
-                    <td>{{index}}</td>
-                    {{!-- <td>playDate</td> --}}
+                    <td>{{endDate}}</td>
                     <td>
                         <table class='table table-condensed'>
                             {{#players}}
