@@ -119,7 +119,12 @@
                                         {{/roundTypeTsumo}}
 
                                         {{#roundTypeDraw}}
-                                            Ничья (темпай: {{tempaiPlayers}}).
+                                            {{#tempaiPlayers}}
+                                                Ничья (темпай: {{tempaiPlayers}}).
+                                            {{/tempaiPlayers}}
+                                            {{^tempaiPlayers}}
+                                                Ничья (все нотен).
+                                            {{/tempaiPlayers}}
                                             {{#riichiPlayers}}
                                                 Риичи: {{riichiPlayers}}
                                             {{/riichiPlayers}}
