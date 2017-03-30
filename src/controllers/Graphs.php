@@ -72,16 +72,16 @@ class Graphs extends Controller
                 $yakuStats []= [$count, Yaku::getMap()[$yaku]];
                 switch ($yaku) {
                     case 13:
-                        $totalYakuhai += 1;
+                        $totalYakuhai += 1 * $count;
                         break;
                     case 14:
-                        $totalYakuhai += 2;
+                        $totalYakuhai += 2 * $count;
                         break;
                     case 15:
-                        $totalYakuhai += 3;
+                        $totalYakuhai += 3 * $count;
                         break;
                     case 16:
-                        $totalYakuhai += 4;
+                        $totalYakuhai += 4 * $count;
                         break;
                     default:
                         ;
