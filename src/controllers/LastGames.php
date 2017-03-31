@@ -187,7 +187,7 @@ class LastGames extends Controller
 
             $result [] = [
                 'index' => $gameId,
-                'playDate' => $game['date'],
+                'endDate' => $game['date'],
                 'players' => $players,
                 'replayLink' => $game['replay_link'],
                 'bestHandPlayers' => implode(', ', $bestHandPlayers),
