@@ -26,7 +26,7 @@
         background-color: #555;
         padding: 1px 4px;
         border-radius: 20%;
-        min-width: 30px;
+        min-width: 45px;
         text-align: right;
     }
     .badge.important {
@@ -162,7 +162,12 @@
                                 {{/roundTypeTsumo}}
 
                                 {{#roundTypeDraw}}
-                                    Ничья (темпай: {{tempaiPlayers}}).
+                                    {{#tempaiPlayers}}
+                                        Ничья (темпай: {{tempaiPlayers}}).
+                                    {{/tempaiPlayers}}
+                                    {{^tempaiPlayers}}
+                                        Ничья (все нотен).
+                                    {{/tempaiPlayers}}
                                     {{#riichiPlayers}}
                                         Риичи: {{riichiPlayers}}
                                     {{/riichiPlayers}}
