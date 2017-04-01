@@ -94,6 +94,9 @@ class Graphs extends Controller
 
             $scoresSummary = $this->_getScoresSummary($currentUser, $data['score_history']);
 
+            $riichiTotal = $data['riichi_summary']['riichi_won'] + $data['riichi_summary']['riichi_lost'];
+            $winCount = $data['win_summary']['ron'] + $data['win_summary']['tsumo'];
+
             return [
                 'playerData' => $playerData,
                 'data' => empty($data['score_history']) ? null : [
@@ -108,15 +111,16 @@ class Graphs extends Controller
                     'yakuStats'      => json_encode($yakuStats),
 
                     'ronCount'          => $data['win_summary']['ron'],
+                    'openHand'          => $data['win_summary']['openhand'],
                     'tsumoCount'        => $data['win_summary']['tsumo'],
-                    'winCount'          => $data['win_summary']['ron'] + $data['win_summary']['tsumo'],
+                    'winCount'          => $winCount,
                     'feedCount'         => $data['win_summary']['feed'],
                     'feedUnderRiichi'   => $data['riichi_summary']['feed_under_riichi'],
                     'tsumoFeedCount'    => $data['win_summary']['tsumofeed'],
                     'chomboCount'       => $data['win_summary']['chombo'],
                     'riichiWon'         => $data['riichi_summary']['riichi_won'],
                     'riichiLost'        => $data['riichi_summary']['riichi_lost'],
-                    'riichiTotal'       => $data['riichi_summary']['riichi_won'] + $data['riichi_summary']['riichi_lost'],
+                    'riichiTotal'       => $riichiTotal,
 
                     'minScores'     => number_format($scoresSummary['min_scores'], 0, '.', ','),
                     'maxScores'     => number_format($scoresSummary['max_scores'], 0, '.', ','),
@@ -136,13 +140,17 @@ class Graphs extends Controller
                         * 100. / $data['total_played_rounds'], 2),
                     'chomboCountPercent'     => round($data['win_summary']['chombo']
                         * 100. / $data['total_played_rounds'], 2),
+                    'openHandPercent' => $winCount ?
+                        round($data['win_summary']['openhand'] * 100. / $winCount, 2)
+                        : 0,
 
-                    'riichiWonPercent'   => round($data['riichi_summary']['riichi_won'] * 100.
-                        / ($data['riichi_summary']['riichi_won'] + $data['riichi_summary']['riichi_lost']), 2),
-                    'riichiLostPercent'  => round($data['riichi_summary']['riichi_lost'] * 100.
-                        / ($data['riichi_summary']['riichi_won'] + $data['riichi_summary']['riichi_lost']), 2),
-                    'riichiTotalPercent' => round(($data['riichi_summary']['riichi_won'] + $data['riichi_summary']['riichi_lost'])
-                        * 100. / $data['total_played_rounds'], 2),
+                    'riichiWonPercent'   => $riichiTotal ?
+                        round($data['riichi_summary']['riichi_won'] * 100. / ($riichiTotal), 2)
+                        : 0,
+                    'riichiLostPercent'  => $riichiTotal ?
+                        round($data['riichi_summary']['riichi_lost'] * 100. / ($riichiTotal), 2)
+                        : 0,
+                    'riichiTotalPercent' => round(($riichiTotal) * 100. / $data['total_played_rounds'], 2),
 
                     'place1' => round($data['places_summary'][1] * 100. / array_sum($data['places_summary']), 2),
                     'place2' => round($data['places_summary'][2] * 100. / array_sum($data['places_summary']), 2),
