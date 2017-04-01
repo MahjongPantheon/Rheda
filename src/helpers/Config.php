@@ -28,6 +28,8 @@ class Config
     protected $_eventTitle = '';
     protected $_eventStatHost = '';
     protected $_redZone = 0;
+    protected $_yellowZone = 0;
+    protected $_timerPolicy = 'none';
     protected $_autoSeating = false;
     protected $_isOnline = false;
     protected $_gameDuration = 0;
@@ -229,6 +231,20 @@ class Config
     public function redZone()
     {
         return $this->_redZone;
+    }
+    /**
+     * @return int
+     */
+    public function yellowZone()
+    {
+        return $this->_yellowZone;
+    }
+    /**
+     * @return string
+     */
+    public function timerPolicy()
+    {
+        return $this->_timerPolicy;
     }
     /**
      * @return int
