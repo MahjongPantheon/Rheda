@@ -140,8 +140,9 @@ class Graphs extends Controller
                         * 100. / $data['total_played_rounds'], 2),
                     'chomboCountPercent'     => round($data['win_summary']['chombo']
                         * 100. / $data['total_played_rounds'], 2),
-                    'openHandPercent' => round($data['win_summary']['openhand']
-                        * 100. / $winCount, 2),
+                    'openHandPercent' => $winCount ?
+                        round($data['win_summary']['openhand'] * 100. / $winCount, 2)
+                        : 0,
 
                     'riichiWonPercent'   => $riichiTotal ?
                         round($data['riichi_summary']['riichi_won'] * 100. / ($riichiTotal), 2)
