@@ -31,22 +31,31 @@ class Timer extends Controller
     {
         $timerState = $this->_api->execute('getTimerState', [TOURNAMENT_ID]);
         $currentSeating = $this->_formatSeating($this->_api->execute('getCurrentSeating', [TOURNAMENT_ID]));
-        
+        $durationWithoutSeating = $this->_rules->gameDuration() - 5;
+
         if ($timerState['started'] && $timerState['time_remaining']) {
             $formattedTime = (int)($timerState['time_remaining'] / 60) . ':'
                            . (floor(($timerState['time_remaining'] % 60) / 10) * 10);
             return [
                 'redZoneLength' => $this->_rules->redZone() / 60,
+                'yellowZoneLength' => $this->_rules->yellowZone() / 60,
+                'redZone' => $this->_rules->timerPolicy() === 'redZone',
+                'yellowZone' => $this->_rules->timerPolicy() === 'yellowZone',
+                'gameDuration' => $this->_rules->gameDuration(), // already in minutes
+                'gameDurationWithoutSeating' => $durationWithoutSeating,
                 'initialTime' => $formattedTime,
-                'showSeating' => $timerState['time_remaining'] > ($this->_rules->gameDuration() - 5) * 60,
                 'seating' => $currentSeating
             ];
         }
 
         return [
             'redZoneLength' => $this->_rules->redZone() / 60,
+            'yellowZoneLength' => $this->_rules->yellowZone() / 60,
+            'redZone' => $this->_rules->timerPolicy() === 'redZone',
+            'yellowZone' => $this->_rules->timerPolicy() === 'yellowZone',
+            'gameDuration' => $this->_rules->gameDuration(), // already in minutes
+            'gameDurationWithoutSeating' => $durationWithoutSeating,
             'initialTime' => '00:00',
-            'showSeating' => true,
             'seating' => $currentSeating
         ];
     }
