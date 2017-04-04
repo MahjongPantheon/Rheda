@@ -23,6 +23,12 @@ class StartTournament extends Controller
     protected $_mainTemplate = 'StartTournament';
     protected $_lastEx = null;
 
+    protected $_errors = [
+        '_WRONG_PASSWORD' => 'Секретное слово неправильное',
+        '_TABLES_NOT_FULL' => 'Столы не укомплектованы! Число игроков не делится нацело на 4, нужно добавить или убрать людей!',
+        '_GAMES_STARTED' => 'Игры уже начаты'
+    ];
+
     protected function _pageTitle()
     {
         return 'Управление турниром';
@@ -89,7 +95,7 @@ class StartTournament extends Controller
         if (empty($_COOKIE['secret']) || $_COOKIE['secret'] != ADMIN_COOKIE) {
             return [
                 'allOk' => false,
-                'reason' => "Секретное слово неправильное"
+                'reason' => $this->_errors['_WRONG_PASSWORD']
             ];
         }
 
@@ -101,41 +107,48 @@ class StartTournament extends Controller
         }
         
         $allOk = true;
-        $reason = '';
-        
+        $errCode = null;
+
+        // Tables info
+        $tables = $this->_api->execute('getTablesState', [TOURNAMENT_ID]);
+        $tablesFormatted = array_map(function ($t) {
+            $t['finished'] = $t['status'] == 'finished';
+            if ($t['status'] == 'finished') {
+                $t['last_round'] = '';
+            } else {
+                $t['last_round'] = $this->_formatLastRound($t['last_round'], $t['players']);
+            }
+
+            $players = ArrayHelpers::elm2Key($t['players'], 'id');
+            $t['penalties'] = array_map(function ($p) use (&$players) {
+                $p['who'] = $players[$p['who']]['display_name'];
+                return $p;
+            }, $t['penalties']);
+            return $t;
+        }, $tables);
+
+        $unfinishedTablesCount = array_reduce($tablesFormatted, function($acc, $i) {
+            return $acc + ($i['finished'] ? 0 : 1);
+        }, 0);
+
+        // Players checks
         $players = $this->_api->execute('getAllPlayers', [TOURNAMENT_ID]);
         if (count($players) % 4 !== 0) {
             $allOk = false;
-            $reason = 'Столы не укомплектованы! Число игроков не делится нацело на 4, нужно добавить или убрать людей!';
+            $errCode = '_TABLES_NOT_FULL';
         } else {
             $timerState = $this->_api->execute('getTimerState', [TOURNAMENT_ID]);
-            if ($timerState['started']) { // Check once after click on START
+            if ($timerState['started'] && $unfinishedTablesCount !== 0) { // Check once after click on START
                 $allOk = false;
-                $reason = 'Игры уже начаты';
+                $errCode = '_GAMES_STARTED';
             }
         }
 
-        $tables = $this->_api->execute('getTablesState', [TOURNAMENT_ID]);
-
         return [
             'allOk' => $allOk,
-            'reason' => $reason,
+            'reason' => $errCode ? $this->_errors[$errCode] : '',
             'tablesList' => empty($_POST['description']) ? '' : $_POST['description'],
-            'tables' => array_map(function ($t) {
-                $t['finished'] = $t['status'] == 'finished';
-                if ($t['status'] == 'finished') {
-                    $t['last_round'] = '';
-                } else {
-                    $t['last_round'] = $this->_formatLastRound($t['last_round'], $t['players']);
-                }
-
-                $players = ArrayHelpers::elm2Key($t['players'], 'id');
-                $t['penalties'] = array_map(function ($p) use (&$players) {
-                    $p['who'] = $players[$p['who']]['display_name'];
-                    return $p;
-                }, $t['penalties']);
-                return $t;
-            }, $tables)
+            'tables' => $tablesFormatted
         ];
     }
 
