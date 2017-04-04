@@ -15,13 +15,35 @@
 *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *}}
 {{^allOk}}
-  <h2>Нельзя стартовать игры: {{reason}}</h2>
+    <h2>Нельзя стартовать игры: {{reason}}</h2>
 {{/allOk}}
 {{#allOk}}
-  <h3>Старт игр с автоматической рассадкой</h3>
-  <button onclick="location.href='/tourn/start/'" style="font-size: 50px; height: 100px">START AUTO</button>
-  <hr />
-  <h3>Старт игр с ручной рассадкой</h3>
+    <script>
+        function disableTemporarily(what) {
+            $(what).attr('disabled', true);
+            var timer = window.setTimeout(function() {
+                $(what).attr('disabled', false);
+                window.clearTimeout(timer);
+            }, 3000);
+            $(what).parent('form').submit();
+            return true;
+        }
+    </script>
+    <h3>Рестарт текущего таймера</h3>
+    <form action="/tourn/resetTimer/" method="post">
+        <input type="button" style="font-size: 50px; height: 100px;"
+               onclick="return window.confirm('Сбросить таймер в начальное значение? Внимание - ' +
+                'эта кнопка не должна использоваться в нормальных условиях и предназначена только ' +
+                'для случаев непредвиденных ошибок!') && disableTemporarily(this);"
+               value="TIMER RESET">
+    </form>
+    <hr />
+    <h3>Старт игр с автоматической рассадкой</h3>
+    <form action="/tourn/start/" method="post">
+        <input type="button" style="font-size: 50px; height: 100px" onclick="return disableTemporarily(this);" value="START AUTO">
+    </form>
+    <hr/>
+    <h3>Старт игр с ручной рассадкой</h3>
     <form action="/tourn/startManual/" method="post">
         Введите состав столов. Один стол = одна строка.<br>
         Если не отмечена галочка, игроки будут рассажены на "восток-юг-запад-север" согласно порядку ввода.<br>
@@ -32,46 +54,47 @@
         4-8-12-16<br>
         <div><textarea name="description" rows="6">{{tablesList}}</textarea></div>
         <div><label for="randomize" style="font-size: 17px;">
-            <input checked="checked" id="randomize" type="checkbox" name="randomize" value="true"> Перемешать игроков за каждым столом
+            <input checked="checked" id="randomize" type="checkbox" name="randomize" value="true"> Перемешать игроков за
+            каждым столом
         </label></div>
-        <div><input type="submit" style="font-size: 50px; height: 100px" value="START MANUAL"></div>
+        <input type="button" style="font-size: 50px; height: 100px" value="START MANUAL" onclick="return disableTemporarily(this);">
     </form>
 {{/allOk}}
-<hr />
+<hr/>
 <h3>Состояние столов:</h3>
 <table class="table table-bordered">
-  {{#tables}}
-    <tr>
-      <td>#{{table_index}}</td>
-      {{#players}}
-        <td>{{display_name}}</td>
-      {{/players}}
-      <td><span class="badge {{#finished}}badge-success{{/finished}}">{{status}}</span></td>
-    </tr>
-      <tr>
-          <td colspan="6" style="font-weight: bold; font-size: 16px">
-              Предыдущая раздача:
-              {{^last_round}}(ни одной раздачи не сыграно){{/last_round}}
-              {{#last_round}}
-                  {{last_round}}
-                  <a onclick="return window.confirm('Отменяем раздачу: {{last_round}}. Точно отменить раздачу? Назад дороги нет!')"
-                     href="/tourn/dropLastRound/{{hash}}/"
-                     style="background-color: #900; color: #fff; display: inline-block; padding: 5px; font-size: 16px"
-                          >Отменить последнюю внесенную раздачу</a>
-              {{/last_round}}
-          </td>
-      </tr>
-      <tr>
-          <td style="font-weight: bold; font-size: 16px">
-              Штрафы:
-          </td>
-          <td colspan="5">
-              <ul>
-              {{#penalties}}
-                  <li>{{who}} - штраф {{amount}} очков. Причина: {{reason}}</li>
-              {{/penalties}}
-              </ul>
-          </td>
-      </tr>
-  {{/tables}}
+    {{#tables}}
+        <tr>
+            <td>#{{table_index}}</td>
+            {{#players}}
+                <td>{{display_name}}</td>
+            {{/players}}
+            <td><span class="badge {{#finished}}badge-success{{/finished}}">{{status}}</span></td>
+        </tr>
+        <tr>
+            <td colspan="6" style="font-weight: bold; font-size: 16px">
+                Предыдущая раздача:
+                {{^last_round}}(ни одной раздачи не сыграно){{/last_round}}
+                {{#last_round}}
+                    {{last_round}}
+                    <a onclick="return window.confirm('Отменяем раздачу: {{last_round}}. Точно отменить раздачу? Назад дороги нет!')"
+                       href="/tourn/dropLastRound/{{hash}}/"
+                       style="background-color: #900; color: #fff; display: inline-block; padding: 5px; font-size: 16px"
+                    >Отменить последнюю внесенную раздачу</a>
+                {{/last_round}}
+            </td>
+        </tr>
+        <tr>
+            <td style="font-weight: bold; font-size: 16px">
+                Штрафы:
+            </td>
+            <td colspan="5">
+                <ul>
+                    {{#penalties}}
+                        <li>{{who}} - штраф {{amount}} очков. Причина: {{reason}}</li>
+                    {{/penalties}}
+                </ul>
+            </td>
+        </tr>
+    {{/tables}}
 </table>

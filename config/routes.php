@@ -30,10 +30,11 @@ return [
     '/sortition/'     => 'Sortition',
     '/sortition/(?<seed>[0-9a-f]+)/' => 'Sortition',
 
-    '/tourn/'         => 'StartTournament',
-    '/tourn/(?<action>start)/'   => 'StartTournament',
+    '/tourn/'                                               => 'StartTournament',
+    '/tourn/(?<action>start)/'                              => 'StartTournament',
     '/tourn/(?<action>dropLastRound)/(?<hash>[0-9a-f]+)/'   => 'StartTournament',
-    '/tourn/(?<action>startManual)/'   => 'StartTournament',
+    '/tourn/(?<action>startManual)/'                        => 'StartTournament',
+    '/tourn/(?<action>resetTimer)/'                         => 'StartTournament',
 
     '/penalties/'     => 'Penalties',
     '/penalties/(?<action>apply)/' => 'Penalties',
