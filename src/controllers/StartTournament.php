@@ -71,6 +71,20 @@ class StartTournament extends Controller
             return false;
         }
 
+        if (!empty($this->_path['action']) && $this->_path['action'] == 'resetTimer') {
+            if (empty($_COOKIE['secret']) || $_COOKIE['secret'] != ADMIN_COOKIE) {
+                return true; // to show error in _run
+            }
+
+            try {
+                $this->_api->execute('startTimer', [TOURNAMENT_ID]);
+            } catch (Exception $e) {
+                $this->_lastEx = $e;
+                return true;
+            }
+            header('Location: /tourn/');
+            return false;
+        }
 
         if (!empty($this->_path['action']) && $this->_path['action'] == 'dropLastRound') {
             if (empty($_COOKIE['secret']) || $_COOKIE['secret'] != ADMIN_COOKIE) {
