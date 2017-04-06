@@ -18,6 +18,7 @@
 
 require_once __DIR__ . '/helpers/MobileDetect.php';
 require_once __DIR__ . '/helpers/Config.php';
+require_once __DIR__ . '/helpers/HttpClient.php';
 
 abstract class Controller
 {
@@ -51,15 +52,21 @@ abstract class Controller
     {
         $this->_url = $url;
         $this->_path = $path;
-        $this->_api = new \JsonRPC\Client(API_URL);
-        $this->_api->getHttpClient()->withHeaders([
-            'X-Auth-Token: ' . API_ADMIN_TOKEN
+        $this->_api = new \JsonRPC\Client(API_URL, false, new HttpClient(API_URL));
+
+        /** @var HttpClient $client */
+        $client = $this->_api->getHttpClient();
+
+        $client->withHeaders([
+            'X-Auth-Token: ' . API_ADMIN_TOKEN,
+            'X-Api-Version: ' . API_VERSION_MAJOR . '.' . API_VERSION_MINOR
         ]);
         if (DEBUG_MODE) {
-            $this->_api->getHttpClient()->withDebug();
+            $client->withDebug();
         }
 
         $this->_rules = Config::fromRaw($this->_api->execute('getGameConfig', [TOURNAMENT_ID]));
+        $this->_checkCompatibility($client->getLastHeaders());
     }
 
     public function run()
@@ -129,5 +136,30 @@ abstract class Controller
             }
         }
         throw new Exception('No available controller found for this URL');
+    }
+
+    protected function _checkCompatibility($headersArray)
+    {
+        $header = '';
+        foreach ($headersArray as $h) {
+            if (strpos($h, 'X-Api-Version') === 0) {
+                $header = $h;
+                break;
+            }
+        }
+
+        if (empty($header)) {
+            return;
+        }
+
+        list ($major, $minor) = explode('.', trim(str_replace('X-Api-Version: ', '', $header)));
+
+        if (intval($major) !== API_VERSION_MAJOR) {
+            throw new Exception('API major version mismatch. Update your app or API instance!');
+        }
+
+        if (intval($minor) > API_VERSION_MINOR && DEBUG_MODE) {
+            trigger_error('API minor version mismatch. Consider updating if possible', E_USER_WARNING);
+        }
     }
 }

@@ -19,6 +19,8 @@
 // Common settings
 define('TOURNAMENT_ID', 2);
 define('API_URL', 'http://api.furiten.ru/');
+define('API_VERSION_MAJOR', 1);
+define('API_VERSION_MINOR', 0);
 define('DEBUG_MODE', true); // TODO -> to false in prod!
 define('API_ADMIN_TOKEN', 'CHANGE_ME'); // TODO -> change it on prod!
 
