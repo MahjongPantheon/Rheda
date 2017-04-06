@@ -14,6 +14,15 @@
 *  You should have received a copy of the GNU General Public License
 *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *}}
+<h3>Рестарт текущего таймера</h3>
+<form action="/tourn/resetTimer/" method="post">
+    <input type="button" style="font-size: 50px; height: 100px;"
+           onclick="return window.confirm('Сбросить таймер в начальное значение? Внимание - ' +
+                'эта кнопка не должна использоваться в нормальных условиях и предназначена только ' +
+                'для случаев непредвиденных ошибок!') && disableTemporarily(this);"
+           value="TIMER RESET">
+</form>
+<hr />
 {{^allOk}}
     <h2>Нельзя стартовать игры: {{reason}}</h2>
 {{/allOk}}
@@ -29,15 +38,6 @@
             return true;
         }
     </script>
-    <h3>Рестарт текущего таймера</h3>
-    <form action="/tourn/resetTimer/" method="post">
-        <input type="button" style="font-size: 50px; height: 100px;"
-               onclick="return window.confirm('Сбросить таймер в начальное значение? Внимание - ' +
-                'эта кнопка не должна использоваться в нормальных условиях и предназначена только ' +
-                'для случаев непредвиденных ошибок!') && disableTemporarily(this);"
-               value="TIMER RESET">
-    </form>
-    <hr />
     <h3>Старт игр с автоматической рассадкой</h3>
     <form action="/tourn/start/" method="post">
         <input type="button" style="font-size: 50px; height: 100px" onclick="return disableTemporarily(this);" value="START AUTO">
