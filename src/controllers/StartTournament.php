@@ -203,6 +203,42 @@ class StartTournament extends Controller
                 }, $roundData['riichi']));
             case 'chombo':
                 return "Чомбо ({$players[$roundData['loser']]['display_name']})";
+            case 'multiron':
+                if (count($roundData['wins']) == 2) {
+                    return "Дабл-рон: платит {$players[$roundData['loser']]['display_name']}; "
+
+                        . "№1: {$players[$roundData['wins'][0]['winner']]['display_name']}, "
+                        . "{$roundData['wins'][0]['han']} хан"
+                        . ($roundData['wins'][0]['fu'] ? ", {$roundData['wins'][0]['fu']} фу" : '')
+
+                        . ", №2: {$players[$roundData['wins'][1]['winner']]['display_name']} "
+                        . "{$roundData['wins'][1]['han']} хан"
+                        . ($roundData['wins'][1]['fu'] ? ", {$roundData['wins'][1]['fu']} фу" : '')
+
+                        . "; риичи - " . implode(', ', array_map(function ($e) use (&$players) {
+                            return $players[$e]['display_name'];
+                        }, $roundData['riichi']));
+                }
+
+                if (count($roundData['wins']) == 3) {
+                    return "Трипл-рон: платит {$players[$roundData['loser']]['display_name']}; "
+
+                        . "№1: {$players[$roundData['wins'][0]['winner']]['display_name']}, "
+                        . "{$roundData['wins'][0]['han']} хан"
+                        . ($roundData['wins'][0]['fu'] ? ", {$roundData['wins'][0]['fu']} фу" : '')
+
+                        . ", №2: {$players[$roundData['wins'][1]['winner']]['display_name']} "
+                        . "{$roundData['wins'][1]['han']} хан"
+                        . ($roundData['wins'][1]['fu'] ? ", {$roundData['wins'][1]['fu']} фу" : '')
+
+                        . ", №3: {$players[$roundData['wins'][2]['winner']]['display_name']} "
+                        . "{$roundData['wins'][2]['han']} хан"
+                        . ($roundData['wins'][2]['fu'] ? ", {$roundData['wins'][2]['fu']} фу" : '')
+
+                        . "; риичи - " . implode(', ', array_map(function ($e) use (&$players) {
+                            return $players[$e]['display_name'];
+                        }, $roundData['riichi']));
+                }
             default:
                 return '';
         }
