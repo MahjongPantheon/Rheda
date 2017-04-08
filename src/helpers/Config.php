@@ -4,6 +4,7 @@ class Config
 {
     protected $_allowedYaku = [];
     protected $_startPoints = 0;
+    protected $_subtractStartPoints = false;
     protected $_withKazoe = false;
     protected $_withKiriageMangan = false;
     protected $_withAbortives = false;
@@ -63,6 +64,13 @@ class Config
     public function startPoints()
     {
         return $this->_startPoints;
+    }
+    /**
+     * @return bool
+     */
+    public function subtractStartPoints()
+    {
+        return $this->_subtractStartPoints;
     }
     /**
      * @return boolean

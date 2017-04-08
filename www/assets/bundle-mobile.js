@@ -15,7 +15,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function plotRating (points, games, currentUser, playersMap) {
+function plotRating (points, games, currentUser, playersMap, labelColorThreshold) {
     var ticks = [];
     for (var idx = 0; idx < points.length; idx++) {
         ticks.push(idx);
@@ -73,7 +73,7 @@ function plotRating (points, games, currentUser, playersMap) {
             var winds = ['東', '南', '西', '北'];
             players.push('<div class="rating-chart-details">');
             for (var i = 0; i < 4; i++) {
-                outcome = g[i].rating_delta < 0 ? 'important' : 'success';
+                outcome = g[i].rating_delta < labelColorThreshold ? 'important' : 'success';
                 own = g[i].player_id == currentUser ? 'own' : '';
                 score = $.jqplot.sprintf("%'i", g[i].score);
                 players.push(
@@ -85,7 +85,7 @@ function plotRating (points, games, currentUser, playersMap) {
                     '<div class="player-score">' +
                     '<span class="score">' + score + '</span> ' +
                     '<span class="badge ' + outcome + '">' + (
-                        g[i].rating_delta > 0 ? '+' : ''
+                        g[i].rating_delta > labelColorThreshold ? '+' : ''
                     ) + parseFloat(g[i].rating_delta).toFixed(1) + '</span>' +
                     '</div></div>'
                 );
