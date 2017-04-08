@@ -81,17 +81,18 @@ class LastGames extends Controller
 
     protected function _makeGamesData(&$gamesData)
     {
+        $labelColorThreshold = $this->_rules->subtractStartPoints() ? 0 : $this->_rules->startPoints();
         $result = [];
         foreach ($gamesData['games'] as $gameId => $game) {
             $players = array_map(
-                function ($finalScore, $playerId) use (&$gamesData) {
+                function ($finalScore, $playerId) use (&$gamesData, $labelColorThreshold) {
 
                     return $this->_enrichWithInitials([
                         'display_name' => $gamesData['players'][$playerId]['display_name'],
                         'score' => number_format($finalScore['score'], 0, '.', ','),
-                        'label' => ($finalScore['rating_delta'] > 0
+                        'label' => ($finalScore['rating_delta'] > $labelColorThreshold
                             ? 'success'
-                            : ($finalScore['rating_delta'] < 0
+                            : ($finalScore['rating_delta'] < $labelColorThreshold
                                 ? 'important'
                                 : 'info'
                             )

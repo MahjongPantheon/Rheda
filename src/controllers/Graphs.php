@@ -96,10 +96,12 @@ class Graphs extends Controller
 
             $riichiTotal = $data['riichi_summary']['riichi_won'] + $data['riichi_summary']['riichi_lost'];
             $winCount = $data['win_summary']['ron'] + $data['win_summary']['tsumo'];
+            $labelColorThreshold = $this->_rules->subtractStartPoints() ? 0 : $this->_rules->startPoints();
 
             return [
                 'playerData' => $playerData,
                 'data' => empty($data['score_history']) ? null : [
+                    'labelThreshold'    => $labelColorThreshold,
                     'currentPlayer'     => $currentUser,
                     'totalPlayedGames'  => $data['total_played_games'],
                     'totalPlayedRounds' => $data['total_played_rounds'],
