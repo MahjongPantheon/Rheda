@@ -234,6 +234,8 @@ class LastGames extends Controller
                 $roundIndex = ($round['round_index'] - 12);
             }
 
+            $riichiSource = ($round['outcome'] == 'multiron' ? $round['wins'][0] : $round);
+
             $rounds []= $this->_enrichWithInitials([
                 'roundWind'         => $roundWind,
                 'roundIndex'        => $roundIndex,
@@ -252,7 +254,7 @@ class LastGames extends Controller
                 'fu'                => isset($round['fu']) ? $round['fu'] : null,
                 'yakuman'           => isset($round['han']) && $round['han'] < 0,
                 'tempaiPlayers'     => $this->_formatCsvPlayersList($round, 'tempai', $playersData),
-                'riichiPlayers'     => $this->_formatCsvPlayersList($round, 'riichi_bets', $playersData),
+                'riichiPlayers'     => $this->_formatCsvPlayersList($riichiSource, 'riichi_bets', $playersData),
 
                 'multiRonWins'      => $this->_formatMultiron($round, $playersData)
             ]);
@@ -307,8 +309,7 @@ class LastGames extends Controller
                     'fu'            => $win['fu'],
                     'yakuman'       => $win['han'] < 0,
                     'yakuList'      => $this->_formatYaku($win),
-                    'riichiPlayers' => $this->_formatCsvPlayersList($win, 'riichi_bets', $playersData),
-                    'doras'         => isset($round['dora']) ? $round['dora'] : null
+                    'doras'         => isset($win['dora']) ? $win['dora'] : null
                 ]);
             }, $round['wins']);
         }
