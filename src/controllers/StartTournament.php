@@ -119,7 +119,12 @@ class StartTournament extends Controller
                 'reason' => $this->_lastEx->getMessage()
             ];
         }
-        
+
+        /*
+         * TODO: распилить isOK на несколько флагов и отображать или не отображать элементы страницы соответственно.
+         * Пересмотреть всю логику шаблона, например сейчас кнопка сброса таймера отображается даже если пароль неверен :)
+         *
+         */
         $allOk = true;
         $errCode = null;
 
@@ -239,6 +244,8 @@ class StartTournament extends Controller
                             return $players[$e]['display_name'];
                         }, $roundData['riichi']));
                 }
+
+                return '';
             default:
                 return '';
         }
