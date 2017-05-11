@@ -108,24 +108,54 @@ class StartTournament extends Controller
     {
         if (empty($_COOKIE['secret']) || $_COOKIE['secret'] != ADMIN_COOKIE) {
             return [
-                'allOk' => false,
+                'showAll' => false,
                 'reason' => $this->_errors['_WRONG_PASSWORD']
             ];
         }
 
         if (!empty($this->_lastEx)) {
             return [
-                'allOk' => false,
+                'showAll' => false,
                 'reason' => $this->_lastEx->getMessage()
             ];
         }
-        
-        $allOk = true;
+
         $errCode = null;
 
         // Tables info
         $tables = $this->_api->execute('getTablesState', [TOURNAMENT_ID]);
-        $tablesFormatted = array_map(function ($t) {
+        $tablesFormatted = $this->_formatTables($tables);
+
+        $unfinishedTablesCount = array_reduce($tablesFormatted, function($acc, $i) {
+            return $acc + ($i['finished'] ? 0 : 1);
+        }, 0);
+
+        if (!$this->_rules->allowPlayerAppend()) { // Club games do not require all of these checks
+            $players = $this->_api->execute('getAllPlayers', [TOURNAMENT_ID]);
+            if (count($players) % 4 !== 0) {
+                $errCode = '_TABLES_NOT_FULL';
+            } else {
+                $timerState = $this->_api->execute('getTimerState', [TOURNAMENT_ID]);
+                if ($timerState['started'] && $unfinishedTablesCount !== 0) { // Check once after click on START
+                    $errCode = '_GAMES_STARTED';
+                }
+            }
+        }
+
+        return [
+            'showAll' => true,
+            'showControls' => empty($errCode),
+            'showAutoSeating' => $this->_rules->autoSeating(),
+            'showTimerControls' => $this->_rules->syncStart(),
+            'reason' => $errCode ? $this->_errors[$errCode] : '',
+            'tablesList' => empty($_POST['description']) ? '' : $_POST['description'],
+            'tables' => $tablesFormatted
+        ];
+    }
+
+    protected function _formatTables($tables)
+    {
+        return array_map(function ($t) {
             $t['finished'] = $t['status'] == 'finished';
             if ($t['status'] == 'finished') {
                 $t['last_round'] = '';
@@ -140,30 +170,6 @@ class StartTournament extends Controller
             }, $t['penalties']);
             return $t;
         }, $tables);
-
-        $unfinishedTablesCount = array_reduce($tablesFormatted, function($acc, $i) {
-            return $acc + ($i['finished'] ? 0 : 1);
-        }, 0);
-
-        // Players checks
-        $players = $this->_api->execute('getAllPlayers', [TOURNAMENT_ID]);
-        if (count($players) % 4 !== 0) {
-            $allOk = false;
-            $errCode = '_TABLES_NOT_FULL';
-        } else {
-            $timerState = $this->_api->execute('getTimerState', [TOURNAMENT_ID]);
-            if ($timerState['started'] && $unfinishedTablesCount !== 0) { // Check once after click on START
-                $allOk = false;
-                $errCode = '_GAMES_STARTED';
-            }
-        }
-
-        return [
-            'allOk' => $allOk,
-            'reason' => $errCode ? $this->_errors[$errCode] : '',
-            'tablesList' => empty($_POST['description']) ? '' : $_POST['description'],
-            'tables' => $tablesFormatted
-        ];
     }
 
     protected function _formatLastRound($roundData, $players)
@@ -239,6 +245,8 @@ class StartTournament extends Controller
                             return $players[$e]['display_name'];
                         }, $roundData['riichi']));
                 }
+
+                return '';
             default:
                 return '';
         }

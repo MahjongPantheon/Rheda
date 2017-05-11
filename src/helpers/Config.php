@@ -35,6 +35,10 @@ class Config
     protected $_isOnline = false;
     protected $_gameDuration = 0;
     protected $_withLeadingDealerGameover = false;
+    protected $_isTextlog = false;
+    protected $_syncStart = false;
+    protected $_sortByGames = false;
+    protected $_allowPlayerAppend = false;
     
     public static function fromRaw($arr)
     {
@@ -73,35 +77,35 @@ class Config
         return $this->_subtractStartPoints;
     }
     /**
-     * @return boolean
+     * @return bool
      */
     public function withKazoe()
     {
         return $this->_withKazoe;
     }
     /**
-     * @return boolean
+     * @return bool
      */
     public function withKiriageMangan()
     {
         return $this->_withKiriageMangan;
     }
     /**
-     * @return boolean
+     * @return bool
      */
     public function withAbortives()
     {
         return $this->_withAbortives;
     }
     /**
-     * @return boolean
+     * @return bool
      */
     public function withNagashiMangan()
     {
         return $this->_withNagashiMangan;
     }
     /**
-     * @return boolean
+     * @return bool
      */
     public function withAtamahane()
     {
@@ -129,7 +133,7 @@ class Config
         return $this->_ratingDivider;
     }
     /**
-     * @return boolean
+     * @return bool
      */
     public function tonpuusen()
     {
@@ -143,14 +147,14 @@ class Config
         return $this->_startRating;
     }
     /**
-     * @return boolean
+     * @return bool
      */
     public function riichiGoesToWinner()
     {
         return $this->_riichiGoesToWinner;
     }
     /**
-     * @return boolean
+     * @return bool
      */
     public function extraChomboPayments()
     {
@@ -164,28 +168,28 @@ class Config
         return $this->_chomboPenalty;
     }
     /**
-     * @return boolean
+     * @return bool
      */
     public function withKuitan()
     {
         return $this->_withKuitan;
     }
     /**
-     * @return boolean
+     * @return bool
      */
     public function withButtobi()
     {
         return $this->_withButtobi;
     }
     /**
-     * @return boolean
+     * @return bool
      */
     public function withMultiYakumans()
     {
         return $this->_withMultiYakumans;
     }
     /**
-     * @return boolean
+     * @return bool
      */
     public function autoRegisterUsers()
     {
@@ -262,24 +266,52 @@ class Config
         return $this->_gameDuration;
     }
     /**
-     * @return boolean
+     * @return bool
      */
     public function autoSeating()
     {
         return $this->_autoSeating;
     }
     /**
-     * @return boolean
+     * @return bool
      */
     public function isOnline()
     {
         return $this->_isOnline;
     }
     /**
-     * @return boolean
+     * @return bool
      */
     public function withLeadingDealerGameover()
     {
         return $this->_withLeadingDealerGameover;
+    }
+    /**
+     * @return bool
+     */
+    public function isTextlog()
+    {
+        return $this->_isTextlog;
+    }
+    /**
+     * @return bool
+     */
+    public function syncStart()
+    {
+        return $this->_syncStart;
+    }
+    /**
+     * @return bool
+     */
+    public function sortByGames()
+    {
+        return $this->_sortByGames;
+    }
+    /**
+     * @return bool
+     */
+    public function allowPlayerAppend()
+    {
+        return $this->_allowPlayerAppend;
     }
 }

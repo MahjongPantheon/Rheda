@@ -14,19 +14,10 @@
 *  You should have received a copy of the GNU General Public License
 *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *}}
-<h3>Рестарт текущего таймера</h3>
-<form action="/tourn/resetTimer/" method="post">
-    <input type="button" style="font-size: 50px; height: 100px;"
-           onclick="return window.confirm('Сбросить таймер в начальное значение? Внимание - ' +
-                'эта кнопка не должна использоваться в нормальных условиях и предназначена только ' +
-                'для случаев непредвиденных ошибок!') && disableTemporarily(this);"
-           value="TIMER RESET">
-</form>
-<hr />
-{{^allOk}}
+{{^showAll}}
     <h2>Нельзя стартовать игры: {{reason}}</h2>
-{{/allOk}}
-{{#allOk}}
+{{/showAll}}
+{{#showAll}}
     <script>
         function disableTemporarily(what) {
             $(what).attr('disabled', true);
@@ -38,28 +29,43 @@
             return true;
         }
     </script>
-    <h3>Старт игр с автоматической рассадкой</h3>
-    <form action="/tourn/start/" method="post">
-        <input type="button" style="font-size: 50px; height: 100px" onclick="return disableTemporarily(this);" value="START AUTO">
-    </form>
-    <hr/>
-    <h3>Старт игр с ручной рассадкой</h3>
-    <form action="/tourn/startManual/" method="post">
-        Введите состав столов. Один стол = одна строка.<br>
-        Если не отмечена галочка, игроки будут рассажены на "восток-юг-запад-север" согласно порядку ввода.<br>
-        Цифры означают текущее место игрока в рейтинге. Пример швейцарской рассадки с шагом 4 для четырех столов: <br>
-        1-5-9-13<br>
-        2-6-10-14<br>
-        3-7-11-15<br>
-        4-8-12-16<br>
-        <div><textarea name="description" rows="6">{{tablesList}}</textarea></div>
-        <div><label for="randomize" style="font-size: 17px;">
-            <input checked="checked" id="randomize" type="checkbox" name="randomize" value="true"> Перемешать игроков за
-            каждым столом
-        </label></div>
-        <input type="button" style="font-size: 50px; height: 100px" value="START MANUAL" onclick="return disableTemporarily(this);">
-    </form>
-{{/allOk}}
+    {{#showTimerControls}}
+        <h3>Рестарт текущего таймера</h3>
+        <form action="/tourn/resetTimer/" method="post">
+            <input type="button" style="font-size: 50px; height: 100px;"
+                   onclick="return window.confirm('Сбросить таймер в начальное значение? Внимание - ' +
+                    'эта кнопка не должна использоваться в нормальных условиях и предназначена только ' +
+                    'для случаев непредвиденных ошибок!') && disableTemporarily(this);"
+                   value="TIMER RESET">
+        </form>
+        <hr />
+    {{/showTimerControls}}
+    {{#showAutoSeating}}
+        <h3>Старт игр с автоматической рассадкой</h3>
+        <form action="/tourn/start/" method="post">
+            <input type="button" style="font-size: 50px; height: 100px" onclick="return disableTemporarily(this);" value="START AUTO">
+        </form>
+        <hr/>
+    {{/showAutoSeating}}
+    {{#showControls}}
+        <h3>Старт игр с ручной рассадкой</h3>
+        <form action="/tourn/startManual/" method="post">
+            Введите состав столов. Один стол = одна строка.<br>
+            Если не отмечена галочка, игроки будут рассажены на "восток-юг-запад-север" согласно порядку ввода.<br>
+            Цифры означают текущее место игрока в рейтинге. Пример швейцарской рассадки с шагом 4 для четырех столов: <br>
+            1-5-9-13<br>
+            2-6-10-14<br>
+            3-7-11-15<br>
+            4-8-12-16<br>
+            <div><textarea name="description" rows="6">{{tablesList}}</textarea></div>
+            <div><label for="randomize" style="font-size: 17px;">
+                <input checked="checked" id="randomize" type="checkbox" name="randomize" value="true"> Перемешать игроков за
+                каждым столом
+            </label></div>
+            <input type="button" style="font-size: 50px; height: 100px" value="START MANUAL" onclick="return disableTemporarily(this);">
+        </form>
+    {{/showControls}}
+{{/showAll}}
 <hr/>
 <h3>Состояние столов:</h3>
 <table class="table table-bordered">
@@ -77,10 +83,12 @@
                 {{^last_round}}(ни одной раздачи не сыграно){{/last_round}}
                 {{#last_round}}
                     {{last_round}}
-                    <a onclick="return window.confirm('Отменяем раздачу: {{last_round}}. Точно отменить раздачу? Назад дороги нет!')"
-                       href="/tourn/dropLastRound/{{hash}}/"
-                       style="background-color: #900; color: #fff; display: inline-block; padding: 5px; font-size: 16px"
-                    >Отменить последнюю внесенную раздачу</a>
+                    {{#showControls}}
+                        <a onclick="return window.confirm('Отменяем раздачу: {{last_round}}. Точно отменить раздачу? Назад дороги нет!')"
+                           href="/tourn/dropLastRound/{{hash}}/"
+                           style="background-color: #900; color: #fff; display: inline-block; padding: 5px; font-size: 16px"
+                        >Отменить последнюю внесенную раздачу</a>
+                    {{/showControls}}
                 {{/last_round}}
             </td>
         </tr>
