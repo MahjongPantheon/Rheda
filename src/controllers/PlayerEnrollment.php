@@ -100,7 +100,7 @@ class PlayerEnrollment extends Controller
     {
         $errorMsg = '';
         try {
-            $success = $this->_api->execute('enrollPlayer', [$userId, TOURNAMENT_ID]);
+            $success = $this->_api->execute('enrollPlayerCP', [$userId, TOURNAMENT_ID]);
             if (!$success) {
                 $errorMsg = 'Не удалось добавить игрока в списки - проблемы с сетью?';
             }
