@@ -38,6 +38,7 @@ return [
 
     '/penalties/'     => 'Penalties',
     '/penalties/(?<action>apply)/' => 'Penalties',
+    '/achievements/'  => 'Achievements',
 
     '/favicon.ico'    => 'Mainpage' // костылёк ^_^
 ];
