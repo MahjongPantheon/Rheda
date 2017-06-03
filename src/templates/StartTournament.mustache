@@ -16,6 +16,18 @@
 *}}
 {{^showAll}}
     <h2>Нельзя стартовать игры: {{reason}}</h2>
+    {{#showTimerControls}}
+        <br />
+        <h3>Рестарт текущего таймера</h3>
+        <form action="/tourn/resetTimer/" method="post">
+            <input type="button" style="font-size: 50px; height: 100px;"
+                   onclick="return window.confirm('Сбросить таймер в начальное значение? Внимание - ' +
+                    'эта кнопка не должна использоваться в нормальных условиях и предназначена только ' +
+                    'для случаев непредвиденных ошибок!') && disableTemporarily(this);"
+                   value="TIMER RESET">
+        </form>
+        <hr />
+    {{/showTimerControls}}
 {{/showAll}}
 {{#showAll}}
     <script>
