@@ -143,8 +143,8 @@ class StartTournament extends Controller
         }
 
         return [
-            'showAll' => true,
-            'showControls' => empty($errCode),
+            'showAll' => empty($errCode),
+            'showControls' => empty($errCode) || $errCode === '_GAMES_STARTED',
             'showAutoSeating' => $this->_rules->autoSeating(),
             'showTimerControls' => $this->_rules->syncStart(),
             'reason' => $errCode ? $this->_errors[$errCode] : '',
