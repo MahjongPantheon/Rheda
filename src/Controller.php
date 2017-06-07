@@ -17,8 +17,10 @@
  */
 
 require_once __DIR__ . '/helpers/MobileDetect.php';
+require_once __DIR__ . '/helpers/Url.php';
 require_once __DIR__ . '/helpers/Config.php';
 require_once __DIR__ . '/helpers/HttpClient.php';
+use Handlebars\Handlebars;
 
 abstract class Controller
 {
@@ -93,9 +95,24 @@ abstract class Controller
             $pageTitle = $this->_pageTitle(); // должно быть после run! чтобы могло использовать полученные данные
             $detector = new \MobileDetect();
 
-            $m = new Mustache_Engine(array(
-                'loader' => new Mustache_Loader_FilesystemLoader(__DIR__ . '/templates/'),
-            ));
+            $m = new Handlebars([
+                'loader' => new \Handlebars\Loader\FilesystemLoader(__DIR__ . '/templates/'),
+                'partials_loader' => new \Handlebars\Loader\FilesystemLoader(
+                    __DIR__ . '/templates/',
+                    ['prefix' => '_']
+                )
+            ]);
+
+            $m->addHelper("href", function($template, $context, $args, $source) {
+                list($url, $name) = $args->getPositionalArguments();
+                return '<a href="' . Url::make(Url::interpolate($url, $context), $this->_eventId) . '">'
+                    . Url::interpolate($name, $context) . '</a>';
+            });
+            $m->addHelper("hrefblank", function($template, $context, $args, $source) {
+                list($url, $name) = $args->getPositionalArguments();
+                return '<a href="' . Url::make(Url::interpolate($url, $context), $this->_eventId) . '" target="_blank">'
+                    . Url::interpolate($name, $context) . '</a>';
+            });
 
             header("Content-type: text/html; charset=utf-8");
 
@@ -155,7 +172,7 @@ abstract class Controller
     {
         $matches = [];
         foreach ($routes as $regex => $controller) {
-            $re = '#^' . preg_replace('#^!#is', '', $regex) . '$#';
+            $re = '#^' . preg_replace('#^!#is', '', $regex) . '/?$#';
             if (preg_match($re, $url, $matches)) {
                 require_once __DIR__ . "/controllers/{$controller}.php";
                 $matches['event'] = 'eid' . OVERRIDE_EVENT_ID;
@@ -171,9 +188,9 @@ abstract class Controller
         $matches = [];
         foreach ($routes as $regex => $controller) {
             if ($regex[0] === '!') {
-                $re = '#^' . mb_substr($regex, 1) . '$#';
+                $re = '#^' . mb_substr($regex, 1) . '/?$#';
             } else {
-                $re = '#^/(?<event>eid\d+)' . $regex . '$#';
+                $re = '#^/(?<event>eid\d+)' . $regex . '/?$#';
             }
 
             if (preg_match($re, $url, $matches)) {

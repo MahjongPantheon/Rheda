@@ -16,28 +16,20 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Url helper class
- */
-class Url
-{
-    public static function make($where, $eventId)
-    {
-        $pieces = array_filter(explode('/', $where));
-        if (strpos($pieces[0], 'eid') === 0) {
-            array_shift($pieces);
-        }
+require_once __DIR__ . '/../Controller.php';
 
-        if (!defined('OVERRIDE_EVENT_ID')) {
-            array_unshift($pieces, 'eid' . $eventId);
-        }
-        return '/' . implode('/', $pieces);
+class MultieventMainpage extends Controller
+{
+    protected $_mainTemplate = 'Mainpage';
+
+    protected function _pageTitle()
+    {
+        return 'Статистика';
     }
 
-    public static function interpolate($str, Handlebars\Context $context)
+    protected function _run()
     {
-        return preg_replace_callback('#{([\w\d]+)}#is', function($matches) use ($context) {
-            return $context->get($matches[1]);
-        }, $str);
+        // TODO: список евентов
+        return [];
     }
 }

@@ -34,7 +34,7 @@
                         <table class='table table-condensed'>
                             {{#players}}
                                 <tr class="user-item-row">
-                                    <td>{{wind}} <b><a href="/graphs/?user={{id}}">{{display_name}}</a></b></td>
+                                    <td>{{wind}} <b>{{{href '/graphs/?user={id}' '{display_name}'}}}</b></td>
                                     <td>{{score}}</td>
                                     <td><span class='badge badge-{{label}}'>{{rating_delta}}</span></td>
                                 </tr>
@@ -147,8 +147,8 @@
             {{/games}}
         </table>
         <div class='pagination'><ul>
-            <li><a href='?page={{prevPage}}'>Назад</a></li>
-            <li><a href='?page={{nextPage}}'>Вперед</a></li>
+            <li>{{{href '/last/?page={prevPage}' 'Назад'}}}</li>
+            <li>{{{href '/last/?page={nextPage}' 'Вперед'}}}</li>
         </ul></div>
     {{/noGames}}
 </div>
