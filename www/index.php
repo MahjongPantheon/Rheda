@@ -17,7 +17,7 @@
  */
 
 require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/../config/const.php';
+require_once __DIR__ . '/../config/sysconf.php';
 
 // Main entry point
 require_once __DIR__ . '/../src/Controller.php';

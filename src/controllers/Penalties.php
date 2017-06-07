@@ -16,6 +16,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once __DIR__ . '/../helpers/Url.php';
 require_once __DIR__ . '/../helpers/Array.php';
 
 class Penalties extends Controller
@@ -37,13 +38,13 @@ class Penalties extends Controller
             $amount = intval($_POST['amount']);
             $reason = $_POST['reason'];
             try {
-                $this->_api->execute('addPenalty', [TOURNAMENT_ID, $userId, $amount, $reason]);
+                $this->_api->execute('addPenalty', [$this->_eventId, $userId, $amount, $reason]);
             } catch (Exception $e) {
                 $this->_errors []= $e->getMessage();
                 return true;
             }
 
-            header('Location: /penalties/');
+            header('Location: ' . Url::make('/penalties/', $this->_eventId));
             return false;
         }
 
@@ -54,8 +55,8 @@ class Penalties extends Controller
     {
         $amounts = [];
         try {
-            $players = $this->_api->execute('getAllPlayers', [TOURNAMENT_ID]);
-            $settings = $this->_api->execute('getGameConfig', [TOURNAMENT_ID]);
+            $players = $this->_api->execute('getAllPlayers', [$this->_eventId]);
+            $settings = $this->_api->execute('getGameConfig', [$this->_eventId]);
             for ($i = $settings['minPenalty']; $i <= $settings['maxPenalty']; $i += $settings['penaltyStep']) {
                 $amounts []= [
                     'view' => $i / (float)$settings['ratingDivider'],

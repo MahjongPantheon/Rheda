@@ -38,7 +38,7 @@ class AddOnlineGame extends Controller
 
         try {
             if (!empty($_POST['log'])) {
-                $this->_api->execute('addOnlineReplay', [TOURNAMENT_ID, $_POST['log']]);
+                $this->_api->execute('addOnlineReplay', [$this->_eventId, $_POST['log']]);
                 $successfullyAdded = true;
             }
         } catch (Exception $e) {

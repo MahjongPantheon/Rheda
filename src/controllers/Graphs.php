@@ -33,7 +33,7 @@ class Graphs extends Controller
         try {
             $currentUser = intval($_GET['user']);
             $playerData = $this->_api->execute('getPlayer', [$currentUser]);
-            $data = $this->_api->execute('getPlayerStats', [$currentUser, TOURNAMENT_ID]);
+            $data = $this->_api->execute('getPlayerStats', [$currentUser, $this->_eventId]);
             $this->_playerName = $playerData['display_name'];
 
             $usersMap = [];

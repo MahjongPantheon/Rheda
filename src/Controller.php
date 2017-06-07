@@ -17,8 +17,10 @@
  */
 
 require_once __DIR__ . '/helpers/MobileDetect.php';
+require_once __DIR__ . '/helpers/Url.php';
 require_once __DIR__ . '/helpers/Config.php';
 require_once __DIR__ . '/helpers/HttpClient.php';
+use Handlebars\Handlebars;
 
 abstract class Controller
 {
@@ -44,6 +46,11 @@ abstract class Controller
     protected $_rules;
 
     /**
+     * @var int
+     */
+    protected $_eventId;
+
+    /**
      * @var string
      */
     protected $_mainTemplate = '';
@@ -52,20 +59,29 @@ abstract class Controller
     {
         $this->_url = $url;
         $this->_path = $path;
-        $this->_api = new \JsonRPC\Client(API_URL, false, new HttpClient(API_URL));
+        $this->_api = new \JsonRPC\Client(Sysconf::API_URL, false, new HttpClient(Sysconf::API_URL));
+
+        $eidMatches = [];
+        if (empty($path['event']) || !preg_match('#eid(\d+)#is', $path['event'], $eidMatches)) {
+            // TODO: убрать чтобы показать страницу со списком событий
+            //throw new Exception('No event id found! Use single-event mode, or choose proper event on main page');
+            exit('Please select some event!');
+        }
+        $this->_eventId = intval($eidMatches[1]);
 
         /** @var HttpClient $client */
         $client = $this->_api->getHttpClient();
 
         $client->withHeaders([
-            'X-Auth-Token: ' . API_ADMIN_TOKEN,
-            'X-Api-Version: ' . API_VERSION_MAJOR . '.' . API_VERSION_MINOR
+            'X-Debug-Token: aehbntyrey',
+            'X-Auth-Token: ' . Sysconf::API_ADMIN_TOKEN,
+            'X-Api-Version: ' . Sysconf::API_VERSION_MAJOR . '.' . Sysconf::API_VERSION_MINOR
         ]);
-        if (DEBUG_MODE) {
+        if (Sysconf::DEBUG_MODE) {
             $client->withDebug();
         }
 
-        $this->_rules = Config::fromRaw($this->_api->execute('getGameConfig', [TOURNAMENT_ID]));
+        $this->_rules = Config::fromRaw($this->_api->execute('getGameConfig', [$this->_eventId]));
         $this->_checkCompatibility($client->getLastHeaders());
     }
 
@@ -81,20 +97,40 @@ abstract class Controller
             $pageTitle = $this->_pageTitle(); // должно быть после run! чтобы могло использовать полученные данные
             $detector = new \MobileDetect();
 
-            $m = new Mustache_Engine(array(
-                'loader' => new Mustache_Loader_FilesystemLoader(__DIR__ . '/templates/'),
-            ));
+            $m = new Handlebars([
+                'loader' => new \Handlebars\Loader\FilesystemLoader(__DIR__ . '/templates/'),
+                'partials_loader' => new \Handlebars\Loader\FilesystemLoader(
+                    __DIR__ . '/templates/',
+                    ['prefix' => '_']
+                )
+            ]);
+
+            $m->addHelper("href", function($template, $context, $args, $source) {
+                list($url, $name) = $args->getPositionalArguments();
+                if (empty($name)) {
+                    $name = $source; // may be used as block helper, without name, for html embed for example.
+                }
+                return '<a href="' . Url::make(Url::interpolate($url, $context), $this->_eventId) . '">'
+                    . Url::interpolate($name, $context) . '</a>';
+            });
+            $m->addHelper("hrefblank", function($template, $context, $args, $source) {
+                list($url, $name) = $args->getPositionalArguments();
+                if (empty($name)) {
+                    $name = $source; // may be used as block helper, without name, for html embed for example.
+                }
+                return '<a href="' . Url::make(Url::interpolate($url, $context), $this->_eventId) . '" target="_blank">'
+                    . Url::interpolate($name, $context) . '</a>';
+            });
 
             header("Content-type: text/html; charset=utf-8");
 
-            $isLoggedIn = (isset($_COOKIE['secret']) && $_COOKIE['secret'] == ADMIN_COOKIE);
             $add = ($detector->isMobile() && !$detector->isTablet()) ? 'Mobile' : ''; // use full version for tablets
 
             echo $m->render($add . 'Layout', [
                 'isOnline' => $this->_rules->isOnline(),
                 'pageTitle' => $pageTitle,
                 'content' => $m->render($add . $this->_mainTemplate, $context),
-                'isLoggedIn' => $isLoggedIn
+                'isLoggedIn' => $this->_adminAuthOk()
             ]);
         }
 
@@ -128,14 +164,79 @@ abstract class Controller
     public static function makeInstance($url)
     {
         $routes = require_once __DIR__ . '/../config/routes.php';
+        $controller = Sysconf::SINGLE_MODE
+            ? self::_singleEventMode($url, $routes)
+            : self::_multiEventMode($url, $routes);
+
+        if (!$controller) {
+            throw new Exception('No available controller found for this URL');
+        }
+
+        return $controller;
+    }
+
+    protected static function _singleEventMode($url, $routes)
+    {
         $matches = [];
         foreach ($routes as $regex => $controller) {
-            if (preg_match('#^' . $regex . '$#', $url, $matches)) {
+            $re = '#^' . preg_replace('#^!#is', '', $regex) . '/?$#';
+            if (preg_match($re, $url, $matches)) {
+                require_once __DIR__ . "/controllers/{$controller}.php";
+                $matches['event'] = 'eid' . Sysconf::OVERRIDE_EVENT_ID;
+                return new $controller($url, $matches);
+            }
+        }
+
+        return null;
+    }
+
+    protected static function _multiEventMode($url, $routes)
+    {
+        $matches = [];
+        foreach ($routes as $regex => $controller) {
+            if ($regex[0] === '!') {
+                $re = '#^' . mb_substr($regex, 1) . '/?$#';
+            } else {
+                $re = '#^/(?<event>eid\d+)' . $regex . '/?$#';
+            }
+
+            if (preg_match($re, $url, $matches)) {
                 require_once __DIR__ . "/controllers/{$controller}.php";
                 return new $controller($url, $matches);
             }
         }
-        throw new Exception('No available controller found for this URL');
+
+        return null;
+    }
+
+    protected function _adminAuthOk()
+    {
+        if (Sysconf::SINGLE_MODE) {
+            return !empty($_COOKIE['secret']) && $_COOKIE['secret'] == Sysconf::SUPER_ADMIN_COOKIE;
+        } else {
+            return !empty($_COOKIE['secret'])
+                && !empty(Sysconf::ADMIN_AUTH()[$this->_eventId]['cookie'])
+                && $_COOKIE['secret'] == Sysconf::ADMIN_AUTH()[$this->_eventId]['cookie'];
+        }
+    }
+
+    protected function _getAdminCookie($password)
+    {
+        if (Sysconf::SINGLE_MODE) {
+            if ($password == Sysconf::SUPER_ADMIN_PASS) {
+                return Sysconf::SUPER_ADMIN_COOKIE;
+            }
+        } else {
+            if (
+                !empty($_COOKIE['secret'])
+                && !empty(Sysconf::ADMIN_AUTH()[$this->_eventId]['password'])
+                && $password == Sysconf::ADMIN_AUTH()[$this->_eventId]['password']
+            ) {
+                return Sysconf::ADMIN_AUTH()[$this->_eventId]['cookie'];
+            }
+        }
+
+        return false;
     }
 
     protected function _checkCompatibility($headersArray)
@@ -154,11 +255,11 @@ abstract class Controller
 
         list ($major, $minor) = explode('.', trim(str_replace('X-Api-Version: ', '', $header)));
 
-        if (intval($major) !== API_VERSION_MAJOR) {
+        if (intval($major) !== Sysconf::API_VERSION_MAJOR) {
             throw new Exception('API major version mismatch. Update your app or API instance!');
         }
 
-        if (intval($minor) > API_VERSION_MINOR && DEBUG_MODE) {
+        if (intval($minor) > Sysconf::API_VERSION_MINOR && Sysconf::DEBUG_MODE) {
             trigger_error('API minor version mismatch. Consider updating if possible', E_USER_WARNING);
         }
     }

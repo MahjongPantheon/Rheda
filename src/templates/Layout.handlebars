@@ -61,34 +61,30 @@
 
             <div class="nav-collapse">
                 <ul class="nav">
-                    <li><a href="/last/">Сыгранные игры</a></li>
-                    <li><a href="/stat/">Рейтинг</a></li>
+                    <li>{{{href '/last/' 'Сыгранные игры'}}}</li>
+                    <li>{{{href '/stat/' 'Рейтинг'}}}</li>
                     {{#isLoggedIn}}
                         {{#isOnline}}
-                            <li><a href="/addonline/">+Онлайн-игра&nbsp;&nbsp;<span style="opacity: 0.5"
-                                                                                    class="icon-lock icon-white"></span></a>
+                            <li>{{{href '/addonline/' '+Онлайн-игра&nbsp;&nbsp;<span style="opacity: 0.5"
+                                                                                    class="icon-lock icon-white"></span>'}}}
                             </li>
                         {{/isOnline}}
                         {{^isOnline}}
-                            {{!--<li><a href="/add/">+Игра&nbsp;&nbsp;<span style="opacity: 0.5"
-                              class="icon-lock icon-white"></span></a></li>--}}
-                              <li><a href="/tourn/">Старт игр</a></li>
-                              <li><a href="/penalties/">Штрафы</a></li>
+                            {{!--<li>href '/add/' '+Игра&nbsp;&nbsp;<span style="opacity: 0.5" class="icon-lock icon-white"></span>'</li>--}}
+                              <li>{{{href '/tourn/' 'Старт игр'}}}</li>
+                              <li>{{{href '/penalties/' 'Штрафы'}}}</li>
                         {{/isOnline}}
-                        <li><a href="/enroll/">Добавить игрока</a></li>
-                        <li><a href="/reg/">Игроки и регистрация</a></li>
-                        <li><a href="/achievements/">Номинации</a></li>
+                        <li>{{{href '/enroll/' 'Добавить игрока'}}}</li>
+                        <li>{{{href '/reg/' 'Игроки и регистрация'}}}</li>
+                        <li>{{{href '/achievements/' 'Номинации'}}}</li>
                         {{!--<li>
-                            <a href="/sortition/">Пересечения&nbsp;&nbsp;<span style="opacity: 0.5"
-                                                                                   class="icon-lock icon-white"></span>
-                            </a>
+                            href="/sortition/">Пересечения&nbsp;&nbsp;<span style="opacity: 0.5" class="icon-lock icon-white"></span>
                         </li>--}}
                     {{/isLoggedIn}}
-                    <li><a href="/timer/" target="_blank">Таймер и рассадка</a></li>
+                    <li>{{{href '/timer/" target="_blank' 'Таймер и рассадка'}}}</li>
                     {{^isLoggedIn}}
                         <li>
-                            <a href="/login/">Вход&nbsp;&nbsp;<span style="opacity: 0.5" class="icon-lock icon-white"></span>
-                            </a>
+                            {{{href '/login/' 'Вход&nbsp;&nbsp;<span style="opacity: 0.5" class="icon-lock icon-white"></span>'}}}
                         </li>
                     {{/isLoggedIn}}
                 </ul>

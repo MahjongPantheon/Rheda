@@ -16,33 +16,20 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ . '/../helpers/Url.php';
+require_once __DIR__ . '/../Controller.php';
 
-class AdminLogin extends Controller
+class MultieventMainpage extends Controller
 {
-    protected $_mainTemplate = 'AdminLogin';
+    protected $_mainTemplate = 'Mainpage';
 
     protected function _pageTitle()
     {
-        return 'Вход администратора';
+        return 'Статистика';
     }
 
     protected function _run()
     {
-        $error = null;
-
-        if (!empty($_POST['secret'])) {
-            if (!$this->_getAdminCookie($_POST['secret'])) {
-                $error = "Wrong password!";
-            } else {
-                setcookie('secret', $this->_getAdminCookie($_POST['secret']), time() + Sysconf::ADMIN_COOKIE_LIFE, '/');
-                header('Location: ' . Url::make('/login/', $this->_eventId));
-            }
-        }
-
-        return [
-            'error' => $error,
-            'isLoggedIn' => $this->_adminAuthOk()
-        ];
+        // TODO: список евентов
+        return [];
     }
 }

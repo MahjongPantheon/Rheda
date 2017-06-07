@@ -16,29 +16,34 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-return [
-    '/'               => 'Mainpage',
-    '/login/'         => 'AdminLogin',
-    '/last/.*'        => 'LastGames',
-    '/add/'           => 'AddGame',
-    '/addonline/'     => 'AddOnlineGame',
-    '/graphs/.*'      => 'Graphs',
-    '/reg/'           => 'PlayerRegistration',
-    '/enroll/'        => 'PlayerEnrollment',
-    '/stat/.*'        => 'RatingTable',
-    '/timer/.*'       => 'Timer',
-    '/sortition/'     => 'Sortition',
-    '/sortition/(?<seed>[0-9a-f]+)/' => 'Sortition',
+return [ // Omit trailing slashes in keys when possible
+    '!'               => 'MultieventMainpage', // special path for multievent mainpage
+    ''                => 'Mainpage', // empty path for mainpage
+    '/login'          => 'AdminLogin',
+    '/last'           => 'LastGames',
+    '/last/.+'        => 'LastGames',
+    '/add'            => 'AddGame',
+    '/addonline'      => 'AddOnlineGame',
+    '/graphs'         => 'Graphs',
+    '/graphs/.+'      => 'Graphs',
+    '/reg'            => 'PlayerRegistration',
+    '/enroll'         => 'PlayerEnrollment',
+    '/stat'           => 'RatingTable',
+    '/stat/.+'        => 'RatingTable',
+    '/timer'          => 'Timer',
+    '/timer/.+'       => 'Timer',
+    '/sortition'      => 'Sortition',
+    '/sortition/(?<seed>[0-9a-f]+)' => 'Sortition',
 
-    '/tourn/'                                               => 'StartTournament',
-    '/tourn/(?<action>start)/'                              => 'StartTournament',
-    '/tourn/(?<action>dropLastRound)/(?<hash>[0-9a-f]+)/'   => 'StartTournament',
-    '/tourn/(?<action>startManual)/'                        => 'StartTournament',
-    '/tourn/(?<action>resetTimer)/'                         => 'StartTournament',
+    '/tourn'                                               => 'StartTournament',
+    '/tourn/(?<action>start)'                              => 'StartTournament',
+    '/tourn/(?<action>dropLastRound)/(?<hash>[0-9a-f]+)'   => 'StartTournament',
+    '/tourn/(?<action>startManual)'                        => 'StartTournament',
+    '/tourn/(?<action>resetTimer)'                         => 'StartTournament',
 
-    '/penalties/'     => 'Penalties',
-    '/penalties/(?<action>apply)/' => 'Penalties',
-    '/achievements/'  => 'Achievements',
+    '/penalties'       => 'Penalties',
+    '/penalties/(?<action>apply)' => 'Penalties',
+    '/achievements'    => 'Achievements',
 
-    '/favicon.ico'    => 'Mainpage' // костылёк ^_^
+    '!/favicon.ico'    => 'Mainpage' // костылёк ^_^
 ];

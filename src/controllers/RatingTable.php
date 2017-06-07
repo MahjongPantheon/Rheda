@@ -69,10 +69,10 @@ class RatingTable extends Controller
         }
 
         try {
-            $players = $this->_api->execute('getAllPlayers', [TOURNAMENT_ID]);
+            $players = $this->_api->execute('getAllPlayers', [$this->_eventId]);
             $players = ArrayHelpers::elm2Key($players, 'id');
 
-            $data = $this->_api->execute('getRatingTable', [TOURNAMENT_ID, $orderBy, $order]);
+            $data = $this->_api->execute('getRatingTable', [$this->_eventId, $orderBy, $order]);
 
             array_map(function ($el) use (&$players) {
                 // remove from common list - user exists in history

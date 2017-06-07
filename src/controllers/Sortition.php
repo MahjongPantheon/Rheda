@@ -16,6 +16,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once __DIR__ . '/../helpers/Url.php';
 require_once __DIR__ . '/../helpers/Array.php';
 
 class Sortition extends Controller
@@ -35,7 +36,7 @@ class Sortition extends Controller
         }
 
         if (empty($this->_path['seed'])) {
-            header('Location: /sortition/' . substr(md5(microtime(true)), 3, 5) . '/');
+            header('Location: ' . Url::make('/sortition/' . substr(md5(microtime(true)), 3, 5) . '/', $this->_eventId));
             return false;
         }
 
@@ -44,18 +45,18 @@ class Sortition extends Controller
 
     protected function _run()
     {
-        if (empty($_COOKIE['secret']) || $_COOKIE['secret'] != ADMIN_COOKIE) {
+        if (!$this->_adminAuthOk()) {
             return [
                 'error' => "Секретное слово неправильное"
             ];
         }
 
-        $players = $this->_api->execute('getAllPlayers', [TOURNAMENT_ID]);
+        $players = $this->_api->execute('getAllPlayers', [$this->_eventId]);
         $players = ArrayHelpers::elm2key($players, 'id');
 
         $seed = hexdec($this->_path['seed']);
         $sortition = $this->_api->execute('generateSeating', [
-            TOURNAMENT_ID,
+            $this->_eventId,
             1, // groups
             $seed
         ]);

@@ -29,8 +29,8 @@ class Timer extends Controller
     
     protected function _run()
     {
-        $timerState = $this->_api->execute('getTimerState', [TOURNAMENT_ID]);
-        $currentSeating = $this->_formatSeating($this->_api->execute('getCurrentSeating', [TOURNAMENT_ID]));
+        $timerState = $this->_api->execute('getTimerState', [$this->_eventId]);
+        $currentSeating = $this->_formatSeating($this->_api->execute('getCurrentSeating', [$this->_eventId]));
         $durationWithoutSeating = $this->_rules->gameDuration() - 5;
 
         if ($timerState['started'] && $timerState['time_remaining']) {

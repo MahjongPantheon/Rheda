@@ -38,13 +38,13 @@ class AddGame extends Controller
         $successfullyAdded = false;
 
         try {
-            $players = $this->_api->execute('getAllPlayers', [TOURNAMENT_ID]);
+            $players = $this->_api->execute('getAllPlayers', [$this->_eventId]);
             if (!empty($_POST['content'])) {
                 // пытаемся сохранить игру в базу
-                if (empty($_COOKIE['secret']) || $_COOKIE['secret'] != ADMIN_COOKIE) {
+                if (!$this->_adminAuthOk()) {
                     $errorMsg = "Секретное слово неправильное";
                 } else {
-                    $this->_api->execute('addTextLog', [TOURNAMENT_ID, $_POST['content']]);
+                    $this->_api->execute('addTextLog', [$this->_eventId, $_POST['content']]);
                     $successfullyAdded = true;
                 }
             }

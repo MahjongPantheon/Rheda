@@ -53,14 +53,14 @@
     <tr>
       <th>#</th>
       <th>Игрок</th>
-      <th><a href="?sort=rating">Итог</a>{{#orderByRating}}<span class="icon-arrow-down"></span>{{/orderByRating}}</th>
-      <th><a href="?sort=avg_place">Avg</a>{{#orderByAvgPlace}}<span class="icon-arrow-up"></span>{{/orderByAvgPlace}}</th>
+      <th>{{{href '?sort=rating' 'Итог'}}}{{#orderByRating}}<span class="icon-arrow-down"></span>{{/orderByRating}}</th>
+      <th>{{{href '?sort=avg_place' 'Avg'}}}{{#orderByAvgPlace}}<span class="icon-arrow-up"></span>{{/orderByAvgPlace}}</th>
       <th>&nbsp;</th>
     </tr>
     {{#data}}
       <tr>
         <td>{{_index}}</td>
-        <td><a href="/graphs/?user={{id}}"><nobr>{{short_name}}</nobr></a></td>
+        <td>{{{href '/graphs/?user={id}' '<nobr>{short_name}</nobr>'}}}</td>
         <td class="cn"><span class="badge
                          {{#winner_zone}}success{{/winner_zone}}
                          {{^winner_zone}}important{{/winner_zone}}

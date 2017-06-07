@@ -16,15 +16,28 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Common settings
-define('TOURNAMENT_ID', 2);
-define('API_URL', 'http://api.furiten.ru/');
-define('API_VERSION_MAJOR', 1);
-define('API_VERSION_MINOR', 0);
-define('DEBUG_MODE', true); // TODO -> to false in prod!
-define('API_ADMIN_TOKEN', 'CHANGE_ME'); // TODO -> change it on prod!
+/**
+ * Url helper class
+ */
+class Url
+{
+    public static function make($where, $eventId)
+    {
+        $pieces = array_filter(explode('/', $where));
+        if (strpos($pieces[0], 'eid') === 0) {
+            array_shift($pieces);
+        }
 
-// Gui-specific settings
-define('ADMIN_PASSWORD', 'hjpjdstckjybrb');
-define('ADMIN_COOKIE', 'kldfmewmd9vbeiogbjsdvjepklsdmnvmn');
-define('ADMIN_COOKIE_LIFE', 3600); // in seconds
+        if (!Sysconf::SINGLE_MODE) {
+            array_unshift($pieces, 'eid' . $eventId);
+        }
+        return '/' . implode('/', $pieces);
+    }
+
+    public static function interpolate($str, Handlebars\Context $context)
+    {
+        return preg_replace_callback('#{([\w\d]+)}#is', function($matches) use ($context) {
+            return $context->get($matches[1]);
+        }, $str);
+    }
+}
