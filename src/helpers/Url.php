@@ -16,15 +16,21 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Common settings
-define('API_URL', 'https://api.mjtop.net/'); // Config tip: change this to your entry point
-define('API_VERSION_MAJOR', 1);
-define('API_VERSION_MINOR', 0);
-define('DEBUG_MODE', true); // TODO -> to false in prod!
-define('API_ADMIN_TOKEN', 'nehybh,scnhsqc,hjc'); // TODO -> change it on prod!
-// define('OVERRIDE_EVENT_ID', 1); // Config tip: uncomment this to use single-event mode on specific domain
+/**
+ * Url helper class
+ */
+class Url
+{
+    public static function make($where, $eventId)
+    {
+        $pieces = array_filter(explode('/', $where));
+        if (strpos($pieces[0], 'eid') === 0) {
+            array_shift($pieces);
+        }
 
-// Gui-specific settings
-define('ADMIN_PASSWORD', 'hjpjdstckjybrb');
-define('ADMIN_COOKIE', 'kldfmewmd9vbeiogbjsdvjepklsdmnvmn');
-define('ADMIN_COOKIE_LIFE', 3600); // in seconds
+        if (!defined('OVERRIDE_EVENT_ID')) {
+            array_unshift($pieces, 'eid' . $eventId);
+        }
+        return '/' . implode('/', $pieces);
+    }
+}

@@ -16,6 +16,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once __DIR__ . '/../helpers/Url.php';
+
 class PlayerEnrollment extends Controller
 {
     protected $_mainTemplate = 'PlayerEnrollment';
@@ -71,7 +73,7 @@ class PlayerEnrollment extends Controller
             }
 
             if (empty($err)) {
-                header('Location: /enroll/');
+                header('Location: ' . Url::make('/enroll/', $this->_eventId));
                 return false;
             }
 
@@ -100,7 +102,7 @@ class PlayerEnrollment extends Controller
     {
         $errorMsg = '';
         try {
-            $success = $this->_api->execute('enrollPlayerCP', [$userId, TOURNAMENT_ID]);
+            $success = $this->_api->execute('enrollPlayerCP', [$userId, $this->_eventId]);
             if (!$success) {
                 $errorMsg = 'Не удалось добавить игрока в списки - проблемы с сетью?';
             }

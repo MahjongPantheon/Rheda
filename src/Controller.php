@@ -44,6 +44,11 @@ abstract class Controller
     protected $_rules;
 
     /**
+     * @var int
+     */
+    protected $_eventId;
+
+    /**
      * @var string
      */
     protected $_mainTemplate = '';
@@ -54,10 +59,17 @@ abstract class Controller
         $this->_path = $path;
         $this->_api = new \JsonRPC\Client(API_URL, false, new HttpClient(API_URL));
 
+        $eidMatches = [];
+        if (empty($path['event']) || !preg_match('#eid(\d+)#is', $path['event'], $eidMatches)) {
+            throw new Exception('No event id found! Use single-event mode, or choose proper event on main page');
+        }
+        $this->_eventId = intval($eidMatches[1]);
+
         /** @var HttpClient $client */
         $client = $this->_api->getHttpClient();
 
         $client->withHeaders([
+            'X-Debug-Token: aehbntyrey',
             'X-Auth-Token: ' . API_ADMIN_TOKEN,
             'X-Api-Version: ' . API_VERSION_MAJOR . '.' . API_VERSION_MINOR
         ]);
@@ -65,7 +77,7 @@ abstract class Controller
             $client->withDebug();
         }
 
-        $this->_rules = Config::fromRaw($this->_api->execute('getGameConfig', [TOURNAMENT_ID]));
+        $this->_rules = Config::fromRaw($this->_api->execute('getGameConfig', [$this->_eventId]));
         $this->_checkCompatibility($client->getLastHeaders());
     }
 
@@ -128,14 +140,49 @@ abstract class Controller
     public static function makeInstance($url)
     {
         $routes = require_once __DIR__ . '/../config/routes.php';
+        $controller = defined('OVERRIDE_EVENT_ID')
+            ? self::_singleEventMode($url, $routes)
+            : self::_multiEventMode($url, $routes);
+
+        if (!$controller) {
+            throw new Exception('No available controller found for this URL');
+        }
+
+        return $controller;
+    }
+
+    protected static function _singleEventMode($url, $routes)
+    {
         $matches = [];
         foreach ($routes as $regex => $controller) {
-            if (preg_match('#^' . $regex . '$#', $url, $matches)) {
+            $re = '#^' . preg_replace('#^!#is', '', $regex) . '$#';
+            if (preg_match($re, $url, $matches)) {
+                require_once __DIR__ . "/controllers/{$controller}.php";
+                $matches['event'] = 'eid' . OVERRIDE_EVENT_ID;
+                return new $controller($url, $matches);
+            }
+        }
+
+        return null;
+    }
+
+    protected static function _multiEventMode($url, $routes)
+    {
+        $matches = [];
+        foreach ($routes as $regex => $controller) {
+            if ($regex[0] === '!') {
+                $re = '#^' . mb_substr($regex, 1) . '$#';
+            } else {
+                $re = '#^/(?<event>eid\d+)' . $regex . '$#';
+            }
+
+            if (preg_match($re, $url, $matches)) {
                 require_once __DIR__ . "/controllers/{$controller}.php";
                 return new $controller($url, $matches);
             }
         }
-        throw new Exception('No available controller found for this URL');
+
+        return null;
     }
 
     protected function _checkCompatibility($headersArray)

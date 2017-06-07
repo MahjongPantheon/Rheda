@@ -16,6 +16,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once __DIR__ . '/../helpers/Url.php';
 require_once __DIR__ . '/../helpers/Array.php';
 
 class StartTournament extends Controller
@@ -42,13 +43,13 @@ class StartTournament extends Controller
             }
 
             try {
-                $this->_api->execute('startGamesWithSeating', [TOURNAMENT_ID, 1, mt_rand(100000, 999999)]);
-                $this->_api->execute('startTimer', [TOURNAMENT_ID]);
+                $this->_api->execute('startGamesWithSeating', [$this->_eventId, 1, mt_rand(100000, 999999)]);
+                $this->_api->execute('startTimer', [$this->_eventId]);
             } catch (Exception $e) {
                 $this->_lastEx = $e;
                 return true;
             }
-            header('Location: /tourn/');
+            header('Location: ' . Url::make('/tourn/', $this->_eventId));
             return false;
         }
 
@@ -60,14 +61,14 @@ class StartTournament extends Controller
             try {
                 $this->_api->execute(
                     'startGamesWithManualSeating',
-                    [TOURNAMENT_ID, $_POST['description'], $_POST['randomize'] == 'true']
+                    [$this->_eventId, $_POST['description'], $_POST['randomize'] == 'true']
                 );
-                $this->_api->execute('startTimer', [TOURNAMENT_ID]);
+                $this->_api->execute('startTimer', [$this->_eventId]);
             } catch (Exception $e) {
                 $this->_lastEx = $e;
                 return true;
             }
-            header('Location: /tourn/');
+            header('Location: ' . Url::make('/tourn/', $this->_eventId));
             return false;
         }
 
@@ -77,12 +78,12 @@ class StartTournament extends Controller
             }
 
             try {
-                $this->_api->execute('startTimer', [TOURNAMENT_ID]);
+                $this->_api->execute('startTimer', [$this->_eventId]);
             } catch (Exception $e) {
                 $this->_lastEx = $e;
                 return true;
             }
-            header('Location: /tourn/');
+            header('Location: ' . Url::make('/tourn/', $this->_eventId));
             return false;
         }
 
@@ -97,7 +98,7 @@ class StartTournament extends Controller
                 $this->_lastEx = $e;
                 return true;
             }
-            header('Location: /tourn/');
+            header('Location: ' . Url::make('/tourn/', $this->_eventId));
             return false;
         }
 
@@ -123,7 +124,7 @@ class StartTournament extends Controller
         $errCode = null;
 
         // Tables info
-        $tables = $this->_api->execute('getTablesState', [TOURNAMENT_ID]);
+        $tables = $this->_api->execute('getTablesState', [$this->_eventId]);
         $tablesFormatted = $this->_formatTables($tables);
 
         $unfinishedTablesCount = array_reduce($tablesFormatted, function($acc, $i) {
@@ -131,11 +132,11 @@ class StartTournament extends Controller
         }, 0);
 
         if (!$this->_rules->allowPlayerAppend()) { // Club games do not require all of these checks
-            $players = $this->_api->execute('getAllPlayers', [TOURNAMENT_ID]);
+            $players = $this->_api->execute('getAllPlayers', [$this->_eventId]);
             if (count($players) % 4 !== 0) {
                 $errCode = '_TABLES_NOT_FULL';
             } else {
-                $timerState = $this->_api->execute('getTimerState', [TOURNAMENT_ID]);
+                $timerState = $this->_api->execute('getTimerState', [$this->_eventId]);
                 if ($timerState['started'] && $unfinishedTablesCount !== 0) { // Check once after click on START
                     $errCode = '_GAMES_STARTED';
                 }

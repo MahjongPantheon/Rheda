@@ -39,7 +39,7 @@ class LastGames extends Controller
             $offset = ($currentPage - 1) * $limit;
         }
 
-        $gamesData = $this->_api->execute('getLastGames', [TOURNAMENT_ID, $limit, $offset]);
+        $gamesData = $this->_api->execute('getLastGames', [$this->_eventId, $limit, $offset]);
 
         return [
             'noGames' => empty($gamesData['games']) && $currentPage == 1,

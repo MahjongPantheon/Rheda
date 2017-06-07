@@ -16,6 +16,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once __DIR__ . '/../helpers/Url.php';
+
 class AdminLogin extends Controller
 {
     protected $_mainTemplate = 'AdminLogin';
@@ -35,7 +37,7 @@ class AdminLogin extends Controller
                 $error = "Wrong password!";
             } else {
                 setcookie('secret', ADMIN_COOKIE, time() + ADMIN_COOKIE_LIFE, '/');
-                header('Location: ' . $this->_url);
+                header('Location: ' . Url::make($this->_url, $this->_eventId));
             }
         }
 

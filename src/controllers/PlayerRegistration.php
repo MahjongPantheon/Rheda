@@ -16,6 +16,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once __DIR__ . '/../helpers/Url.php';
+
 class PlayerRegistration extends Controller
 {
     protected $_mainTemplate = 'PlayerRegistration';
@@ -40,8 +42,8 @@ class PlayerRegistration extends Controller
             $errorMsg = $this->_lastError;
         } else {
             try {
-                $registeredPlayers = $this->_api->execute('getAllPlayers', [TOURNAMENT_ID]);
-                $enrolledPlayers = $this->_api->execute('getAllEnrolled', [TOURNAMENT_ID]);
+                $registeredPlayers = $this->_api->execute('getAllPlayers', [$this->_eventId]);
+                $enrolledPlayers = $this->_api->execute('getAllEnrolled', [$this->_eventId]);
                 usort($enrolledPlayers, $sorter);
                 usort($registeredPlayers, $sorter);
             } catch (Exception $e) {
@@ -83,7 +85,7 @@ class PlayerRegistration extends Controller
             }
 
             if (empty($err)) {
-                header('Location: /reg/');
+                header('Location: ' . Url::make('/reg/', $this->_eventId));
                 return false;
             }
 
@@ -96,7 +98,7 @@ class PlayerRegistration extends Controller
     {
         $errorMsg = '';
         try {
-            $success = $this->_api->execute('registerPlayerCP', [$userId, TOURNAMENT_ID]);
+            $success = $this->_api->execute('registerPlayerCP', [$userId, $this->_eventId]);
             if (!$success) {
                 $errorMsg = 'Не удалось зарегистрировать игрока - проблемы с сетью?';
             }
@@ -111,7 +113,7 @@ class PlayerRegistration extends Controller
     {
         $errorMsg = '';
         try {
-            $this->_api->execute('unregisterPlayerCP', [$userId, TOURNAMENT_ID]);
+            $this->_api->execute('unregisterPlayerCP', [$userId, $this->_eventId]);
         } catch (Exception $e) {
             $errorMsg = $e->getMessage();
         };
@@ -123,7 +125,7 @@ class PlayerRegistration extends Controller
     {
         $errorMsg = '';
         try {
-            $success = $this->_api->execute('enrollPlayerCP', [$userId, TOURNAMENT_ID]);
+            $success = $this->_api->execute('enrollPlayerCP', [$userId, $this->_eventId]);
             if (!$success) {
                 $errorMsg = 'Не удалось добавить игрока в списки - проблемы с сетью?';
             }
