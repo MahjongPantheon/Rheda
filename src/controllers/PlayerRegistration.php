@@ -65,7 +65,7 @@ class PlayerRegistration extends Controller
     protected function _beforeRun()
     {
         if (!empty($_POST['action_type'])) {
-            if ($_COOKIE['secret'] != ADMIN_COOKIE) {
+            if (!$this->_adminAuthOk()) {
                 $this->_lastError = "Секретное слово неправильное";
                 return true;
             }

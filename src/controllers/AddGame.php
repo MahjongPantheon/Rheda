@@ -41,7 +41,7 @@ class AddGame extends Controller
             $players = $this->_api->execute('getAllPlayers', [$this->_eventId]);
             if (!empty($_POST['content'])) {
                 // пытаемся сохранить игру в базу
-                if (empty($_COOKIE['secret']) || $_COOKIE['secret'] != ADMIN_COOKIE) {
+                if (!$this->_adminAuthOk()) {
                     $errorMsg = "Секретное слово неправильное";
                 } else {
                     $this->_api->execute('addTextLog', [$this->_eventId, $_POST['content']]);

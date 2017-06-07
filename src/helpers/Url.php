@@ -28,7 +28,7 @@ class Url
             array_shift($pieces);
         }
 
-        if (!defined('OVERRIDE_EVENT_ID')) {
+        if (!Sysconf::SINGLE_MODE) {
             array_unshift($pieces, 'eid' . $eventId);
         }
         return '/' . implode('/', $pieces);

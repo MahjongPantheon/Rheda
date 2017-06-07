@@ -45,7 +45,7 @@ class Sortition extends Controller
 
     protected function _run()
     {
-        if (empty($_COOKIE['secret']) || $_COOKIE['secret'] != ADMIN_COOKIE) {
+        if (!$this->_adminAuthOk()) {
             return [
                 'error' => "Секретное слово неправильное"
             ];

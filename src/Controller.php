@@ -59,7 +59,7 @@ abstract class Controller
     {
         $this->_url = $url;
         $this->_path = $path;
-        $this->_api = new \JsonRPC\Client(API_URL, false, new HttpClient(API_URL));
+        $this->_api = new \JsonRPC\Client(Sysconf::API_URL, false, new HttpClient(Sysconf::API_URL));
 
         $eidMatches = [];
         if (empty($path['event']) || !preg_match('#eid(\d+)#is', $path['event'], $eidMatches)) {
@@ -72,10 +72,10 @@ abstract class Controller
 
         $client->withHeaders([
             'X-Debug-Token: aehbntyrey',
-            'X-Auth-Token: ' . API_ADMIN_TOKEN,
-            'X-Api-Version: ' . API_VERSION_MAJOR . '.' . API_VERSION_MINOR
+            'X-Auth-Token: ' . Sysconf::API_ADMIN_TOKEN,
+            'X-Api-Version: ' . Sysconf::API_VERSION_MAJOR . '.' . Sysconf::API_VERSION_MINOR
         ]);
-        if (DEBUG_MODE) {
+        if (Sysconf::DEBUG_MODE) {
             $client->withDebug();
         }
 
@@ -157,7 +157,7 @@ abstract class Controller
     public static function makeInstance($url)
     {
         $routes = require_once __DIR__ . '/../config/routes.php';
-        $controller = defined('OVERRIDE_EVENT_ID')
+        $controller = Sysconf::SINGLE_MODE
             ? self::_singleEventMode($url, $routes)
             : self::_multiEventMode($url, $routes);
 
@@ -175,7 +175,7 @@ abstract class Controller
             $re = '#^' . preg_replace('#^!#is', '', $regex) . '/?$#';
             if (preg_match($re, $url, $matches)) {
                 require_once __DIR__ . "/controllers/{$controller}.php";
-                $matches['event'] = 'eid' . OVERRIDE_EVENT_ID;
+                $matches['event'] = 'eid' . Sysconf::OVERRIDE_EVENT_ID;
                 return new $controller($url, $matches);
             }
         }
@@ -202,6 +202,36 @@ abstract class Controller
         return null;
     }
 
+    protected function _adminAuthOk()
+    {
+        if (Sysconf::SINGLE_MODE) {
+            return !empty($_COOKIE['secret']) && $_COOKIE['secret'] == Sysconf::SUPER_ADMIN_COOKIE;
+        } else {
+            return !empty($_COOKIE['secret'])
+                && !empty(Sysconf::ADMIN_AUTH()[$this->_eventId]['cookie'])
+                && $_COOKIE['secret'] == Sysconf::ADMIN_AUTH()[$this->_eventId]['cookie'];
+        }
+    }
+
+    protected function _getAdminCookie($password)
+    {
+        if (Sysconf::SINGLE_MODE) {
+            if ($password == Sysconf::SUPER_ADMIN_PASS) {
+                return Sysconf::SUPER_ADMIN_COOKIE;
+            }
+        } else {
+            if (
+                !empty($_COOKIE['secret'])
+                && !empty(Sysconf::ADMIN_AUTH()[$this->_eventId]['password'])
+                && $password == Sysconf::ADMIN_AUTH()[$this->_eventId]['password']
+            ) {
+                return Sysconf::ADMIN_AUTH()[$this->_eventId]['cookie'];
+            }
+        }
+
+        return false;
+    }
+
     protected function _checkCompatibility($headersArray)
     {
         $header = '';
@@ -218,11 +248,11 @@ abstract class Controller
 
         list ($major, $minor) = explode('.', trim(str_replace('X-Api-Version: ', '', $header)));
 
-        if (intval($major) !== API_VERSION_MAJOR) {
+        if (intval($major) !== Sysconf::API_VERSION_MAJOR) {
             throw new Exception('API major version mismatch. Update your app or API instance!');
         }
 
-        if (intval($minor) > API_VERSION_MINOR && DEBUG_MODE) {
+        if (intval($minor) > Sysconf::API_VERSION_MINOR && Sysconf::DEBUG_MODE) {
             trigger_error('API minor version mismatch. Consider updating if possible', E_USER_WARNING);
         }
     }

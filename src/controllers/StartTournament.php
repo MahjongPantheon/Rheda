@@ -38,7 +38,7 @@ class StartTournament extends Controller
     protected function _beforeRun()
     {
         if (!empty($this->_path['action']) && $this->_path['action'] == 'start') {
-            if (empty($_COOKIE['secret']) || $_COOKIE['secret'] != ADMIN_COOKIE) {
+            if (!$this->_adminAuthOk()) {
                 return true; // to show error in _run
             }
 
@@ -54,7 +54,7 @@ class StartTournament extends Controller
         }
 
         if (!empty($this->_path['action']) && $this->_path['action'] == 'startManual') {
-            if (empty($_COOKIE['secret']) || $_COOKIE['secret'] != ADMIN_COOKIE) {
+            if (!$this->_adminAuthOk()) {
                 return true; // to show error in _run
             }
 
@@ -73,7 +73,7 @@ class StartTournament extends Controller
         }
 
         if (!empty($this->_path['action']) && $this->_path['action'] == 'resetTimer') {
-            if (empty($_COOKIE['secret']) || $_COOKIE['secret'] != ADMIN_COOKIE) {
+            if (!$this->_adminAuthOk()) {
                 return true; // to show error in _run
             }
 
@@ -88,7 +88,7 @@ class StartTournament extends Controller
         }
 
         if (!empty($this->_path['action']) && $this->_path['action'] == 'dropLastRound') {
-            if (empty($_COOKIE['secret']) || $_COOKIE['secret'] != ADMIN_COOKIE) {
+            if (!$this->_adminAuthOk()) {
                 return true; // to show error in _run
             }
 
@@ -107,7 +107,7 @@ class StartTournament extends Controller
     
     protected function _run()
     {
-        if (empty($_COOKIE['secret']) || $_COOKIE['secret'] != ADMIN_COOKIE) {
+        if (!$this->_adminAuthOk()) {
             return [
                 'showAll' => false,
                 'reason' => $this->_errors['_WRONG_PASSWORD']

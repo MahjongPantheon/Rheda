@@ -29,21 +29,20 @@ class AdminLogin extends Controller
 
     protected function _run()
     {
-        $isLoggedIn = (isset($_COOKIE['secret']) && $_COOKIE['secret'] == ADMIN_COOKIE);
         $error = null;
 
         if (!empty($_POST['secret'])) {
-            if ($_POST['secret'] != ADMIN_PASSWORD) {
+            if (!$this->_getAdminCookie($_POST['secret'])) {
                 $error = "Wrong password!";
             } else {
-                setcookie('secret', ADMIN_COOKIE, time() + ADMIN_COOKIE_LIFE, '/');
+                setcookie('secret', $this->_getAdminCookie($_POST['secret']), time() + Sysconf::ADMIN_COOKIE_LIFE, '/');
                 header('Location: ' . Url::make($this->_url, $this->_eventId));
             }
         }
 
         return [
             'error' => $error,
-            'isLoggedIn' => $isLoggedIn
+            'isLoggedIn' => $this->_adminAuthOk()
         ];
     }
 }
