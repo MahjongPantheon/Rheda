@@ -70,8 +70,7 @@
                             </li>
                         {{/isOnline}}
                         {{^isOnline}}
-                            {{!--<li>{{{href '/add/' '+Игра&nbsp;&nbsp;<span style="opacity: 0.5"
-                              class="icon-lock icon-white"></span>'}}}</li>--}}
+                            {{!--<li>href '/add/' '+Игра&nbsp;&nbsp;<span style="opacity: 0.5" class="icon-lock icon-white"></span>'</li>--}}
                               <li>{{{href '/tourn/' 'Старт игр'}}}</li>
                               <li>{{{href '/penalties/' 'Штрафы'}}}</li>
                         {{/isOnline}}
@@ -79,9 +78,7 @@
                         <li>{{{href '/reg/' 'Игроки и регистрация'}}}</li>
                         <li>{{{href '/achievements/' 'Номинации'}}}</li>
                         {{!--<li>
-                            {{{href="/sortition/">Пересечения&nbsp;&nbsp;<span style="opacity: 0.5"
-                                                                                   class="icon-lock icon-white"></span>
-                            }}}
+                            href="/sortition/">Пересечения&nbsp;&nbsp;<span style="opacity: 0.5" class="icon-lock icon-white"></span>
                         </li>--}}
                     {{/isLoggedIn}}
                     <li>{{{href '/timer/" target="_blank' 'Таймер и рассадка'}}}</li>

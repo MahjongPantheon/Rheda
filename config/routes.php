@@ -17,8 +17,8 @@
  */
 
 return [ // Omit trailing slashes in keys when possible
-    '/'               => 'Mainpage',
-    '!/'              => 'MultieventMainpage',
+    '!'               => 'MultieventMainpage', // special path for multievent mainpage
+    ''                => 'Mainpage', // empty path for mainpage
     '/login'          => 'AdminLogin',
     '/last'           => 'LastGames',
     '/last/.+'        => 'LastGames',
