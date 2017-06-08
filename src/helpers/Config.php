@@ -39,7 +39,9 @@ class Config
     protected $_syncStart = false;
     protected $_sortByGames = false;
     protected $_allowPlayerAppend = false;
-    
+    protected $_useTimer = false;
+    protected $_usePenalty = false;
+
     public static function fromRaw($arr)
     {
         $cfg = new self();
@@ -54,7 +56,7 @@ class Config
 
         return $cfg;
     }
-    
+
     /**
      * @return array
      */
@@ -313,5 +315,19 @@ class Config
     public function allowPlayerAppend()
     {
         return $this->_allowPlayerAppend;
+    }
+    /**
+     * @return bool
+     */
+    public function useTimer()
+    {
+        return $this->_useTimer;
+    }
+    /**
+     * @return bool
+     */
+    public function usePenalty()
+    {
+        return $this->_usePenalty;
     }
 }
