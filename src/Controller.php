@@ -228,8 +228,7 @@ abstract class Controller
             }
         } else {
             if (
-                !empty($_COOKIE['secret'])
-                && !empty(Sysconf::ADMIN_AUTH()[$this->_eventId]['password'])
+                !empty(Sysconf::ADMIN_AUTH()[$this->_eventId]['password'])
                 && $password == Sysconf::ADMIN_AUTH()[$this->_eventId]['password']
             ) {
                 return Sysconf::ADMIN_AUTH()[$this->_eventId]['cookie'];
