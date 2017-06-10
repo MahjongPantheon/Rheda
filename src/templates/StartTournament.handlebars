@@ -14,6 +14,15 @@
 *  You should have received a copy of the GNU General Public License
 *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *}}
+<style>
+    .cancellation {
+        background-color: #900;
+        color: #fff;
+        display: inline-block;
+        padding: 5px;
+        font-size: 16px;
+    }
+</style>
 {{^showAll}}
     <h2>Нельзя стартовать игры: {{reason}}</h2>
     {{#showTimerControls}}
@@ -96,10 +105,11 @@
                 {{#last_round}}
                     {{last_round}}
                     {{#showControls}}
-                        <a onclick="return window.confirm('Отменяем раздачу: {{last_round}}. Точно отменить раздачу? Назад дороги нет!')"
-                           href="/tourn/dropLastRound/{{hash}}/"
-                           style="background-color: #900; color: #fff; display: inline-block; padding: 5px; font-size: 16px"
-                        >Отменить последнюю внесенную раздачу</a>
+                        {{#a
+                            href="/tourn/dropLastRound/{hash}/"
+                            class="cancellation"
+                            onclick="return window.confirm('Отменяем раздачу: {last_round}. Точно отменить раздачу? Назад дороги нет!')"
+                        }}Отменить последнюю внесенную раздачу{{/a}}
                     {{/showControls}}
                 {{/last_round}}
             </td>

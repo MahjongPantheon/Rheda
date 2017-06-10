@@ -61,25 +61,25 @@
 
             <div class="nav-collapse">
                 <ul class="nav">
-                    <li>{{#href '/last/'}}Сыгранные игры{{/href}}</li>
-                    <li>{{#href '/stat/'}}Рейтинг{{/href}}</li>
+                    <li>{{#a href='/last/'}}Сыгранные игры{{/a}}</li>
+                    <li>{{#a href='/stat/'}}Рейтинг{{/a}}</li>
                     {{#isLoggedIn}}
                         {{#isOnline}}
-                            <li>{{#href '/addonline/'}}+Онлайн-игра&nbsp;&nbsp;<span style="opacity: 0.5"
-                                                                                     class="icon-lock icon-white"></span>{{/href}}
+                            <li>{{#a href='/addonline/'}}+Онлайн-игра&nbsp;&nbsp;<span style="opacity: 0.5"
+                                                                                     class="icon-lock icon-white"></span>{{/a}}
                             </li>
                         {{/isOnline}}
                         {{^isOnline}}
                             {{#syncStart}}
-                                <li>{{#href '/tourn/'}}Старт игр{{/href}}</li>
+                                <li>{{#a href='/tourn/'}}Старт игр{{/a}}</li>
                             {{/syncStart}}
                             {{#usePenalty}}
-                                <li>{{#href '/penalties/'}}Штрафы{{/href}}</li>
+                                <li>{{#a href='/penalties/'}}Штрафы{{/a}}</li>
                             {{/usePenalty}}
                         {{/isOnline}}
-                        <li>{{#href '/enroll/'}}Добавить игрока{{/href}}</li>
-                        <li>{{#href '/reg/'}}Игроки и регистрация{{/href}}</li>
-                        <li>{{#href '/achievements/'}}Номинации{{/href}}</li>
+                        <li>{{#a href='/enroll/'}}Добавить игрока{{/a}}</li>
+                        <li>{{#a href='/reg/'}}Игроки и регистрация{{/a}}</li>
+                        <li>{{#a href='/achievements/'}}Номинации{{/a}}</li>
                         {{!--<li>
                             #href '/sortition/' Пересечения&nbsp;&nbsp;<span style="opacity: 0.5"
                             class="icon-lock icon-white"></span> /href
@@ -87,12 +87,12 @@
                     {{/isLoggedIn}}
 
                     {{#useTimer}}
-                        <li>{{#href '/timer/' '_blank'}}Таймер и рассадка{{/href}}</li>
+                        <li>{{#a href='/timer/' target='_blank'}}Таймер и рассадка{{/a}}</li>
                     {{/useTimer}}
 
                     {{^isLoggedIn}}
                         <li>
-                            {{#href '/login/'}}Вход&nbsp;&nbsp;<span style="opacity: 0.5" class="icon-lock icon-white"></span>{{/href}}
+                            {{#a href='/login/'}}Вход&nbsp;&nbsp;<span style="opacity: 0.5" class="icon-lock icon-white"></span>{{/a}}
                         </li>
                     {{/isLoggedIn}}
                 </ul>
