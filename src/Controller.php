@@ -106,16 +106,19 @@ abstract class Controller
             ]);
             $inlineRenderer = new Handlebars(); // for block nesting
 
-            $m->addHelper("href", function($template, $context, $args, $source) use ($inlineRenderer) {
-                list($url, $target) = $args->getPositionalArguments();
-                return '<a href="' . Url::make(Url::interpolate($url, $context), $this->_eventId) . '"'
-                    . (empty($target) ? '' : ' target="' . $target . '"') . '>'
-                    . $inlineRenderer->render($source, $context) . '</a>';
+            $m->addHelper("a", function($template, $context, $args, $source) use ($inlineRenderer) {
+                $a = $args->getNamedArguments();
+                return '<a href="' . Url::make(Url::interpolate($a['href'], $context), $this->_eventId) . '"'
+                    . (empty($a['target']) ? '' : ' target="' . $a['target'] . '"')
+                    . (empty($a['class']) ? '' : ' class="' . $a['class'] . '"')
+                    . (empty($a['onclick']) ? '' : ' onclick="' . Url::interpolate($a['onclick'], $context) . '"')
+                    . '>' . $inlineRenderer->render($source, $context) . '</a>';
             });
             $m->addHelper("form", function($template, $context, $args, $source) use ($inlineRenderer) {
-                list($action, $method) = $args->getPositionalArguments();
-                return '<form action="' . Url::make(Url::interpolate($action, $context), $this->_eventId)
-                . '" method="' . $method . '">' . $inlineRenderer->render($source, $context) . '</form>';
+                $form = $args->getNamedArguments();
+                return '<form action="' . Url::make(Url::interpolate($form['action'], $context), $this->_eventId)
+                . (empty($form['method']) ? ' method="get"' : '" method="' . $form['method'] . '"')
+                . '>' . $inlineRenderer->render($source, $context) . '</form>';
             });
 
             header("Content-type: text/html; charset=utf-8");
