@@ -19,7 +19,7 @@
 {{#error}}
     <div class="alert alert-error">{{error}}</div>
 {{/error}}
-<form action="/penalties/apply/" method="post">
+{{#form '/penalties/apply/' 'post'}}
     <table class="table table-striped table-condensed">
         <tr>
             <td colspan="2">
@@ -66,4 +66,4 @@
             </td>
         </tr>
     </table>
-</form>
+{{/form}}
