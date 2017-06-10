@@ -104,22 +104,18 @@ abstract class Controller
                     ['prefix' => '_']
                 )
             ]);
+            $inlineRenderer = new Handlebars(); // for block nesting
 
-            $m->addHelper("href", function($template, $context, $args, $source) {
-                list($url, $name) = $args->getPositionalArguments();
-                if (empty($name)) {
-                    $name = $source; // may be used as block helper, without name, for html embed for example.
-                }
-                return '<a href="' . Url::make(Url::interpolate($url, $context), $this->_eventId) . '">'
-                    . Url::interpolate($name, $context) . '</a>';
+            $m->addHelper("href", function($template, $context, $args, $source) use ($inlineRenderer) {
+                list($url, $target) = $args->getPositionalArguments();
+                return '<a href="' . Url::make(Url::interpolate($url, $context), $this->_eventId) . '"'
+                    . (empty($target) ? '' : ' target="' . $target . '"') . '>'
+                    . $inlineRenderer->render($source, $context) . '</a>';
             });
-            $m->addHelper("hrefblank", function($template, $context, $args, $source) {
-                list($url, $name) = $args->getPositionalArguments();
-                if (empty($name)) {
-                    $name = $source; // may be used as block helper, without name, for html embed for example.
-                }
-                return '<a href="' . Url::make(Url::interpolate($url, $context), $this->_eventId) . '" target="_blank">'
-                    . Url::interpolate($name, $context) . '</a>';
+            $m->addHelper("form", function($template, $context, $args, $source) use ($inlineRenderer) {
+                list($action, $method) = $args->getPositionalArguments();
+                return '<form action="' . Url::make(Url::interpolate($action, $context), $this->_eventId)
+                . '" method="' . $method . '">' . $inlineRenderer->render($source, $context) . '</form>';
             });
 
             header("Content-type: text/html; charset=utf-8");
