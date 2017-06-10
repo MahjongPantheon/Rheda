@@ -28,7 +28,7 @@
     {{#showTimerControls}}
         <br />
         <h3>Рестарт текущего таймера</h3>
-        {{#form '/tourn/resetTimer/' 'post'}}
+        {{#form action='/tourn/resetTimer/' method='post'}}
             <input type="button" style="font-size: 50px; height: 100px;"
                    onclick="return window.confirm('Сбросить таймер в начальное значение? Внимание - ' +
                     'эта кнопка не должна использоваться в нормальных условиях и предназначена только ' +
@@ -52,7 +52,7 @@
     </script>
     {{#showTimerControls}}
         <h3>Рестарт текущего таймера</h3>
-        {{#form '/tourn/resetTimer/' 'post'}}
+        {{#form action='/tourn/resetTimer/' method='post'}}
             <input type="button" style="font-size: 50px; height: 100px;"
                    onclick="return window.confirm('Сбросить таймер в начальное значение? Внимание - ' +
                     'эта кнопка не должна использоваться в нормальных условиях и предназначена только ' +
@@ -63,14 +63,14 @@
     {{/showTimerControls}}
     {{#showAutoSeating}}
         <h3>Старт игр с автоматической рассадкой</h3>
-        {{#form '/tourn/start/' 'post'}}
+        {{#form action='/tourn/start/' method='post'}}
             <input type="button" style="font-size: 50px; height: 100px" onclick="return disableTemporarily(this);" value="START AUTO">
         {{/form}}
         <hr/>
     {{/showAutoSeating}}
     {{#showControls}}
         <h3>Старт игр с ручной рассадкой</h3>
-        {{#form '/tourn/startManual/' 'post'}}
+        {{#form action='/tourn/startManual/' method='post'}}
             Введите состав столов. Один стол = одна строка.<br>
             Если не отмечена галочка, игроки будут рассажены на "восток-юг-запад-север" согласно порядку ввода.<br>
             Цифры означают текущее место игрока в рейтинге. Пример швейцарской рассадки с шагом 4 для четырех столов: <br>
