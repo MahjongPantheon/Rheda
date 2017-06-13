@@ -34,7 +34,7 @@
                         <table class='table table-condensed'>
                             {{#players}}
                                 <tr class="user-item-row">
-                                    <td>{{wind}} <b>{{#a href='/graphs/?user={id}'}}{{display_name}}{{/a}}</b></td>
+                                    <td>{{wind}} <b>{{#a href='/user/{id}/'}}{{display_name}}{{/a}}</b></td>
                                     <td>{{score}}</td>
                                     <td><span class='badge badge-{{label}}'>{{rating_delta}}</span></td>
                                 </tr>

@@ -18,9 +18,9 @@
 
 require_once __DIR__ . '/../helpers/YakuMap.php';
 
-class Graphs extends Controller
+class User extends Controller
 {
-    protected $_mainTemplate = 'Graphs';
+    protected $_mainTemplate = 'User';
     protected $_playerName = 'Игрок';
 
     protected function _pageTitle()
@@ -31,7 +31,7 @@ class Graphs extends Controller
     protected function _run()
     {
         try {
-            $currentUser = intval($_GET['user']);
+            $currentUser = $this->_getUserId();
             $playerData = $this->_api->execute('getPlayer', [$currentUser]);
             $data = $this->_api->execute('getPlayerStats', [$currentUser, $this->_eventId]);
             $this->_playerName = $playerData['display_name'];
@@ -208,5 +208,14 @@ class Graphs extends Controller
             'max_scores' => $maxScores,
             'average_scores' => $playedGames ? (int) ($totalScores / $playedGames) : 0,
         ];
+    }
+
+    /**
+     * @return int
+     */
+    protected function _getUserId() {
+        $parts = explode('/', parse_url($this->_path[0], PHP_URL_PATH));
+        $id = $parts[3];
+        return $id;
     }
 }
