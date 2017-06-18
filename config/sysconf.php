@@ -27,9 +27,11 @@ class Sysconf
 
     // Multi-event mode auth settings. Will not work when single mode is active
     public static function ADMIN_AUTH() {
-        return [ // event id -> auth
+        return [
+            // event id -> auth
+            // default cookie_life is 3600 (it will be used when cookie_life is not specified for the event)
             100500 => ['cookie' => 'verysecretcookie', 'password' => 'verysecretpassword'],
-            100501 => ['cookie' => 'verysecretcookie', 'password' => 'verysecretpassword'],
+            100501 => ['cookie' => 'verysecretcookie', 'password' => 'verysecretpassword', 'cookie_life' => 7200],
         ];
     }
 
@@ -39,5 +41,4 @@ class Sysconf
     const API_VERSION_MINOR = 0;
     const DEBUG_MODE = true; // TODO -> to false in prod!
     const API_ADMIN_TOKEN = 'nehybh,scnhsqc,hjc'; // TODO -> change it on prod!
-    const ADMIN_COOKIE_LIFE = 3600; // in seconds, also counts for super cookies
 }
