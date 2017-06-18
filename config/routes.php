@@ -26,6 +26,8 @@ return [ // Omit trailing slashes in keys when possible
     '/addonline'      => 'AddOnlineGame',
     '/user'           => 'User',
     '/user/.+'        => 'User',
+    '/game'           => 'Game',
+    '/game/.+'        => 'Game',
     '/reg'            => 'PlayerRegistration',
     '/enroll'         => 'PlayerEnrollment',
     '/stat'           => 'RatingTable',

@@ -14,17 +14,28 @@
 *  You should have received a copy of the GNU General Public License
 *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *}}
-<h2>Последние сыгранные игры</h2>
+
+<h2 class="header-title">Информация об игре</h2>
 <br>
-<div class="last-games">
-    {{#noGames}}
-        Ни одной игры еще не сыграно
-    {{/noGames}}
-    {{^noGames}}
-        {{> partials/Games }}
-        <div class='pagination'><ul>
-            <li>{{#a href='/last/?page={prevPage}'}}Назад{{/a}}</li>
-            <li>{{#a href='/last/?page={nextPage}'}}Вперед{{/a}}</li>
-        </ul></div>
-    {{/noGames}}
+{{#error}}
+    <div class="alert alert-error">{{error}}</div>
+{{/error}}
+
+<div class="main-content">
+    <div class="games">
+        {{> partials/MobileGames }}
+    </div>
 </div>
+
+{{!* Redefine toogle function and display details on the page start *}}
+<script>
+    function toggleDetails(self) {
+        return true;
+    }
+</script>
+
+<style>
+    .details {
+        display: block;
+    }
+</style>
