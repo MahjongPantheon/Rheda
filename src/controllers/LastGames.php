@@ -38,7 +38,8 @@ class LastGames extends Controller
             $offset = ($currentPage - 1) * $limit;
         }
 
-        $gamesData = $this->_api->execute('getLastGames', [$this->_eventId, $limit, $offset]);
+        $gamesData = $this->_api->execute('getLastGames',
+            [$this->_eventId, $limit, $offset, 'end_date', 'desc']);
         $formatter = new GameFormatter();
 
         return [
