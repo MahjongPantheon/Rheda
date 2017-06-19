@@ -135,6 +135,7 @@ class GameFormatter
             $result [] = [
                 'index' => $gameId,
                 'endDate' => $game['date'],
+                'hash' => $game['hash'],
                 'players' => $players,
                 'replayLink' => $game['replay_link'],
                 'bestHandPlayers' => implode(', ', $bestHandPlayers),

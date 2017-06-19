@@ -30,8 +30,8 @@ class Game extends Controller
     {
         try {
             $formatter = new GameFormatter();
-            $sessionId = $this->_getSessionId();
-            $gamesData = $this->_api->execute('getGame', [$this->_eventId, $sessionId]);
+            $gameHash = $this->_path['hash'];
+            $gamesData = $this->_api->execute('getGame', [$gameHash]);
             return [
                 'games' => $formatter->formatGamesData($gamesData, $this->_rules),
             ];
@@ -41,14 +41,5 @@ class Game extends Controller
                 'error' => $e->getMessage()
             ];
         }
-    }
-
-    /**
-     * @return int
-     */
-    protected function _getSessionId() {
-        $parts = explode('/', parse_url($this->_path[0], PHP_URL_PATH));
-        $id = $parts[3];
-        return $id;
     }
 }

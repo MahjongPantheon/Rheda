@@ -31,7 +31,7 @@ class User extends Controller
     protected function _run()
     {
         try {
-            $currentUser = $this->_getUserId();
+            $currentUser = $this->_path['user'];
             $playerData = $this->_api->execute('getPlayer', [$currentUser]);
             $data = $this->_api->execute('getPlayerStats', [$currentUser, $this->_eventId]);
             $this->_playerName = $playerData['display_name'];
@@ -208,14 +208,5 @@ class User extends Controller
             'max_scores' => $maxScores,
             'average_scores' => $playedGames ? (int) ($totalScores / $playedGames) : 0,
         ];
-    }
-
-    /**
-     * @return int
-     */
-    protected function _getUserId() {
-        $parts = explode('/', parse_url($this->_path[0], PHP_URL_PATH));
-        $id = $parts[3];
-        return $id;
     }
 }
