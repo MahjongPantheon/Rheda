@@ -15,40 +15,31 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 include_once __DIR__ . "/../helpers/GameFormatter.php";
 
-class LastGames extends Controller
+class Game extends Controller
 {
-    protected $_mainTemplate = 'LastGames';
+    protected $_mainTemplate = 'Game';
 
     protected function _pageTitle()
     {
-        return 'Последние игры';
+        return 'Информация об игре';
     }
 
     protected function _run()
     {
-        $limit = 10;
-        $offset = 0;
-        $currentPage = 1;
-
-        if (isset($_GET['page']) && is_numeric($_GET['page'])) {
-            $currentPage = max(1, (int)$_GET['page']);
-            $offset = ($currentPage - 1) * $limit;
+        try {
+            $formatter = new GameFormatter();
+            $gameHash = $this->_path['hash'];
+            $gamesData = $this->_api->execute('getGame', [$gameHash]);
+            return [
+                'games' => $formatter->formatGamesData($gamesData, $this->_rules),
+            ];
+        } catch (Exception $e) {
+            return [
+                'data' => null,
+                'error' => $e->getMessage()
+            ];
         }
-
-        $gamesData = $this->_api->execute('getLastGames',
-            [$this->_eventId, $limit, $offset, 'end_date', 'desc']);
-        $formatter = new GameFormatter();
-
-        return [
-            'noGames' => empty($gamesData['games']) && $currentPage == 1,
-            'games' => $formatter->formatGamesData($gamesData, $this->_rules),
-            'nextPage' => $currentPage + 1,
-            'prevPage' => $currentPage == 1 ? 1 : $currentPage - 1
-        ];
     }
-
-
 }
