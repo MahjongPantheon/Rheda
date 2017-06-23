@@ -14,4 +14,24 @@
 *  You should have received a copy of the GNU General Public License
 *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *}}
-<h3>Sorry, this page is not available for mobile devices</h3>
+
+<h2 class="header-title">Добавить онлайн-игру</h2>
+
+<div class="main-content mobile-add-online-game">
+    {{#successfullyAdded}}
+        <div class="alert alert-success"><p>Игра успешно добавлена!</p></div>
+        <br>
+    {{/successfullyAdded}}
+
+    {{#error}}
+        <div class="alert alert-error">{{error}}</div>
+        <br>
+    {{/error}}
+
+    <form action="" method="POST" id="addform">
+        <input type="text" name="log" value="{{link}}" autocomplete="off">
+        <br>
+
+        <input type="submit" value="Добавить">
+    </form>
+</div>

@@ -74,7 +74,7 @@ body {
 .main-content {
   margin: 0 10px;
   font-size: 22px;
-  line-height: 26px;  
+  line-height: 26px;
 }
 
 .bottom-fade {
@@ -84,4 +84,26 @@ body {
   height: 80px;
   width: 100%;
   bottom: 0;
+}
+
+.mobile-add-online-game  .alert-success {
+  color: green;
+}
+
+.mobile-add-online-game  .alert-error {
+  color: red;
+}
+
+.mobile-add-online-game  input[type=submit] {
+  border: 1px solid #dddddd;
+  height: 30px;
+  width: 100px;
+  font-size: 14px;
+}
+
+.mobile-add-online-game  input[type=text] {
+  border: 1px solid #dddddd;
+  height: 25px;
+  width: 250px;
+  margin-bottom: 20px;
 }
