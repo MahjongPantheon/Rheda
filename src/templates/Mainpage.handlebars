@@ -26,6 +26,7 @@
             <th>Лучшая серия</th>
             <th>Очки за лучшую серию</th>
             <th>Текущая серия</th>
+            <th>Очки за текущую серию</th>
         </tr>
         {{#data}}
             <tr>
@@ -46,6 +47,7 @@
                         {{#a href='/game/{hash}/'}}{{place}}{{/a}}
                     {{/current_series}}
                 </td>
+                <td>{{current_series_scores}}</td>
             </tr>
         {{/data}}
     </table>

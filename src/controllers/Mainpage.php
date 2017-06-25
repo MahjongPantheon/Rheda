@@ -39,6 +39,7 @@ class Mainpage extends Controller
         $counter = 1;
         foreach ($data as $item) {
             $item['best_series_scores'] = number_format($item['best_series_scores']);
+            $item['current_series_scores'] = number_format($item['current_series_scores']);
             $item['_index'] = $counter;
             $formattedData[] = $item;
             $counter++;
