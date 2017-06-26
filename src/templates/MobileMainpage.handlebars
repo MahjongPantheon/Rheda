@@ -39,7 +39,7 @@
             padding: 10px;
             border: 1px solid #dddddd;
         }
-        tr:nth-child(even) {
+        .highlighted {
             background-color: #ddd;
         }
         table {
@@ -51,24 +51,39 @@
     <h2 class="header-title">{{title}}</h2>
     <div class="main-content">
         <table>
-            <tr>
-                <th>#</th>
-                <th>Игрок</th>
-                <th>Лучшая серия</th>
-            </tr>
             {{#data}}
-                <tr>
-                    <td>{{_index}}</td>
+                <tr class="highlighted">
+                    <td>Игрок:</td>
                     <td>
+                        #{{_index}}
                         {{#player}}
                             {{#a href='/user/{id}/'}}{{display_name}}{{/a}}
                         {{/player}}
                     </td>
+                </tr>
+                <tr>
+                    <td>Лучшая серия:</td>
                     <td>
                         {{#best_series}}
                             {{#a href='/game/{hash}/'}}{{place}}{{/a}}
                         {{/best_series}}
                     </td>
+                </tr>
+                <tr>
+                    <td>Очки:</td>
+                    <td>{{best_series_scores}}</td>
+                </tr>
+                <tr>
+                    <td>Текущая серия:</td>
+                    <td>
+                        {{#current_series}}
+                            {{#a href='/game/{hash}/'}}{{place}}{{/a}}
+                        {{/current_series}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Очки:</td>
+                    <td>{{current_series_scores}}</td>
                 </tr>
             {{/data}}
         </table>
