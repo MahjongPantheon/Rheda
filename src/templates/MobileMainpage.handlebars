@@ -53,9 +53,8 @@
         <table>
             {{#data}}
                 <tr class="highlighted">
-                    <td>Игрок:</td>
+                    <td>Игрок #{{_index}}</td>
                     <td>
-                        #{{_index}}
                         {{#player}}
                             {{#a href='/user/{id}/'}}{{display_name}}{{/a}}
                         {{/player}}
