@@ -40,6 +40,7 @@ class Config
     protected $_allowPlayerAppend = false;
     protected $_useTimer = false;
     protected $_usePenalty = false;
+    protected $_seriesLength = 0;
 
     public static function fromRaw($arr)
     {
@@ -321,5 +322,11 @@ class Config
     public function usePenalty()
     {
         return $this->_usePenalty;
+    }
+    /**
+     * @return int
+     */
+    public function seriesLength() {
+        return $this->_seriesLength;
     }
 }

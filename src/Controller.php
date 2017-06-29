@@ -130,6 +130,7 @@ abstract class Controller
                 'useTimer' => $this->_rules->useTimer(),
                 'usePenalty' => $this->_rules->usePenalty(),
                 'syncStart' => $this->_rules->syncStart(),
+                'eventTitle' => $this->_rules->eventTitle(),
                 'pageTitle' => $pageTitle,
                 'content' => $m->render($add . $this->_mainTemplate, $context),
                 'isLoggedIn' => $this->_adminAuthOk()
