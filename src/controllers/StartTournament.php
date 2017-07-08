@@ -15,6 +15,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Riichi;
 
 require_once __DIR__ . '/../helpers/Url.php';
 require_once __DIR__ . '/../helpers/Array.php';
@@ -127,7 +128,7 @@ class StartTournament extends Controller
         $tables = $this->_api->execute('getTablesState', [$this->_eventId]);
         $tablesFormatted = $this->_formatTables($tables);
 
-        $unfinishedTablesCount = array_reduce($tablesFormatted, function($acc, $i) {
+        $unfinishedTablesCount = array_reduce($tablesFormatted, function ($acc, $i) {
             return $acc + ($i['finished'] ? 0 : 1);
         }, 0);
 

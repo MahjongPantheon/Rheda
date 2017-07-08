@@ -15,6 +15,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Riichi;
 
 include_once __DIR__ . "/../helpers/GameFormatter.php";
 
@@ -38,8 +39,10 @@ class LastGames extends Controller
             $offset = ($currentPage - 1) * $limit;
         }
 
-        $gamesData = $this->_api->execute('getLastGames',
-            [$this->_eventId, $limit, $offset, 'end_date', 'desc']);
+        $gamesData = $this->_api->execute(
+            'getLastGames',
+            [$this->_eventId, $limit, $offset, 'end_date', 'desc']
+        );
         $formatter = new GameFormatter();
 
         return [
@@ -49,6 +52,4 @@ class LastGames extends Controller
             'prevPage' => $currentPage == 1 ? 1 : $currentPage - 1
         ];
     }
-
-
 }

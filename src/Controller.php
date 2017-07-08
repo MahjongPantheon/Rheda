@@ -15,6 +15,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Riichi;
 
 require_once __DIR__ . '/helpers/MobileDetect.php';
 require_once __DIR__ . '/helpers/Url.php';
@@ -106,7 +107,7 @@ abstract class Controller
             ]);
             $inlineRenderer = new Handlebars(); // for block nesting
 
-            $m->addHelper("a", function($template, $context, $args, $source) use ($inlineRenderer) {
+            $m->addHelper("a", function ($template, $context, $args, $source) use ($inlineRenderer) {
                 $a = $args->getNamedArguments();
                 return '<a href="' . Url::make(Url::interpolate($a['href'], $context), $this->_eventId) . '"'
                     . (empty($a['target']) ? '' : ' target="' . $a['target'] . '"')
@@ -114,7 +115,7 @@ abstract class Controller
                     . (empty($a['onclick']) ? '' : ' onclick="' . Url::interpolate($a['onclick'], $context) . '"')
                     . '>' . $inlineRenderer->render($source, $context) . '</a>';
             });
-            $m->addHelper("form", function($template, $context, $args, $source) use ($inlineRenderer) {
+            $m->addHelper("form", function ($template, $context, $args, $source) use ($inlineRenderer) {
                 $form = $args->getNamedArguments();
                 return '<form action="' . Url::make(Url::interpolate($form['action'], $context), $this->_eventId)
                 . (empty($form['method']) ? ' method="get"' : '" method="' . $form['method'] . '"')
@@ -230,8 +231,7 @@ abstract class Controller
                 return Sysconf::SUPER_ADMIN_COOKIE;
             }
         } else {
-            if (
-                !empty(Sysconf::ADMIN_AUTH()[$this->_eventId]['password'])
+            if (!empty(Sysconf::ADMIN_AUTH()[$this->_eventId]['password'])
                 && $password == Sysconf::ADMIN_AUTH()[$this->_eventId]['password']
             ) {
                 return Sysconf::ADMIN_AUTH()[$this->_eventId]['cookie'];

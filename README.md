@@ -45,7 +45,10 @@ Please use our [Bug tracker](https://pantheon.myjetbrains.com/youtrack/issues/RH
 
 ### Development
 
-Run `make deps` and then `make dev` to run dev server.
+- Run `make deps` and then `make dev` to run dev server.
+- Use `make lint` to check code style.
+- Use `make autofix` to fix all codestyle problems, that can be fixed automatically.
+- Remember to use PSR2 coding standards when adding php code.
 
 Please send your issues and pull requests. Any help is appreciated.
 

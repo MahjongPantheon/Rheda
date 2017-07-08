@@ -15,6 +15,8 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Riichi;
+
 include_once __DIR__ . "/../helpers/GameFormatter.php";
 
 class Game extends Controller
