@@ -18,6 +18,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Riichi;
 
 use JsonRPC\Exception\AccessDeniedException;
 use JsonRPC\Exception\ConnectionFailureException;
@@ -343,7 +344,7 @@ class HttpClient extends JsonRPC\HttpClient
             $headers[] = 'Authorization: Basic '.base64_encode($this->username.':'.$this->password);
         }
 
-        if (! empty($this->cookies)){
+        if (! empty($this->cookies)) {
             $cookies = array();
 
             foreach ($this->cookies as $key => $value) {

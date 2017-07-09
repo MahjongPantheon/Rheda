@@ -1,4 +1,5 @@
 <?php
+namespace Riichi;
 
 class Config
 {
@@ -326,7 +327,8 @@ class Config
     /**
      * @return int
      */
-    public function seriesLength() {
+    public function seriesLength()
+    {
         return $this->_seriesLength;
     }
 }

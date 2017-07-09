@@ -10,6 +10,7 @@ deps: hooks
 lint:
 	php vendor/bin/phpcs --config-set default_standard PSR2
 	php vendor/bin/phpcs --config-set show_warnings 0
+	php vendor/bin/phpcs src www --ignore=www/assets/*
 
 dev:
 	echo "Running dev server on port 8001..."
@@ -23,4 +24,4 @@ check: lint unit
 autofix:
 	php vendor/bin/phpcbf --config-set default_standard PSR2
 	php vendor/bin/phpcbf --config-set show_warnings 0
-	php vendor/bin/phpcbf src tests
+	php vendor/bin/phpcbf src www --ignore=www/assets/*

@@ -15,6 +15,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Riichi;
 
 require_once __DIR__ . '/../helpers/Array.php';
 
@@ -81,7 +82,7 @@ class Timer extends Controller
             ];
         }
 
-        usort($result, function($e1, $e2) {
+        usort($result, function ($e1, $e2) {
             return $e1['index'] - $e2['index'];
         });
 
