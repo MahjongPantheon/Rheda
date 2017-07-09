@@ -80,3 +80,7 @@ li, .table th, .table td {
 .last-games a:hover {
   cursor: pointer;
 }
+
+.last-games .replay-link {
+  color: #0088cc;
+}

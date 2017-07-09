@@ -23,7 +23,7 @@ return [ // Omit trailing slashes in keys when possible
     '/last'           => 'LastGames',
     '/last/.+'        => 'LastGames',
     '/add'            => 'AddGame',
-    '/addonline'      => 'AddOnlineGame',
+    '/add-online'     => 'AddOnlineGame',
     '/user'           => 'User',
     '/user/(?<user>[0-9]+)' => 'User',
     '/game'           => 'Game',

@@ -64,12 +64,10 @@
                     <li>{{#a href='/'}}{{eventTitle}}{{/a}}</li>
                     <li>{{#a href='/last/'}}Сыгранные игры{{/a}}</li>
                     <li>{{#a href='/stat/'}}Рейтинг{{/a}}</li>
+                    {{#isOnline}}
+                        <li>{{#a href='/add-online/'}}+Онлайн-игра{{/a}}</li>
+                    {{/isOnline}}
                     {{#isLoggedIn}}
-                        {{#isOnline}}
-                            <li>{{#a href='/addonline/'}}+Онлайн-игра&nbsp;&nbsp;<span style="opacity: 0.5"
-                                                                                     class="icon-lock icon-white"></span>{{/a}}
-                            </li>
-                        {{/isOnline}}
                         {{^isOnline}}
                             <li>{{#a href='/tourn/'}}Старт игр{{/a}}</li>
                             {{#usePenalty}}

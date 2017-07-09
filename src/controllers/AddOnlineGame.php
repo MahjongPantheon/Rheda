@@ -36,10 +36,11 @@ class AddOnlineGame extends Controller
     {
         $errorMsg = '';
         $successfullyAdded = false;
+        $link = empty($_POST['log']) ? '' : $_POST['log'];
 
         try {
-            if (!empty($_POST['log'])) {
-                $this->_api->execute('addOnlineReplay', [$this->_eventId, $_POST['log']]);
+            if ($link) {
+                $this->_api->execute('addOnlineReplay', [$this->_eventId, $link]);
                 $successfullyAdded = true;
             }
         } catch (Exception $e) {
@@ -48,7 +49,6 @@ class AddOnlineGame extends Controller
 
         return [
             'error'             => $errorMsg,
-            'link'              => empty($_POST['log']) ? '' : $_POST['log'],
             'successfullyAdded' => $successfullyAdded
         ];
     }

@@ -22,7 +22,6 @@ class Config
     protected $_withKuitan = false;
     protected $_withButtobi = false;
     protected $_withMultiYakumans = false;
-    protected $_autoRegisterUsers = false;
     protected $_gameExpirationTime = 0;
     protected $_minPenalty = 0;
     protected $_maxPenalty = 0;
@@ -191,13 +190,6 @@ class Config
     public function withMultiYakumans()
     {
         return $this->_withMultiYakumans;
-    }
-    /**
-     * @return bool
-     */
-    public function autoRegisterUsers()
-    {
-        return $this->_autoRegisterUsers;
     }
     /**
      * @return int

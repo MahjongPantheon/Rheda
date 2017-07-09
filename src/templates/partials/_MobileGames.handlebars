@@ -69,6 +69,9 @@
     </div><div class="details">
         <hr />
         <ul>
+            {{#replayLink}}
+                <li><a href='{{replayLink}}' class="replay-link" target='_blank'>Посмотреть реплей</a></li>
+            {{/replayLink}}
             <li>Выигрышей по рон: {{ronWins}}</li>
             <li>Выигрышей по цумо: {{tsumoWins}}</li>
             <li>Ничьих: {{draws}}</li>

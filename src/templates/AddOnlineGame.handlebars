@@ -14,34 +14,28 @@
 *  You should have received a copy of the GNU General Public License
 *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *}}
-{{#successfullyAdded}}
-    <h4>Игра успешно добавлена!</h4>
-    <br>
-    Идем обратно через 3 секунды...
-    <script type='text/javascript'>
-        window.setTimeout(function () {
-            window.location = '/addonline/';
-        }, 3000);
-    </script>
-{{/successfullyAdded}}
-{{^successfullyAdded}}
-    <div class="row">
-        <div class="span9">
-            <h2>Добавить онлайн-игру</h2>
-            <br>
-            {{#error}}
-                <div class="alert alert-error">{{error}}</div>
-            {{/if}}
-            <form action="" method="POST" id="addform">
-                <input type="text" name="log" value="{{link}}">
+<div class="row">
+    <div class="span9">
+        {{#successfullyAdded}}
+            <div class="alert alert-success">
+                <p>Игра успешно добавлена!</p>
+            </div>
+        {{/successfullyAdded}}
 
-                <div class="row">
-                    <div class="span10">
-                        <input type="submit" value="Добавить" class="btn btn-primary btn-large">
-                    </div>
+        <h2>Добавить онлайн-игру</h2>
+        <br>
+        {{#error}}
+            <div class="alert alert-error">{{error}}</div>
+        {{/error}}
+        <form action="" method="POST" id="addform">
+            <input type="text" name="log" value="">
+
+            <div class="row">
+                <div class="span10">
+                    <input type="submit" value="Добавить" class="btn btn-primary btn-large">
                 </div>
+            </div>
 
-            </form>
-        </div>
+        </form>
     </div>
-{{/successfullyAdded}}
+</div>
