@@ -15,6 +15,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Riichi;
 
 require_once 'src/helpers/Array.php';
 
@@ -96,7 +97,7 @@ class SortitionHelper
         $bestResult = 10005000;
         $bestPlacement = null;
         foreach ($possiblePlacements as $placement) {
-            $newResult = self::_calсSubSums(
+            $newResult = self::_calcSubSums(
                 $tablePlayers[$placement[0]]['username'],
                 $tablePlayers[$placement[1]]['username'],
                 $tablePlayers[$placement[2]]['username'],
@@ -141,7 +142,7 @@ class SortitionHelper
      * @param $prevData
      * @return float|int
      */
-    protected static function _calсSubSums($player1, $player2, $player3, $player4, $prevData)
+    protected static function _calcSubSums($player1, $player2, $player3, $player4, $prevData)
     {
         $totalsum = 0;
         foreach ([$player1, $player2, $player3, $player4] as $idx => $player) {

@@ -15,6 +15,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Riichi;
 
 /**
  * Url helper class
@@ -36,7 +37,7 @@ class Url
 
     public static function interpolate($str, Handlebars\Context $context)
     {
-        return preg_replace_callback('#{([\w\d]+)}#is', function($matches) use ($context) {
+        return preg_replace_callback('#{([\w\d]+)}#is', function ($matches) use ($context) {
             return $context->get($matches[1]);
         }, $str);
     }
