@@ -19,6 +19,9 @@
     table {
         width: 100%;
     }
+    td {
+        font-size: 18px;
+    }
     td.cn {
         text-align: center;
     }
@@ -54,7 +57,8 @@
       <th>#</th>
       <th>Игрок</th>
       <th>{{#a href='/stat/?sort=rating'}}Итог{{/a}}{{#orderByRating}}<span class="icon-arrow-down"></span>{{/orderByRating}}</th>
-      <th>{{#a href='/stat/?sort=avg_place'}}Avg{{/a}}{{#orderByAvgPlace}}<span class="icon-arrow-up"></span>{{/orderByAvgPlace}}</th>
+      <th>{{#a href='/stat/?sort=avg_place'}}СрМесто{{/a}}{{#orderByAvgPlace}}<span class="icon-arrow-up"></span>{{/orderByAvgPlace}}</th>
+      <th>{{#a href='/stat/?sort=avg_score'}}СрОчки{{/a}}{{#orderByAvgScore}}<span class="icon-arrow-up"></span>{{/orderByAvgScore}}</th>
       <th>&nbsp;</th>
     </tr>
     {{#data}}
@@ -66,6 +70,7 @@
                          {{^winner_zone}}important{{/winner_zone}}
                          ">{{rating}}</span></td>
         <td class="cn">{{avg_place_less_precision}}</td>
+        <td class="cn">{{avg_score}}</td>
         <td class="cn">{{games_played}}</td>
       </tr>
     {{/data}}

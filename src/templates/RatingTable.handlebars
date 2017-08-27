@@ -25,6 +25,7 @@
         <th>{{#a href='/stat/?sort=name'}}Игрок{{/a}}{{#orderByName}}<span class="icon-arrow-up"></span>{{/orderByName}}</th>
         <th>{{#a href='/stat/?sort=rating'}}Итог{{/a}}{{#orderByRating}}<span class="icon-arrow-down"></span>{{/orderByRating}}</th>
         <th>{{#a href='/stat/?sort=avg_place'}}Среднее место{{/a}}{{#orderByAvgPlace}}<span class="icon-arrow-up"></span>{{/orderByAvgPlace}}</th>
+        <th>{{#a href='/stat/?sort=avg_score'}}Средние очки{{/a}}{{#orderByAvgScore}}<span class="icon-arrow-down"></span>{{/orderByAvgScore}}</th>
 <!--        <th><abbr title="Среднеквадратичное отклонение">СКО</abbr></th>-->
         <th>Сыграно игр</th>
     </tr>
@@ -37,6 +38,7 @@
             {{^winner_zone}}badge-important{{/winner_zone}}
         ">{{rating}}</span></td>
         <td>{{avg_place}}</td>
+        <td>{{avg_score}}</td>
         {{! <td>stddev</td> }}
         <td>{{games_played}}</td>
     </tr>
