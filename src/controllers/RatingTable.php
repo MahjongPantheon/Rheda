@@ -55,6 +55,12 @@ class RatingTable extends Controller
                     $order = 'asc';
                 }
                 break;
+            case 'avg_score':
+                $orderBy = $_GET['sort'];
+                if (empty($_GET['order'])) {
+                    $order = 'desc';
+                }
+                break;
             case 'name':
                 $orderBy = $_GET['sort'];
                 if (empty($_GET['order'])) {
@@ -86,6 +92,7 @@ class RatingTable extends Controller
                     'rating'        => '0',
                     'winner_zone'   => true,
                     'avg_place'     => '0',
+                    'avg_score'     => '0',
                     'games_played'  => '0'
                 ]);
             }, array_values($players)));
@@ -110,6 +117,7 @@ class RatingTable extends Controller
 
             'orderByRating'     => $orderBy == 'rating',
             'orderByAvgPlace'   => $orderBy == 'avg_place',
+            'orderByAvgScore'   => $orderBy == 'avg_score',
             'orderByName'       => $orderBy == 'name',
         ];
     }
