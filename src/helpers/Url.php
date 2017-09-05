@@ -25,7 +25,7 @@ class Url
     public static function make($where, $eventId)
     {
         $pieces = array_filter(explode('/', $where));
-        if (strpos($pieces[0], 'eid') === 0) {
+        if (!empty($pieces[0]) && strpos($pieces[0], 'eid') === 0) {
             array_shift($pieces);
         }
 
@@ -35,7 +35,7 @@ class Url
         return '/' . implode('/', $pieces);
     }
 
-    public static function interpolate($str, Handlebars\Context $context)
+    public static function interpolate($str, \Handlebars\Context $context)
     {
         return preg_replace_callback('#{([\w\d]+)}#is', function ($matches) use ($context) {
             return $context->get($matches[1]);

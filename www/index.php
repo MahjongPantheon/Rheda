@@ -21,5 +21,5 @@ require_once __DIR__ . '/../config/sysconf.php';
 
 // Main entry point
 require_once __DIR__ . '/../src/Controller.php';
-$controller = Controller::makeInstance($_SERVER['REQUEST_URI']);
+$controller = \Riichi\Controller::makeInstance($_SERVER['REQUEST_URI']);
 $controller->run();
