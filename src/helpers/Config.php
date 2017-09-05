@@ -27,6 +27,7 @@ class Config
     protected $_maxPenalty = 0;
     protected $_penaltyStep = 0;
     protected $_eventTitle = '';
+    protected $_eventDescription = '';
     protected $_eventStatHost = '';
     protected $_redZone = 0;
     protected $_yellowZone = 0;
@@ -225,6 +226,13 @@ class Config
     public function eventTitle()
     {
         return $this->_eventTitle;
+    }
+    /**
+     * @return string
+     */
+    public function eventDescription()
+    {
+        return $this->_eventDescription;
     }
     /**
      * @return string

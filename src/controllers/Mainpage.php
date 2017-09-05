@@ -31,7 +31,10 @@ class Mainpage extends Controller
     protected function _run()
     {
         if ($this->_rules->seriesLength() == 0) {
-            return ['title' => $this->_rules->eventTitle()];
+            return [
+                'title' => $this->_rules->eventTitle(),
+                'description' => $this->_rules->eventDescription()
+            ];
         }
 
         $data = $this->_api->execute('getGamesSeries', [$this->_eventId]);
