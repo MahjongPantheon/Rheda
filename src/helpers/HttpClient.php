@@ -30,7 +30,7 @@ use JsonRPC\Exception\ServerErrorException;
  * @package JsonRPC
  * @author  Frederic Guillot
  */
-class HttpClient extends JsonRPC\HttpClient
+class HttpClient extends \JsonRPC\HttpClient
 {
     /**
      * URL of the server

@@ -103,6 +103,7 @@ class RatingTable extends Controller
                 $el['_index'] = $ctr++;
                 $el['short_name'] = $this->_makeShortName($el['display_name']);
                 $el['avg_place_less_precision'] = sprintf('%.2f', $el['avg_place']);
+                $el['avg_score_int'] = round($el['avg_score']);
                 return $el;
             }, $data);
         } catch (Exception $e) {

@@ -96,7 +96,7 @@ abstract class Controller
         if ($this->_beforeRun()) {
             $context = $this->_run();
             $pageTitle = $this->_pageTitle(); // должно быть после run! чтобы могло использовать полученные данные
-            $detector = new \MobileDetect();
+            $detector = new MobileDetect();
 
             $m = new Handlebars([
                 'loader' => new \Handlebars\Loader\FilesystemLoader(__DIR__ . '/templates/'),
@@ -187,7 +187,8 @@ abstract class Controller
             if (preg_match($re, $url, $matches)) {
                 require_once __DIR__ . "/controllers/{$controller}.php";
                 $matches['event'] = 'eid' . Sysconf::OVERRIDE_EVENT_ID;
-                return new $controller($url, $matches);
+                $wNs = '\\Riichi\\' . $controller;
+                return new $wNs($url, $matches);
             }
         }
 
@@ -206,7 +207,8 @@ abstract class Controller
 
             if (preg_match($re, $url, $matches)) {
                 require_once __DIR__ . "/controllers/{$controller}.php";
-                return new $controller($url, $matches);
+                $wNs = '\\Riichi\\' . $controller;
+                return new $wNs($url, $matches);
             }
         }
 
