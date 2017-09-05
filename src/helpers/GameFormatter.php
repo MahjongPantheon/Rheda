@@ -139,7 +139,7 @@ class GameFormatter
                 'endDate' => $game['date'],
                 'hash' => $game['hash'],
                 'players' => $players,
-                'replayLink' => $game['replay_link'],
+                'replayLink' => empty($game['replay_link']) ? null : $game['replay_link'],
                 'bestHandPlayers' => implode(', ', $bestHandPlayers),
                 'bestHandCost' => ($bestHan == 200
                     ? 'якуман'

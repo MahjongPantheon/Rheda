@@ -259,10 +259,10 @@ class HttpClient extends \JsonRPC\HttpClient
      * Assign a callback before the request
      *
      * @access public
-     * @param  Closure $closure
+     * @param  \Closure $closure
      * @return $this
      */
-    public function withBeforeRequestCallback(Closure $closure)
+    public function withBeforeRequestCallback(\Closure $closure)
     {
         $this->beforeRequest = $closure;
         return $this;

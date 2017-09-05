@@ -17,6 +17,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Riichi;
+
 class Sysconf
 {
     // Single event mode settings; enable SINGLE_MODE and fill others with any non-empty value
@@ -36,9 +38,9 @@ class Sysconf
     }
 
     // Common settings
-    const API_URL = 'https://api.mjtop.net/'; // Config tip: change this to your entry point
+    const API_URL = 'http://staging.api.furiten.ru/'; // Config tip: change this to your entry point
     const API_VERSION_MAJOR = 1;
     const API_VERSION_MINOR = 0;
     const DEBUG_MODE = true; // TODO -> to false in prod!
-    const API_ADMIN_TOKEN = 'nehybh,scnhsqc,hjc'; // TODO -> change it on prod!
+    const API_ADMIN_TOKEN = 'CHANGE_ME'; // TODO -> change it on prod!
 }
