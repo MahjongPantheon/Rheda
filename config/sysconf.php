@@ -19,8 +19,8 @@
 
 namespace Riichi;
 
-if (file_exists(__DIR__ . '/local/sysconf.php')) {
-    include __DIR__ . '/local/sysconf.php';
+if (file_exists(__DIR__ . '/local/index.php')) {
+    include __DIR__ . '/local/index.php';
 } else {
     class Sysconf
     {

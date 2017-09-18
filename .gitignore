@@ -3,4 +3,4 @@
 .vagrant
 vendor/
 var/www-error.log
-config/local/sysconf.php
+config/local/index.php
