@@ -60,7 +60,7 @@ abstract class Controller
     {
         $this->_url = $url;
         $this->_path = $path;
-        $this->_api = new \JsonRPC\Client(Sysconf::API_URL, false, new HttpClient(Sysconf::API_URL));
+        $this->_api = new \JsonRPC\Client(Sysconf::API_URL(), false, new HttpClient(Sysconf::API_URL()));
 
         $eidMatches = [];
         if (empty($path['event']) || !preg_match('#eid(\d+)#is', $path['event'], $eidMatches)) {
@@ -199,7 +199,7 @@ abstract class Controller
     {
         $matches = [];
         foreach ($routes as $regex => $controller) {
-            if ($regex[0] === '!') {
+            if (Sysconf::SINGLE_MODE) {
                 $re = '#^' . mb_substr($regex, 1) . '/?$#';
             } else {
                 $re = '#^/(?<event>eid\d+)' . $regex . '/?$#';

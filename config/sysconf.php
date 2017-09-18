@@ -19,28 +19,37 @@
 
 namespace Riichi;
 
-class Sysconf
-{
-    // Single event mode settings; enable SINGLE_MODE and fill others with any non-empty value
-    const SINGLE_MODE = false; // next items won't work until this is false
-    const OVERRIDE_EVENT_ID = 1;
-    const SUPER_ADMIN_PASS = 'hjpjdstckjybrb';
-    const SUPER_ADMIN_COOKIE = 'kldfmewmd9vbeiogbjsdvjepklsdmnvmn';
+if (file_exists(__DIR__ . '/local/sysconf.php')) {
+    include __DIR__ . '/local/sysconf.php';
+} else {
+    class Sysconf
+    {
+        // Single event mode settings; enable SINGLE_MODE and fill others with any non-empty value
+        const SINGLE_MODE = false; // next items won't work until this is false
+        const OVERRIDE_EVENT_ID = 1;
+        const SUPER_ADMIN_PASS = 'hjpjdstckjybrb';
+        const SUPER_ADMIN_COOKIE = 'kldfmewmd9vbeiogbjsdvjepklsdmnvmn';
 
-    // Multi-event mode auth settings. Will not work when single mode is active
-    public static function ADMIN_AUTH() {
-        return [
-            // event id -> auth
-            // default cookie_life is 3600 (it will be used when cookie_life is not specified for the event)
-            100500 => ['cookie' => 'verysecretcookie', 'password' => 'verysecretpassword'],
-            100501 => ['cookie' => 'verysecretcookie', 'password' => 'verysecretpassword', 'cookie_life' => 7200],
-        ];
+        // Multi-event mode auth settings. Will not work when single mode is active
+        public static function ADMIN_AUTH() {
+            return [
+                // event id -> auth
+                // default cookie_life is 3600 (it will be used when cookie_life is not specified for the event)
+                100500 => ['cookie' => 'verysecretcookie', 'password' => 'verysecretpassword'],
+                100501 => ['cookie' => 'verysecretcookie', 'password' => 'verysecretpassword', 'cookie_life' => 7200],
+            ];
+        }
+
+        // Common settings
+        const API_VERSION_MAJOR = 1;
+        const API_VERSION_MINOR = 0;
+        const DEBUG_MODE = true; // TODO -> to false in prod!
+        const API_ADMIN_TOKEN = 'CHANGE_ME'; // TODO -> change it on prod!
+
+        public static function API_URL() {
+            return 'http://staging.api.furiten.ru/';
+        }
     }
-
-    // Common settings
-    const API_URL = 'http://staging.api.furiten.ru/'; // Config tip: change this to your entry point
-    const API_VERSION_MAJOR = 1;
-    const API_VERSION_MINOR = 0;
-    const DEBUG_MODE = true; // TODO -> to false in prod!
-    const API_ADMIN_TOKEN = 'CHANGE_ME'; // TODO -> change it on prod!
 }
+
+
