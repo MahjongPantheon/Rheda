@@ -31,6 +31,8 @@ if (file_exists(__DIR__ . '/local/index.php')) {
         const SUPER_ADMIN_COOKIE = 'kldfmewmd9vbeiogbjsdvjepklsdmnvmn';
 
         // Multi-event mode auth settings. Will not work when single mode is active
+        // Also this will not work if DEBUG_MODE is set to true: every event will
+        // have admin password 'password' when pantheon is in debug mode
         public static function ADMIN_AUTH() {
             return [
                 // event id -> auth
@@ -47,7 +49,7 @@ if (file_exists(__DIR__ . '/local/index.php')) {
         const API_ADMIN_TOKEN = 'CHANGE_ME'; // TODO -> change it on prod!
 
         public static function API_URL() {
-            return 'http://staging.api.furiten.ru/';
+            return getenv('MIMIR_URL');
         }
     }
 }
